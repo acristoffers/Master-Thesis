@@ -1,0 +1,391 @@
+% !TeX root = document.tex
+% !TeX encoding = UTF-8 Unicode
+
+\chapter{Theoretical Foundations}%
+\label{chp:theoretical-foundations}
+
+This work presents a new mode-switching strategy for Command Governors based on
+the concept of a Region of Attraction. The Command Governor framework requires
+the system to be divided into modes, turning it into a switched system if it was
+not already one. Thus, those are the main concepts involved in this work and
+will be further explained in the following sections.
+
+\section{Switched Systems}%
+\label{sec:switched-systems}
+
+A switched system is a system composed of many subsystems, called modes, and a
+mode-transition rule. It is often used to divide non-linear systems into many
+linear systems around different operation points, creating linear
+approximations, which are active one at a time. Please do not confuse it with
+switching systems, in which mode transition can happen arbitrarily, whereas, in
+the switched system, a supervisor orchestrates them~\cite{Morse99,Lucia2017}.
+
+A critical aspect of switched systems is stability. Even if all modes are
+stable, the system as a whole is not guaranteed stable, as the act of switching
+may give rise to instability. Therefore it is essential to find ways of
+guaranteeing system stability when switching modes~\cite{Lin2009}.
+
+One commonly used technique to guarantee the stability of switched systems
+during mode transitions is the dwell-time. It consists of waiting for a specific
+time to elapse before allowing the system to change modes again. The dwell-time
+must be large enough to allow the system to stabilize using the active mode,
+making modes change infrequent and guarantee a stable state on the event of the
+next change. Various techniques exist that make the dwell-time as small as
+possible, and it is the focus of current studies~\cite{Franze2017,Chesi2010}.
+
+The proposed technique addresses this problem by using the Region of Attraction
+to guarantee stability without waiting for a dwell-time to elapse.
+
+\section{Command Governor}%
+\label{sec:command-governor}
+
+\subsection{System Description}%
+\label{subsec:system-description}
+
+A switched discrete-time system given in the state-space representation has the
+form
+
+\begin{equation}
+	\label{eq:state-space}
+	\begin{aligned}
+		x(k+1) & = A_{i}x(k)+B_{i}u(k), \\
+		y(k)   & = C_{i}x(k)+D_{i}u(k), \\
+		c(k)   & = E_{i}x(k)+F_{i}u(k),
+	\end{aligned}
+\end{equation}
+
+where \(x(k)\in\mathbb{R}^n\) is the state vector, \(y(k)\in\mathbb{R}^p\) is the
+output, \(c(k)\in\mathbb{R}^{n_c}\) is the constrained or weight output, the
+matrices \(A\in\mathbb{R}^{n\times{}n}\), \(B\in\mathbb{R}^{n\times{}n_u}\),
+\(C\in\mathbb{R}^{n_y\times{}n}\), and \(D\in\mathbb{R}^{n_y\times{}n_u}\) concern the
+system's dynamic and output, matrices \(E\in\mathbb{R}^{n_c\times{}n}\) and
+\(F\in\mathbb{R}^{n_c\times{}n_u}\) concern the constrained output and are chosen by
+the designer to take into account the constraints associate with the state and
+control signal. The sub-index \(i = 1,\ldots, s\) refers to the active model. In many
+cases the mode \(i\) is switched depending on the state-vector, and thus on its
+trajectory.
+
+We exploit the state-feedback structure to propose a mode-dependent
+proportional-integral (PI) action for the system~\eqref{eq:state-space}. The
+controller is designed to ensure null steady-state error for piecewise constant
+references at each mode \(i\), and thus the integral action is applied over the
+tracking error \citep{Lopes2020}
+
+\begin{equation}
+	\label{eq:r-y-error}
+	e(k) = r(k)-y(k),
+\end{equation}
+
+where \(r(k)\) is the desired output of the system. The proportional action
+comes from the system's state deviation with respect to the equilibrium point.
+Because we suppose the state values are not measured, we use an observer to
+estimate them. Figure~\ref{fig:pi-controller-diagram} depicts the topology of
+the considered controller with the observer.
+
+\begin{figure}[!htb]
+	\centering
+	\resizebox{0.98\linewidth}{!}{\input{imgs/topos2c.tex}}
+	\caption{PI-like controller.}%
+	\label{fig:pi-controller-diagram}
+\end{figure}
+
+By defining an augmented state vector
+\[
+	\xi(k)=\begin{bmatrix}{\hat{x}(k)}^\top &v{(k)}^\top\end{bmatrix}^\top,
+\]
+where \(v(k)\in\mathbb{R}^{n_u}\) is the vector of added integrators, the
+closed-loop system shown in Figure~\ref{fig:pi-controller-diagram} can be
+rewritten as
+
+\begin{equation}
+	\label{sistemaaum}
+	\begin{split}
+		\xi(k+1) &= \mathcal{A}_i\xi(k)+\mathcal{B}_{i}u(k), \\
+		y_{k}    &= \mathcal{C}_i\xi(k)+\mathcal{D}_{i}u(k),
+	\end{split}
+\end{equation}
+
+where \(\mathcal{A}_i=\begin{bmatrix}A_i & \textbf{0} \\-C_{i}A_i&\textbf{I}
+\end{bmatrix} \), \(\mathcal{B}_i=\begin{bmatrix}B_i\\-C_{i}B_i\end{bmatrix}\),
+\(\mathcal{C}_i=\begin{bmatrix} C_i & \textbf{0} \end{bmatrix}\),
+\(\mathcal{D}_i=\begin{bmatrix}\mathcal{D}_i^\top&\textbf{0}\end{bmatrix}^\top\).
+
+The design of each controller gain \(K_i\in\mathbb{R}^{n_u\times{}(n+p)}\) may use
+standard LMI based techniques, such as, for instance, pole
+placement~\citep{book:yu}, LPV design~\citep{briat2014linear}, or robust
+control~\citep{Boyd94}. In this case, the main issue is to ensure the stability
+between the switching instants, and our approach concerns such an aspect, as
+presented in the next section. It is important to note that, in practice, the
+controller may be designed independently for each mode.
+
+Thus, for each mode we design a observer gain \(L_{i}\in\mathbb{R}^{n\times{}n_y}\)
+ensuring the asymptotic convergence of the estimation error
+(\(\hat{x}(k)-x(k)\)) to zero. Such gains yield the following mode-dependent
+observers:
+
+\begin{equation}
+	\label{eq:observer}
+	\hat{x}(k+1) = A_{i}\hat{x}(k) + B_{i}u(k) + L_{i}(y(k)-C_{i}\hat{x}(k)).
+\end{equation}
+
+Conventional methods in the literature can calculate the gain
+\(L_i\)~\citep{chi-tsongchen2012,Hespanha09}. Therefore, the linear control law
+becomes
+
+\begin{equation}
+	\label{eq:control-law}
+	u(k)= K_i \hat{\xi}(k) = \begin{bmatrix}K_{Pi} & K_{Ii} \end{bmatrix}
+	\hat{\xi}(k),
+\end{equation}
+
+with \(\hat{\xi}(k) = \begin{bmatrix}\hat{x}{(k)}^\top & v{(k)}^\top
+\end{bmatrix}^\top{}\), for \(i=1,\ldots,s\).
+
+Note that the constrained output can also be expressed in terms of the augmented
+state \(\xi(k)\), taking into account the state of the integrator, i.e., \(c(k)\)
+in~\eqref{eq:state-space} can be given by
+
+\begin{equation}
+	\label{eq:constrained-output}
+	c(k) = \mathcal{E}_i\hat{\xi}(k) + \mathcal{F}_i u(k),
+\end{equation}
+
+with the mode-dependent matrices \(\mathcal{E}_i\) and \(\mathcal{F}_i\) with
+adequate dimensions.
+
+\subsection{Command Governor}%
+\label{subsec:cg}
+
+The Command Governor (CG) is an add-on technique that extends existing
+controllers with constraint enforcement. It uses the system model to predict
+states given a reference \(y(k)\) and computes the virtual reference \(g(k)\)
+closest to \(y(k)\) that keeps the system constrained.
+Figure~\ref{fig:cg-schematic} presents its block diagram, which shows that the
+CG is aware of the system and controller states. The constraint itself is an
+integral part of the CG.\
+
+\input{imgs/cg-schematic}
+
+In what follows we use the sets \(\mathcal{C}\), \(\mathcal{W}\), and
+\(\mathcal{V}\) defined as follows:
+
+\begin{enumerate}
+	\item The set of values allowed to the  constrained output, \(c(k)\),
+	      defines the set \(\mathcal{C}\), which is the output restriction.
+	\item Let \(\omega\equiv g(k)\) for a constant \(g(k)\). \(\mathcal{W}\) is
+	      the set of all values \(\omega{}\) that keep \(c(k)\) constrained on
+	      the steady-state.
+	      \[\mathcal{W} = \{\omega\in\mathbb{R}^{n_y}:
+		      c(k)\in\mathcal{C},k\rightarrow\infty{}\}.\]
+	\item \(\mathcal{V}\) is the set of \(\omega{}\) values ensuring the
+	      constrained output to belong to \(\mathcal{C}\) in the next \(k_0\)
+	      samples
+	      \[
+		      \mathcal{V}=\{\omega\in\mathcal{W}:c(k)\in\mathcal{C},0<k\leq{}k_0\},
+	      \]
+\end{enumerate}
+
+We write the set \(\mathcal{V}\) in terms of convex constraints on the virtual
+reference, the \(k\) future states, the minimization of the distance to the
+desired reference, and actuator saturation.
+
+The output of the Command Governor is given by the following convex optimization
+procedure:
+
+\begin{equation}
+	\begin{aligned}
+		g(k)=\argmin_{\omega\in\mathcal{V}} & \norm{\omega-r(k)}^2_\Psi
+	\end{aligned}
+	\label{eq:cg}
+\end{equation}
+
+where \(\Psi{}\) is a semi-definite positive weighing matrix and \(g(k)\) is the
+virtual reference closest to the desired reference, not allowing the system to
+violate the constraints. Observe that the set \(\mathcal{V}\) is defined by
+evolving the system in closed-loop, without disturbances, a number \(k_0\) of
+samples ahead, and testing if the state sequence remains inside the constraints.
+
+\subsection{Supervisor}%
+\label{subsec:supervisor}
+
+The supervisor is responsible for selecting which i-th CG is currently active.
+Figure~\ref{fig:supervisor-schematic} shows its block diagram, in which we see
+that all CGs are continuously updated, but only one is active to send control
+signals to the system. The policy for switching CGs is problem-dependent. It
+might be another controller giving better performance, according to some metric,
+or being able to access a state-space region.
+
+\input{imgs/supervisor-schematic}
+
+However, even if the policy allows the change, it will not be admissible if
+\(x(k)\not\in\mathcal{X}_i\cap{}\mathcal{X}_j\), where
+
+\begin{equation}
+	\mathcal{X}_i =
+	\left\{
+	x\in\mathbb{R}^n | \begin{bmatrix}\omega\\x\end{bmatrix} \in
+	\mathcal{Z}_i \textrm{ for at least one } \omega\in\mathbb{R}^{n_y}
+	\right\}
+\end{equation}
+
+is the set of all states that can be steered to an equilibrium point without
+constraint violation, with
+
+\begin{equation}
+	\mathcal{Z}_i =
+	\left\{
+	\begin{bmatrix}r\\x\end{bmatrix}
+	\in\mathbb{R}^{n_y}\times\mathbb{R}^{n} | c(k)\in\mathcal{C}_i,
+	\forall{}k\in\mathbb{Z}^+
+	\right\}
+\end{equation}
+
+being the admissible output set.
+
+A system can have many CG units, each of them with its constraint region.  A
+generic CG switch \(CG_i\rightarrow{}CG_j\) is admissible (with respect to the plant
+constraints) if the two CG's domains have a nonempty intersection. If one wants
+to go from \(CG_1\) to \(CG_3\) and there is no intersection, one must find a
+path through other CGs with nonempty intersections. Therefore the union of all
+CG's domains cannot be a disconnected domain. To change the active CG, one needs
+to go to a point interior to the CG' domains intersection, called way-point.
+This point can be chosen arbitrarily inside the intersection of constraints.
+However, it is better to use points in the central area, not so close to the
+borders, to avoid problems involving disturbances and controller
+sensitivity~\citep{Keel1997}. All the paths from one CG to another can be
+calculated offline, for example, using graph theory\citep{Ahuja1990,Pettie2004}.
+
+In~\citep{Lucia2017,Franze2017} it has been shown that any \(CG\) switch, e.g.
+\(CG_i\rightarrow{}CG_j\) can be safely accomplished (preserving the constraints) form any
+point belonging to the intersection between the two CGs' domains. Therefore, a
+possible way to achieve a safe switch is to define a waypoint reference in the
+intersection set. Once the plant trajectory, under the action of \(CG_i\) is
+confined in the intersection region, then \(CG_j\) is activated. Moreover, the
+minimum waiting time assuring that the state of the system enters \(CG_j\)'s
+domain is defined resorting to the concept of guaranteed dwell-time.
+
+This approach is a way of guaranteeing stability, as the dwell-time is
+calculated not to allow the switching to occur neither too soon nor too often,
+giving enough time to the current controller to stabilize the system before
+switching again. It is, however, a very conservative approach that assumes a
+worst-case scenario. Although it might be necessary to stabilize some systems,
+it is not always needed and may lead the convergence time to take longer.
+
+\section{Region of Attraction}%
+\label{sec:region-of-attraction}
+
+The Region of Attraction is a definition which initiated with the work of the
+French mathematician Henri Poincaré. He studied real, nonlinear differential
+equations' behaviour, finding that the states' evolution in time is stable,
+unstable or cyclic. However, he did not find proof, which was later given by the
+Swedish mathematician Ivar Bendixson~\citep{bendixson1901}.
+
+Real differential equations are equations that satisfy the Lipschitz condition.
+All differential equations that represent the dynamics of a real-world, physical
+system satisfy this condition. The condition is
+
+\begin{equation}
+	\label{eq:lipschitz}
+	\norm{\frac{\partial{}f(x,t)}{\partial{}x}} \le L,
+\end{equation}
+
+where \(L\) is a real, positive constant. This condition is important as it
+guarantees that the equation \(\dot{x}=f(x,t)\) with initial condition
+\(x(t_{0})=x_{0}\) has a unique solution for every \(\delta\) in
+\([t_{0}, t_{0}+\delta]\)~\citep{Donchev1998}. In other words, the differential
+equation has only unique solutions.
+
+For equations satisfying this condition, the Poincaré-Bendixson theorem states
+that you can define a closed region \(V(x)\) on the plane containing  one
+equilibrium point~\citep{bendixson1901}. Then:
+
+\begin{enumerate}
+	\item if the point is unstable (the jacobian at the point has positive
+	      eigenvalues) and \(\nabla{}V\cdot{}f(x) < 0\) (where \(\nabla{}V(x)\) is the
+	      gradient of \(V(x)\)), then there is a stable cycle inside the region
+	      \(V(x)\);
+	\item if the point is unstable and \(\nabla{}V\cdot{}f(x) > 0\), then there is an
+	      unstable cycle inside the region \(V(x)\) or no cycles;
+	\item if the point is stable and \(\nabla{}V\cdot{}f(x) < 0\), then there is a
+	      semi-stable cycle inside the region \(V(x)\) or no cycles;
+	\item if the point is stable and \(\nabla{}V\cdot{}f(x) > 0\), then there is a
+	      semi-stable cycle inside the region \(V(x)\).
+\end{enumerate}
+
+Figure~\ref{fig:poincare-cycles} shows some possible gradients.
+In~\ref{fig:semi-stable-cycle} there is a stable point and a semi-stable cycle.
+Notice how all points inside the cycle converge to the origin (center of the
+figure) and all points outside diverges. The cycle exists but is not stable, as
+the state might either converge or diverge after some time.
+In~\ref{fig:stable-cycle} the gradients are the opposite of the previous case,
+resulting on a sustained cycle. Every initial state will converge to the cycle
+and the state will keep looping forever. In~\ref{fig:stable-point} there is no
+cycle, but there could be one. This is the most common case, specially when
+working with linearizations. All states converge to the origin, regardless of
+the initial state. Note that we do not know what happens outside the plotted
+region. There could be a cycle hidden there, or the gradient might change
+completely, so we cannot make any affirmation about the system's behaviour
+outside the plotted region. You could call this region \(V(x)\) and it would be
+a Region of Attraction.
+
+\begin{figure}[!htb]
+	\centering
+	%
+	\begin{subfigure}[b]{0.45\linewidth}
+		\centering
+		\includegraphics[trim=116 155 125 55,clip,width=\linewidth]{imgs/stable-point}
+		\caption{Stable point}%
+		\label{fig:stable-point}
+	\end{subfigure}
+	%
+	\begin{subfigure}[b]{0.45\linewidth}
+		\centering
+		\includegraphics[trim=116 155 125 55,clip,width=\linewidth]{imgs/stable-cycle}
+		\caption{Stable cycle}%
+		\label{fig:stable-cycle}
+	\end{subfigure}
+	%
+	\begin{subfigure}[b]{0.5\linewidth}
+		\centering
+		\includegraphics[trim=116 155 125 55,clip,width=\linewidth]{imgs/semi-stable-cycle}
+		\caption{Semi-stable cycle}%
+		\label{fig:semi-stable-cycle}
+	\end{subfigure}
+	%
+	\caption{Different cycles' gradient maps}%
+	\label{fig:poincare-cycles}
+\end{figure}
+
+So, by definition, a Region of Attraction is the closed region in the state
+plane that guarantees that all initial states inside it will converge to a point
+inside of it (usually the origin). This definition does allow stable cycles.
+
+Lyapunov's stability criteria states that for the system \(\dot{x} = f(t, x)\),
+if there is a function \(V(x)\) such that
+
+\begin{align}
+	V(x)       & = 0 \iff x = 0,                                \\
+	V(x)       & > 0 \iff x \ne 0,                              \\
+	\dot{V}(x) & = \nabla{}V\cdot{}f(x) \le 0 \phantom{0} \forall x \ne 0,
+\end{align}
+
+then the system is stable~\citep{chi-tsongchen2012,Hespanha09}. Futhermore, if
+\(\dot{V}(x)<0\), the system is asymptotically stable. In this context, \(V(x)\)
+is an energy function, but its derivative reminds us of Poincaré's theorem. In
+fact, Lyapunov's function can be seen as a more restricted form or Poincaré's
+region, which always contains stable points or stable cycles inside it. If the
+derivative is strictly negative, the region \(V(x)\) is guarantee to not contain
+cycles~\citep{chi-tsongchen2012}. Because of this link between the two theorems,
+Lyapunov's stability criteria is often used to estimate the region of
+attraction.
+
+A common choice of \(V(x)\) is \(V(X)=x^{T}Px\), which is an ellipsoid. It is
+commonly used because it can be shown that, if there is a \(V(x)\) that
+satisfies Poincaré's and Lyapunov's criteria, then there are infinitely many and
+\(x^{T}Px\) is one of them. Since it is a simple region to describe, derive and
+can be written in matrix form, making it easy to use with LMI tools, it became
+the most commonly used candidate. Note, however, that the infinite possible
+areas are not the same, and \(V(X)=x^{T}Px\) is most certainly not the region
+with the largest area, making it a conservative solution, which is guaranteed to
+work if the system is, in fact, stable. However, there might be other functions
+with larger areas.

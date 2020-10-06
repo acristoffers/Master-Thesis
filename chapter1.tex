@@ -1,0 +1,88 @@
+% !TeX root = document.tex
+% !TeX encoding = UTF-8 Unicode
+
+\chapter{Introduction}%
+\label{chp:introduction}
+
+The fundamental frameworks of classical and modern control theory are conceived
+for unconstrained systems. Therefore, if constraints are of interest, ad-hoc
+solutions must used. Some approaches handle saturating actuators by using a
+polytopic representation or generalized sector conditions \citep{Tar+11}.
+However, these techniques cannot handle the state's constraints directly,
+requiring the inclusion of state-space constraints \citep{Klug2015}. Some
+techniques started to be developed that enforces constraints, like the model
+predictive control (MPC)~\citep{article:zhang,book:wang}. However, they require
+the design of a new controller following the framework. Another line of research
+tried to solve the same problem by using existing controllers. Instead of trying
+to compute the optimal control path that keeps the system constrained, it uses
+model prediction to change the reference given to existing controllers to keep
+the system constrained. The first of such techniques were reference filters that
+also imposed only soft-constraints~\citep{Vahidi2007}.
+
+The idea then evolved into Reference Governors (RG), which makes use of
+optimization to find the best reference to follow~\citep{Gilbert1995}. The RG
+gives a virtual reference \(g(k)\) to the controller, which is a scaled version
+of the real reference \(r(k)\), read \(g(k)=\delta r(k)\). The optimization problem
+finds the best \(\delta r(k)\) that minimizes the distance between \(g(k)\) and
+\(y(k)\) without violating the constraints. Because of the simplicity of the
+optimization problem, this approach has an easy implementation but suffers from
+loss of dimensions. Such a loss comes from the fact that variation is
+one-dimensional while \(r(k)\) may be multidimensional~\citep{Gilbert1999}.
+
+Building on this idea,~\citet{Bemporad1997} and~\citet{Casavola2000} developed
+what is known today as the \ac{CG} approach. The difference to RG is that the CG
+technique optimizes \(g(k)\) directly, requiring more computational processing
+power but yielding better system performance, especially when the reference has
+dimension greater than 1. They also built on the work of~\citet{Kapasouris1988},
+which explores the ideas of the Lyapunov Theorem and Invariant Sets Theorem.
+
+Switching systems are composed of many subsystems, called modes, which switch
+according to a switching rule~\citep{liberzon2003,Morse99}. Only one subsystem
+can be active at a given time. The switching can cause instability even when all
+subsystems are stable, which leads to the notion of a dwell-time: how long a
+subsystem must remain active after switching to avoid
+instability~\citep{Morse99}. Different approaches have been proposed to compute
+the minimum dwell time (see~\citep{Chesi2010} and reference therein) and
+stabilizing controller (see~\citep{Lin2009} for switched linear systems). Fewer
+solutions exist to deal with constrained switching systems, see
+e.g.~\citep{Lucia2017,Franze2017} and references therein.
+
+In \citep{Lucia2017,Franze2017}, the CG framework is used to supervise the
+system mode switches and assure both stability and constraint satisfaction.
+
+\textbf{Notations:} The set of real numbers is denoted by \(\mathbb{R}\).
+\(\mathbb{R}^n\) denotes a vector of \(n\) real elements. \(\mathcal{V}\),
+\(\mathcal{W}\) and \(\mathcal{C}\) represent sets. \ac{AT} represents the
+conjugate transpose of \(A\). \(g(k)\) represents a discrete-time signal. We
+define \(x^\top\Psi x\) with \(x\in\mathbb{R}^n\) and semidefinite positive matrix
+\(\Psi \in \mathbb{R}^{n \times n}\) as the norm \(\norm{x}^2_\Psi{}\).
+
+\section{Objectives}%
+\label{sec:objectives}
+
+In this work, considering the class of switched systems (switching systems with
+controlled switching signals), we propose a novel switching rule based on the
+switching CG's region of attraction. It aims at improving the control
+performance obtained in the previous work of~\citet{Franze2017} where
+mode-switches occur after a worst-case dwell-time elapses.
+
+The presented approach consists of a two-step switch, which uses an intermediate
+CG.\ This intermediate CG has the constraints of the source CG and the
+controller of the target CG.\ To change from \(CG_i\) to \(CG_j\), you first
+switch from \(CG_i\) to a \(CG_{ij}\) when the system enters the region of
+attraction of \(CG_{ij}\)'s controller, and then changes to \(CG_j\) when the
+system enters the intersection of the constraint regions between \(CG_{ij}\) and
+\(CG_j\). Thus, if it is verified that the controller of \(CG_j\) has better
+performance than that of \(CG_1\), it can be used from an earlier stage.
+
+\section{Document organization}%
+\label{sec:organization}
+
+The main concepts involved in this work are explained in
+Chapter~\ref{chp:theoretical-foundations} -
+\nameref{chp:theoretical-foundations}.
+Chapter~\ref{chp:practival-implementation-aspects} -
+\nameref{chp:practival-implementation-aspects} discusses some practical aspects
+of implementing the command governor. In Chapter~\ref{chp:results} -
+\nameref{chp:results} we show two experiments that illustrate the advantages of
+the proposed technique.
