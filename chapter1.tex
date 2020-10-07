@@ -7,48 +7,56 @@
 The fundamental frameworks of classical and modern control theory are conceived
 for unconstrained systems. Therefore, if constraints are of interest, ad-hoc
 solutions must used. Some approaches handle saturating actuators by using a
-polytopic representation or generalized sector conditions \citep{Tar+11}.
-However, these techniques cannot handle the state's constraints directly,
-requiring the inclusion of state-space constraints \citep{Klug2015}. Some
+polytopic representation or generalized sector
+conditions~\parencite{tarbouriech.garcia.ea:stability}. However, these
+techniques cannot handle the state's constraints directly, requiring the
+inclusion of state-space constraints~\parencite{klug.castelan.ea:fuzzy}. Some
 techniques started to be developed that enforces constraints, like the model
-predictive control (MPC)~\citep{article:zhang,book:wang}. However, they require
-the design of a new controller following the framework. Another line of research
-tried to solve the same problem by using existing controllers. Instead of trying
-to compute the optimal control path that keeps the system constrained, it uses
-model prediction to change the reference given to existing controllers to keep
-the system constrained. The first of such techniques were reference filters that
-also imposed only soft-constraints~\citep{Vahidi2007}.
+predictive control (MPC)~\parencite{wang:model,zhang:fast}. However, they
+require the design of a new controller following the framework. Another line of
+research tried to solve the same problem by using existing controllers. Instead
+of trying to compute the optimal control path that keeps the system constrained,
+it uses model prediction to change the reference given to existing controllers
+to keep the system constrained. The first of such techniques were reference
+filters that also imposed only
+soft-constraints~\parencite{vahidi.kolmanovsky.ea:constraint}.
 
 The idea then evolved into Reference Governors (RG), which makes use of
-optimization to find the best reference to follow~\citep{Gilbert1995}. The RG
-gives a virtual reference \(g(k)\) to the controller, which is a scaled version
-of the real reference \(r(k)\), read \(g(k)=\delta r(k)\). The optimization problem
-finds the best \(\delta r(k)\) that minimizes the distance between \(g(k)\) and
-\(y(k)\) without violating the constraints. Because of the simplicity of the
-optimization problem, this approach has an easy implementation but suffers from
-loss of dimensions. Such a loss comes from the fact that variation is
-one-dimensional while \(r(k)\) may be multidimensional~\citep{Gilbert1999}.
+optimization to find the best reference to
+follow~\parencite{gilbert.kolmanovsky.ea:discrete‐time}. The RG gives a virtual
+reference \(g(k)\) to the controller, which is a scaled version of the real
+reference \(r(k)\), read \(g(k)=\delta r(k)\). The optimization problem finds the
+best \(\delta r(k)\) that minimizes the distance between \(g(k)\) and \(y(k)\)
+without violating the constraints. Because of the simplicity of the optimization
+problem, this approach has an easy implementation but suffers from loss of
+dimensions. Such a loss comes from the fact that variation is one-dimensional
+while \(r(k)\) may be multidimensional~\parencite{gilbert.kolmanovsky:fast}.
 
-Building on this idea,~\citet{Bemporad1997} and~\citet{Casavola2000} developed
-what is known today as the \ac{CG} approach. The difference to RG is that the CG
-technique optimizes \(g(k)\) directly, requiring more computational processing
-power but yielding better system performance, especially when the reference has
-dimension greater than 1. They also built on the work of~\citet{Kapasouris1988},
+Building on this idea,~\textcite{bemporad.casavola.ea:nonlinear}
+and~\textcite{bemporad.casavola.ea:nonlinear} developed what is known today as
+the \ac{CG} approach. The difference to RG is that the CG technique optimizes
+\(g(k)\) directly, requiring more computational processing power but yielding
+better system performance, especially when the reference has dimension greater
+than 1. They also built on the work of~\textcite{kapasouris.athans.ea:design},
 which explores the ideas of the Lyapunov Theorem and Invariant Sets Theorem.
 
 Switching systems are composed of many subsystems, called modes, which switch
-according to a switching rule~\citep{liberzon2003,Morse99}. Only one subsystem
-can be active at a given time. The switching can cause instability even when all
+according to a switching
+rule~\parencite{liberzon:switching,liberzon.morse:basic}. Only one subsystem can
+be active at a given time. The switching can cause instability even when all
 subsystems are stable, which leads to the notion of a dwell-time: how long a
 subsystem must remain active after switching to avoid
-instability~\citep{Morse99}. Different approaches have been proposed to compute
-the minimum dwell time (see~\citep{Chesi2010} and reference therein) and
-stabilizing controller (see~\citep{Lin2009} for switched linear systems). Fewer
-solutions exist to deal with constrained switching systems, see
-e.g.~\citep{Lucia2017,Franze2017} and references therein.
+instability~\parencite{liberzon.morse:basic}. Different approaches have been
+proposed to compute the minimum dwell time
+(see~\parencite{chesi.colaneri.ea:computing} and reference therein) and
+stabilizing controller (see~\parencite{lin.antsaklis:stability} for switched
+linear systems). Fewer solutions exist to deal with constrained switching
+systems, see e.g.~\parencite{franzè.lucia.ea:command,lucia.franzè:stabilization}
+and references therein.
 
-In \citep{Lucia2017,Franze2017}, the CG framework is used to supervise the
-system mode switches and assure both stability and constraint satisfaction.
+In \parencite{franzè.lucia.ea:command,lucia.franzè:stabilization}, the CG
+framework is used to supervise the system mode switches and assure both
+stability and constraint satisfaction.
 
 \textbf{Notations:} The set of real numbers is denoted by \(\mathbb{R}\).
 \(\mathbb{R}^n\) denotes a vector of \(n\) real elements. \(\mathcal{V}\),
@@ -63,8 +71,8 @@ define \(x^\top\Psi x\) with \(x\in\mathbb{R}^n\) and semidefinite positive matr
 In this work, considering the class of switched systems (switching systems with
 controlled switching signals), we propose a novel switching rule based on the
 switching CG's region of attraction. It aims at improving the control
-performance obtained in the previous work of~\citet{Franze2017} where
-mode-switches occur after a worst-case dwell-time elapses.
+performance obtained in the previous work of~\textcite{franzè.lucia.ea:command}
+where mode-switches occur after a worst-case dwell-time elapses.
 
 The presented approach consists of a two-step switch, which uses an intermediate
 CG.\ This intermediate CG has the constraints of the source CG and the

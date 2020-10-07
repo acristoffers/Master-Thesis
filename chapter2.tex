@@ -13,17 +13,25 @@ will be further explained in the following sections.
 \section{Switched Systems}%
 \label{sec:switched-systems}
 
+% Grace
+% Geromel
+% Types of switched systems
+% Switched system stability
+% Stabilization via switching-function and controller
+
 A switched system is a system composed of many subsystems, called modes, and a
 mode-transition rule. It is often used to divide non-linear systems into many
 linear systems around different operation points, creating linear
 approximations, which are active one at a time. Please do not confuse it with
 switching systems, in which mode transition can happen arbitrarily, whereas, in
-the switched system, a supervisor orchestrates them~\cite{Morse99,Lucia2017}.
+the switched system, a supervisor orchestrates
+them~\parencite{lucia.franzè:stabilization,liberzon.morse:basic}.
 
 A critical aspect of switched systems is stability. Even if all modes are
 stable, the system as a whole is not guaranteed stable, as the act of switching
 may give rise to instability. Therefore it is essential to find ways of
-guaranteeing system stability when switching modes~\cite{Lin2009}.
+guaranteeing system stability when switching
+modes~\parencite{lin.antsaklis:stability}.
 
 One commonly used technique to guarantee the stability of switched systems
 during mode transitions is the dwell-time. It consists of waiting for a specific
@@ -31,7 +39,8 @@ time to elapse before allowing the system to change modes again. The dwell-time
 must be large enough to allow the system to stabilize using the active mode,
 making modes change infrequent and guarantee a stable state on the event of the
 next change. Various techniques exist that make the dwell-time as small as
-possible, and it is the focus of current studies~\cite{Franze2017,Chesi2010}.
+possible, and it is the focus of current
+studies~\parencite{franzè.lucia.ea:command,chesi.colaneri.ea:computing}.
 
 The proposed technique addresses this problem by using the Region of Attraction
 to guarantee stability without waiting for a dwell-time to elapse.
@@ -69,7 +78,7 @@ We exploit the state-feedback structure to propose a mode-dependent
 proportional-integral (PI) action for the system~\eqref{eq:state-space}. The
 controller is designed to ensure null steady-state error for piecewise constant
 references at each mode \(i\), and thus the integral action is applied over the
-tracking error \citep{Lopes2020}
+tracking error~\parencite{lopes.leite.ea:anti-windup}
 
 \begin{equation}
 	\label{eq:r-y-error}
@@ -112,11 +121,11 @@ where \(\mathcal{A}_i=\begin{bmatrix}A_i & \textbf{0} \\-C_{i}A_i&\textbf{I}
 
 The design of each controller gain \(K_i\in\mathbb{R}^{n_u\times{}(n+p)}\) may use
 standard LMI based techniques, such as, for instance, pole
-placement~\citep{book:yu}, LPV design~\citep{briat2014linear}, or robust
-control~\citep{Boyd94}. In this case, the main issue is to ensure the stability
-between the switching instants, and our approach concerns such an aspect, as
-presented in the next section. It is important to note that, in practice, the
-controller may be designed independently for each mode.
+placement~\parencite{yu:lmis}, LPV design~\parencite{briat:linear}, or robust
+control~\parencite{boyd.ghaoui.ea:linear}. In this case, the main issue is to
+ensure the stability between the switching instants, and our approach concerns
+such an aspect, as presented in the next section. It is important to note that,
+in practice, the controller may be designed independently for each mode.
 
 Thus, for each mode we design a observer gain \(L_{i}\in\mathbb{R}^{n\times{}n_y}\)
 ensuring the asymptotic convergence of the estimation error
@@ -129,8 +138,8 @@ observers:
 \end{equation}
 
 Conventional methods in the literature can calculate the gain
-\(L_i\)~\citep{chi-tsongchen2012,Hespanha09}. Therefore, the linear control law
-becomes
+\(L_i\)~\parencite{chen:linear,hespanha:linear}. Therefore, the linear control
+law becomes
 
 \begin{equation}
 	\label{eq:control-law}
@@ -252,17 +261,19 @@ to go to a point interior to the CG' domains intersection, called way-point.
 This point can be chosen arbitrarily inside the intersection of constraints.
 However, it is better to use points in the central area, not so close to the
 borders, to avoid problems involving disturbances and controller
-sensitivity~\citep{Keel1997}. All the paths from one CG to another can be
-calculated offline, for example, using graph theory\citep{Ahuja1990,Pettie2004}.
+sensitivity~\parencite{keel.bhattacharyya:robust}. All the paths from one CG to
+another can be calculated offline, for example, using graph
+theory\parencite{ahuja.mehlhorn.ea:faster,pettie:new}.
 
-In~\citep{Lucia2017,Franze2017} it has been shown that any \(CG\) switch, e.g.
-\(CG_i\rightarrow{}CG_j\) can be safely accomplished (preserving the constraints) form any
-point belonging to the intersection between the two CGs' domains. Therefore, a
-possible way to achieve a safe switch is to define a waypoint reference in the
-intersection set. Once the plant trajectory, under the action of \(CG_i\) is
-confined in the intersection region, then \(CG_j\) is activated. Moreover, the
-minimum waiting time assuring that the state of the system enters \(CG_j\)'s
-domain is defined resorting to the concept of guaranteed dwell-time.
+In~\parencite{franzè.lucia.ea:command,lucia.franzè:stabilization} it has been
+shown that any \(CG\) switch, e.g.  \(CG_i\rightarrow{}CG_j\) can be safely accomplished
+(preserving the constraints) form any point belonging to the intersection
+between the two CGs' domains. Therefore, a possible way to achieve a safe switch
+is to define a waypoint reference in the intersection set. Once the plant
+trajectory, under the action of \(CG_i\) is confined in the intersection region,
+then \(CG_j\) is activated. Moreover, the minimum waiting time assuring that the
+state of the system enters \(CG_j\)'s domain is defined resorting to the concept
+of guaranteed dwell-time.
 
 This approach is a way of guaranteeing stability, as the dwell-time is
 calculated not to allow the switching to occur neither too soon nor too often,
@@ -278,7 +289,7 @@ The Region of Attraction is a definition which initiated with the work of the
 French mathematician Henri Poincaré. He studied real, nonlinear differential
 equations' behaviour, finding that the states' evolution in time is stable,
 unstable or cyclic. However, he did not find proof, which was later given by the
-Swedish mathematician Ivar Bendixson~\citep{bendixson1901}.
+Swedish mathematician Ivar Bendixson~\parencite{bendixson:sur}.
 
 Real differential equations are equations that satisfy the Lipschitz condition.
 All differential equations that represent the dynamics of a real-world, physical
@@ -292,12 +303,12 @@ system satisfy this condition. The condition is
 where \(L\) is a real, positive constant. This condition is important as it
 guarantees that the equation \(\dot{x}=f(x,t)\) with initial condition
 \(x(t_{0})=x_{0}\) has a unique solution for every \(\delta\) in
-\([t_{0}, t_{0}+\delta]\)~\citep{Donchev1998}. In other words, the differential
-equation has only unique solutions.
+\([t_{0}, t_{0}+\delta]\)~\parencite{donchev.farkhi:stability}. In other words, the
+differential equation has only unique solutions.
 
 For equations satisfying this condition, the Poincaré-Bendixson theorem states
 that you can define a closed region \(V(x)\) on the plane containing  one
-equilibrium point~\citep{bendixson1901}. Then:
+equilibrium point~\parencite{bendixson:sur}. Then:
 
 \begin{enumerate}
 	\item if the point is unstable (the jacobian at the point has positive
@@ -369,14 +380,14 @@ if there is a function \(V(x)\) such that
 	\dot{V}(x) & = \nabla{}V\cdot{}f(x) \le 0 \phantom{0} \forall x \ne 0,
 \end{align}
 
-then the system is stable~\citep{chi-tsongchen2012,Hespanha09}. Futhermore, if
-\(\dot{V}(x)<0\), the system is asymptotically stable. In this context, \(V(x)\)
-is an energy function, but its derivative reminds us of Poincaré's theorem. In
-fact, Lyapunov's function can be seen as a more restricted form or Poincaré's
-region, which always contains stable points or stable cycles inside it. If the
-derivative is strictly negative, the region \(V(x)\) is guarantee to not contain
-cycles~\citep{chi-tsongchen2012}. Because of this link between the two theorems,
-Lyapunov's stability criteria is often used to estimate the region of
+then the system is stable~\parencite{chen:linear,hespanha:linear}. Futhermore,
+if \(\dot{V}(x)<0\), the system is asymptotically stable. In this context,
+\(V(x)\) is an energy function, but its derivative reminds us of Poincaré's
+theorem. In fact, Lyapunov's function can be seen as a more restricted form or
+Poincaré's region, which always contains stable points or stable cycles inside
+it. If the derivative is strictly negative, the region \(V(x)\) is guarantee to
+not contain cycles~\parencite{chen:linear}. Because of this link between the two
+theorems, Lyapunov's stability criteria is often used to estimate the region of
 attraction.
 
 A common choice of \(V(x)\) is \(V(X)=x^{T}Px\), which is an ellipsoid. It is
@@ -386,6 +397,5 @@ satisfies Poincaré's and Lyapunov's criteria, then there are infinitely many an
 can be written in matrix form, making it easy to use with LMI tools, it became
 the most commonly used candidate. Note, however, that the infinite possible
 areas are not the same, and \(V(X)=x^{T}Px\) is most certainly not the region
-with the largest area, making it a conservative solution, which is guaranteed to
-work if the system is, in fact, stable. However, there might be other functions
-with larger areas.
+with the largest area, making it a conservative solution. However, there might
+be other functions with larger areas.

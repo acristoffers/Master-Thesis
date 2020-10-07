@@ -53,7 +53,7 @@
 \fi
 
 \RequirePackage[useregional]{datetime2}
-\RequirePackage[style=apa,backend=biber,natbib=true]{biblatex}
+\RequirePackage[style=apa,backend=biber]{biblatex}
 \RequirePackage[top=3cm,bottom=2cm,left=3cm,right=2cm]{geometry}
 \RequirePackage{float}
 \RequirePackage{framed}
