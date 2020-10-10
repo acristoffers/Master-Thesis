@@ -27,23 +27,103 @@ switching systems, in which mode transition can happen arbitrarily, whereas, in
 the switched system, a supervisor orchestrates
 them~\parencite{lucia.franzè:stabilization,liberzon.morse:basic}.
 
-A critical aspect of switched systems is stability. Even if all modes are
-stable, the system as a whole is not guaranteed stable, as the act of switching
-may give rise to instability. Therefore it is essential to find ways of
-guaranteeing system stability when switching
-modes~\parencite{lin.antsaklis:stability}.
+A linear switched system has the description
 
-One commonly used technique to guarantee the stability of switched systems
-during mode transitions is the dwell-time. It consists of waiting for a specific
-time to elapse before allowing the system to change modes again. The dwell-time
-must be large enough to allow the system to stabilize using the active mode,
-making modes change infrequent and guarantee a stable state on the event of the
-next change. Various techniques exist that make the dwell-time as small as
-possible, and it is the focus of current
-studies~\parencite{franzè.lucia.ea:command,chesi.colaneri.ea:computing}.
+\begin{align}
+	\dot{x}(t) & = A_{\sigma(t)}x(t) + B_{\sigma(t)}u(t), \\
+	y(t)       & = C_{\sigma(t)}x(t) + D_{\sigma(t)}u(t),
+\end{align}
 
-The proposed technique addresses this problem by using the Region of Attraction
-to guarantee stability without waiting for a dwell-time to elapse.
+where \(\sigma(t):t>0\rightarrow\mathbb{K}=\{1,\ldots,N\}\) is the switching function.
+\(A_{i}, B_{i}, C_{i}\) and \(D_{i}\) are real matrices and represent
+linearizations around different operation points. There are also nonlinear
+switched systems with the form
+
+\begin{align}
+	\dot{x}(t) & = f_{\sigma(t)}(t,x(t),u(t)), \\
+	y(t)       & = g_{\sigma(t)}(t,x(t)),
+\end{align}
+
+but those will not be discussed here. In both cases, \(t_{k}:k\in\mathbb{N}\) is
+the switching instant.
+
+There are two classes of switching functions: pertubation and control. For the
+former, given \(J(\sigma)\) a switching criterion and
+\(\mathcal{D}_{T}=\sigma(\cdot):t_{k+1}-t_{k}\ge{}T~\forall{}~k\in{}\mathbb{N}\), we solve
+
+\begin{equation}
+	\sigma = \sup_{\sigma\in\mathcal{D}_{T}} J(\sigma),
+\end{equation}
+
+and for the later, which is the one of interest for us, given \(\mathcal{S}\)
+the set of all stabilizing switching functions, we solve
+
+\begin{equation}
+	\sigma = \inf_{\sigma\in\mathcal{S}} J(\sigma).
+\end{equation}
+
+This is, however, a very broad definition. In plain english, the pertubation
+switching function finds the worse-case scenario (the admissible pertubation
+depends on the magnitude of \(T\)) and the control the best-case.  To define
+stabilizing switching functions, let us analyse the stability of switched
+systems.
+
+The linear switched system is not guaranteed to be stable even if all subsystems
+are stable~\parencite{liberzon.morse:basic}. This happens because the switching
+signal itself is a source of instability, as the subsystems might behave
+differently and diverge under constant switching or start cycling. This can also
+be seen if you consider the set \(\{A_{1}, A_{2}, \ldots, A_{N}\}\) to be the
+vertices of a polytope, as the system will be instantaneously jumping between
+the vertices~\parencite{geromel.colaneri:stabilization}.
+
+Borrowing from robust control, if we do in fact consider the system to be a
+polytope and can find \(P\succ{}0\) such that
+
+\begin{equation}
+	A_{i}^{T}P+PA_{i} \prec{} 0,
+\end{equation}
+
+then the system is stable under arbitrary
+switching~\parencite{geromel.deaecto:stability}. However, this is a conservative
+solution and might yield very small regions of attraction. A more desirable
+result is to have
+
+\begin{equation}
+	A_{i}^{T}P_{i}+P_{i}A_{i} \prec{} 0,
+\end{equation}
+
+but it is only stable under arbitrary switching, when switching from
+\(i\) to \(j\), if
+
+\begin{align}
+	V(x(t_{k+1})) & = x^{T}(t_{k+1})P_{j}x(t_{k+1})                                     \\
+	              & = x^{T}(t_{k})e^{A^{T}_{i}T_{k}}P_{j}xe^{A_{i}T_{k}}(t_{k})         \\
+	              & < x^{T}(t_{k})e^{A^{T}_{i}(T_{k}-T)}P_{i}xe^{A_{i}(T_{k}-T)}(t_{k}) \\
+	              & < x^{T}(t_{k})P_{i}x(t_{k})                                         \\
+	              & = V(x(t_{k})),
+\end{align}
+
+which also implies that all subsystems must be
+stable~\parencite{geromel.colaneri:stabilization}.
+
+Still on the realm of robust control, it is also possible to certify stability
+under arbitrary switching if~\parencite{liberzon.morse:basic}
+
+\begin{equation}
+	(\alpha{}A_{i}+(1-\alpha)A_{j})^{T}P_{ij}+P_{ij}(\alpha{}A_{i}+(1-\alpha)A_{j}) \prec{} 0,~\forall{}~\alpha{}\in{}[0,1].
+\end{equation}
+
+The solutions discussed so far allow arbitrary switching, but a large class of
+systems will not satisfy the conditions required. If the switching is assumed to
+not be arbitrary, one can create a rule that will guarantee stability. One such
+rule is the slow-switching. The dwell-time is a way of slow switching in which
+\(t_{k+1}-t_{k}>T\), and the goal is to minimize \(T\), forcing a system to be
+active for at least \(T\)
+seconds~\parencite{chesi.colaneri.ea:computing,franzè.lucia.ea:command,liberzon.morse:basic}.
+Note that there is one \(T\) for each transition \(i\rightarrow{}j\).
+
+Other ways of guaranteeing switching stability exists.
+See~\textcite{geromel.deaecto:stability,liberzon.morse:basic,geromel.colaneri:stabilization}.
 
 \section{Command Governor}%
 \label{sec:command-governor}
@@ -51,8 +131,8 @@ to guarantee stability without waiting for a dwell-time to elapse.
 \subsection{System Description}%
 \label{subsec:system-description}
 
-A switched discrete-time system given in the state-space representation has the
-form
+A linear, switched, discrete-time system given in the state-space representation
+has the form
 
 \begin{equation}
 	\label{eq:state-space}
@@ -375,8 +455,8 @@ Lyapunov's stability criteria states that for the system \(\dot{x} = f(t, x)\),
 if there is a function \(V(x)\) such that
 
 \begin{align}
-	V(x)       & = 0 \iff x = 0,                                \\
-	V(x)       & > 0 \iff x \ne 0,                              \\
+	V(x)       & = 0 \iff x = 0,                                           \\
+	V(x)       & > 0 \iff x \ne 0,                                         \\
 	\dot{V}(x) & = \nabla{}V\cdot{}f(x) \le 0 \phantom{0} \forall x \ne 0,
 \end{align}
 
