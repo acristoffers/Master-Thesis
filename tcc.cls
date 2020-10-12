@@ -36,18 +36,20 @@
 \renewcommand{\baselinestretch}{1.5} % Line height of 1.5
 
 \if@langfr
-    \RequirePackage[input-complex-roots=j,
-                    output-complex-root=j,
+    \RequirePackage[output-decimal-marker=,,
+                    input-complex-roots=i,
+                    output-complex-root=i,
                     complex-root-position=after-number]{siunitx} % SI units
 \else
     \if@langen
-        \RequirePackage[decimalsymbol=.,
-                        input-complex-roots=j,
-                        output-complex-root=j,
+        \RequirePackage[output-decimal-marker=.,
+                        input-complex-roots=i,
+                        output-complex-root=i,
                         complex-root-position=after-number]{siunitx} % SI units
     \else
-        \RequirePackage[input-complex-roots=j,
-                        output-complex-root=j,
+        \RequirePackage[output-decimal-marker=,,
+                        input-complex-roots=i,
+                        output-complex-root=i,
                         complex-root-position=after-number]{siunitx} % SI units
     \fi
 \fi
@@ -65,7 +67,7 @@
 \RequirePackage{rotate} % To rotate images
 \RequirePackage[section]{placeins} % Prevents figures from floating to wrong places
 \RequirePackage{epsf}
-\RequirePackage{caption}[2020/09/12]
+\RequirePackage{caption}
 \RequirePackage{subcaption}
 
 % Math related
