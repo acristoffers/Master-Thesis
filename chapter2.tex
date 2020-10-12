@@ -13,12 +13,6 @@ will be further explained in the following sections.
 \section{Switched Systems}%
 \label{sec:switched-systems}
 
-% Grace
-% Geromel
-% Types of switched systems
-% Switched system stability
-% Stabilization via switching-function and controller
-
 A switched system is a system composed of many subsystems, called modes, and a
 mode-transition rule. It is often used to divide non-linear systems into many
 linear systems around different operation points, creating linear
@@ -64,14 +58,14 @@ the set of all stabilizing switching functions, we solve
 
 This is, however, a very broad definition. In plain english, the pertubation
 switching function finds the worse-case scenario (the admissible pertubation
-depends on the magnitude of \(T\)) and the control the best-case.  To define
+depends on the magnitude of \(T\)) and the control the best-case. To define
 stabilizing switching functions, let us analyse the stability of switched
 systems.
 
 The linear switched system is not guaranteed to be stable even if all subsystems
 are stable~\parencite{liberzon.morse:basic}. This happens because the switching
 signal itself is a source of instability, as the subsystems might behave
-differently and diverge under constant switching or start cycling. This can also
+differently and diverge or start cycling under constant switching. This can also
 be seen if you consider the set \(\{A_{1}, A_{2}, \ldots, A_{N}\}\) to be the
 vertices of a polytope, as the system will be instantaneously jumping between
 the vertices~\parencite{geromel.colaneri:stabilization}.
@@ -477,5 +471,4 @@ satisfies Poincaré's and Lyapunov's criteria, then there are infinitely many an
 can be written in matrix form, making it easy to use with LMI tools, it became
 the most commonly used candidate. Note, however, that the infinite possible
 areas are not the same, and \(V(X)=x^{T}Px\) is most certainly not the region
-with the largest area, making it a conservative solution. However, there might
-be other functions with larger areas.
+with the largest area, making it a conservative solution.

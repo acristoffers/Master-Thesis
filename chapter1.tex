@@ -70,18 +70,15 @@ define \(x^\top\Psi x\) with \(x\in\mathbb{R}^n\) and semidefinite positive matr
 
 In this work, considering the class of switched systems (switching systems with
 controlled switching signals), we propose a novel switching rule based on the
-switching CG's region of attraction. It aims at improving the control
-performance obtained in the previous work of~\textcite{franzè.lucia.ea:command}
-where mode-switches occur after a worst-case dwell-time elapses.
-
-The presented approach consists of a two-step switch, which uses an intermediate
-CG.\ This intermediate CG has the constraints of the source CG and the
-controller of the target CG.\ To change from \(CG_i\) to \(CG_j\), you first
-switch from \(CG_i\) to a \(CG_{ij}\) when the system enters the region of
-attraction of \(CG_{ij}\)'s controller, and then changes to \(CG_j\) when the
-system enters the intersection of the constraint regions between \(CG_{ij}\) and
-\(CG_j\). Thus, if it is verified that the controller of \(CG_j\) has better
-performance than that of \(CG_1\), it can be used from an earlier stage.
+switching CG's region of attraction. The presented approach consists of a
+two-step switch, which uses an intermediate CG.\ This intermediate CG has the
+constraints of the source CG and the controller of the target CG.\ To change
+from \(CG_i\) to \(CG_j\), you first switch from \(CG_i\) to a \(CG_{ij}\) when
+the system enters the region of attraction of \(CG_{ij}\)'s controller, and then
+changes to \(CG_j\) when the system enters the intersection of the constraint
+regions between \(CG_{ij}\) and \(CG_j\). Thus, if it is verified that the
+controller of \(CG_j\) has better performance than that of \(CG_1\), it can be
+used from an earlier stage.
 
 \section{Document organization}%
 \label{sec:organization}
