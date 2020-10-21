@@ -13,7 +13,7 @@ challenging, that is one reason why we choose convex sets: we know how to
 implement membership tests and use it in common optimization frameworks.
 
 This chapter will discuss how to represent the constraints and region of
-attraction, as well as provide some insight on how to implemente the models of
+attraction, as well as provide some insight on how to implement the models of
 the command governor with a supervisor structure, the problems faced when
 resetting integrators and estimating the region of attraction.
 
@@ -98,7 +98,7 @@ halves make the convex region in the middle.
 
 Given that the V-representation is easier to obtain from generic shapes but the
 H-representation is more useful when verifying set membership, it is important
-to have a way to switch between them. Unfortunately this is not straightforwad,
+to have a way to switch between them. Unfortunately this is not straightforward,
 but there are algorithms that allows to enumerate the facets given the vertices.
 Some problems of such algorithms are the time needed to find the facets if there
 are many vertices and how to find facets in higher order spaces. There are
@@ -109,7 +109,7 @@ computation will be offline
 Particular regions can be easily described in a way that is easy to include in
 optimization problems. The ellipsoid is on such region, as it can be described
 as \(x^{T}Px\leq{}1\), so that any point that satisfies the inequality is inside
-the region. Many regions described by polynoms can be expressed in a matricial
+the region. Many regions described by polynomials can be expressed in a matricial
 form, and hence can be used to easily test membership. For such regions, is
 better to use its inequation directly than to transform it into a polytope.
 This is the case of the Region of Attraction and is how we implemented the check
