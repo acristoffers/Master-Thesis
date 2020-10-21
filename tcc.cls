@@ -388,19 +388,19 @@
     \listoffigures*{}
     \thispagestyle{plain}
     \cleardoublepage{}
-    \listoftables*{}
-    \thispagestyle{plain}
-    \cleardoublepage{}
-    \if@useminted
-        \listofcodes*{}
-        \thispagestyle{plain}
-        \cleardoublepage{}
-    \fi
-    \printacronyms[include=abbrev,name=Abbreviations]
-    \thispagestyle{plain}
-    \printacronyms[include=nomencl,name=Nomenclature]
-    \thispagestyle{plain}
-    \cleardoublepage{}
+    % \listoftables*{}
+    % \thispagestyle{plain}
+    % \cleardoublepage{}
+    % \if@useminted
+    %     \listofcodes*{}
+    %     \thispagestyle{plain}
+    %     \cleardoublepage{}
+    % \fi
+    % \printacronyms[include=abbrev,name=Abbreviations]
+    % \thispagestyle{plain}
+    % \printacronyms[include=nomencl,name=Nomenclature]
+    % \thispagestyle{plain}
+    % \cleardoublepage{}
     \pagenumbering{arabic}
     \pagestyle{cefet}
     \aliaspagestyle{chapter}{cefetchapter}
