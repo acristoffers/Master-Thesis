@@ -9,31 +9,30 @@ attention. For example, it is easy to say
 \enquote{\(\mathrm{minimize}~f(x)~|~x\in\mathcal{X}\)}, however it is not so
 simple (and sometimes even possible) to implement the \(x\in\mathcal{X}\) bit.
 Describing the set and finding a way to test membership numerically can be
-challenging, that is one reason why we choose convex sets: we know how to
+challenging. That is one reason why we choose convex sets: we know how to
 implement membership tests and use it in common optimization frameworks.
 
 This chapter will discuss how to represent the constraints and region of
-attraction, as well as provide some insight on how to implement the models of
-the command governor with a supervisor structure, the problems faced when
-resetting integrators and estimating the region of attraction.
+attraction and provide some insight into how to implement the models of the
+command governor with a supervisor structure, the problems faced when resetting
+integrators and estimating the region of attraction.
 
 \section{Polytope representations}%
 \label{sec:polytope-representation}
 
-Any convex region can be approximated by a convex polytope. A convex polytope is
-defined as a compact convex set with a finite number of extreme points such
-that, for any two distinct points \((a,b)\) belonging to the region, a closed
-segment with endpoints \((a,b)\) is entirely contained within the
+A convex polytope can approximate any convex region. A convex polytope is a
+compact convex set with a finite number of extreme points such that, for any two
+distinct points \((a,b)\) belonging to the region, a closed segment with
+endpoints \((a,b)\) is entirely contained within the
 region~\parencite{grünbaum:convex}. In other words, it is a convex hull of a
 finite number of points, called vertices. This representation is called the
-\enquote{V-representation} and is not useful to test membership, however is very
-simple to sample points from the boundaries of the desired region/set to create
-a V-representation of a polytope that approximates it. It is also useful for
-plotting. The Figure~\ref{fig:v-rep-example} illustrates a region in its
-V-representation, where the red dots are the vertices, and all blue dots are
-considered to be inside the region. The set of vertices is
-\resizebox{\linewidth}{!}{%
-	\(\{(0.02,0.71),(0.31,0.02),(0.82,0.04),(0.87,0.13),(0.99,0.88),(0.60,0.98),(0.38,0.97),(0.04,0.88),(0.02,0.82)\}\)}.
+\enquote{V-representation} and is not useful to test membership. However, it is
+straightforward to sample points from the desired region's border to create a
+V-representation of a polytope approximating it. It is also useful for plotting.
+The Figure~\ref{fig:v-rep-example} illustrates a region in its V-representation,
+where the red dots are the vertices, and all blue dots are inside the region.
+The set of vertices is \resizebox{\linewidth}{!}{%
+\(\{(0.02,0.71),(0.31,0.02),(0.82,0.04),(0.87,0.13),(0.99,0.88),(0.60,0.98),(0.38,0.97),(0.04,0.88),(0.02,0.82)\}\)}.
 
 \begin{figure}[!htb]
 	\centering
@@ -43,10 +42,10 @@ considered to be inside the region. The set of vertices is
 \end{figure}
 
 A more useful representation of such regions is the \enquote{H-representation}.
-In this representation the region is described the intersection of a finite
-number of half-spaces. A half-space is one of the two parts in which a
-hyper-plane divides a affine space. Since half-spaces are written as linear
-inequalities, the H-representation becomes the matricial inequality
+In this representation, the intersection of a finite number of half-spaces
+describes the region. A half-space is one of the two parts in which a
+hyper-plane divides an affine space. Since half-spaces are linear inequalities,
+the H-representation becomes the matrix inequality
 %
 \begin{equation}
 	Ax\leq{}b,
@@ -55,13 +54,13 @@ inequalities, the H-representation becomes the matricial inequality
 where \(A\) is a matrix of coefficients, \(x\) is a point in space and \(b\) is
 a vector of real numbers. The number of rows in \(A\) and \(b\) is the same as
 the number of half-spaces defining the region. All points satisfying the
-inequality are in the interior of the region, making it easy to test set
-membership. Figure~\ref{fig:h-rep-example} shows the half-spaces that compose
-the H-representation of the same convex polytope presented in
-Figure~\ref{fig:v-rep-example}. The inequation that describes the region is
-shown in Equation~\ref{eq:h-rep-example}. The selected side is not shown for
-each half-space, but is the one which intersections with the other selected
-halves make the convex region in the middle.
+inequality are in the region's interior, making it easy to test set membership.
+Figure~\ref{fig:h-rep-example} shows the half-spaces that compose the
+H-representation of the same convex polytope presented in
+Figure~\ref{fig:v-rep-example}. Equation~\ref{eq:h-rep-example} shows the
+inequation that describes the region. The selected side is not shown for each
+half-space but is the one in which intersections with the other selected halves
+make the convex region in the middle.
 
 \begin{equation}
 	\label{eq:h-rep-example}
@@ -96,24 +95,24 @@ halves make the convex region in the middle.
 	\label{fig:h-rep-example}
 \end{figure}
 
-Given that the V-representation is easier to obtain from generic shapes but the
-H-representation is more useful when verifying set membership, it is important
-to have a way to switch between them. Unfortunately this is not straightforward,
-but there are algorithms that allows to enumerate the facets given the vertices.
-Some problems of such algorithms are the time needed to find the facets if there
-are many vertices and how to find facets in higher order spaces. There are
-however good algorithms that can be used for the conversion, specially if the
-computation will be offline
+Given that the V-representation is easier to obtain from generic shapes, but the
+H-representation is more useful when verifying set membership, it is essential
+to have a way to switch between them. Unfortunately, this is not
+straightforward, but some algorithms allow us to enumerate the facets given the
+vertices. Some problems of such algorithms are the time needed to find the
+facets of many vertices and how to find facets in higher-order spaces. However,
+good algorithms can be used for the conversion, especially if the computation
+will be offline
 \parencite{avis.bremner.ea:how,graham.frances-yao:finding,lee:on,mccallum.avis:linear}.
 
 Particular regions can be easily described in a way that is easy to include in
-optimization problems. The ellipsoid is on such region, as it can be described
-as \(x^{T}Px\leq{}1\), so that any point that satisfies the inequality is inside
-the region. Many regions described by polynomials can be expressed in a matricial
-form, and hence can be used to easily test membership. For such regions, is
-better to use its inequation directly than to transform it into a polytope.
-This is the case of the Region of Attraction and is how we implemented the check
-to verify if the state is inside it.
+optimization problems. The ellipsoid is one such region, as it is described as
+\(x^{T}Px\leq{}1\) so that any point \(x\) that satisfies the inequality is inside
+the region. Many regions described by polynomials can be expressed in a matrix
+form and can quickly test membership. Such regions should use their inequation
+directly instead of a polytope approximation.  We do that to the Region of
+Attraction, and it is how we implemented the check to verify if the state is
+inside it.
 
 \section{Internal Models}%
 \label{sec:internal-models}
