@@ -123,14 +123,14 @@ continuity. Also, since every CG unit has its controller and model, the
 destination CG must be updated to a valid state before switching. There are many
 ways to do so, and we will present some.
 
-Probably the best way is to run all CGs in parallel. The optimization problem of
-the inactive units does not need to run with complete constraints. It can be
-relaxed only to contain the region constraint on the virtual reference; also,
-the observer can be ignored. It is necessary to find the virtual reference,
-which will be close to the constraint region's border, which is closest to the
-real system's state. Notice that, in this case, we are not looking for a virtual
-reference closest to the real reference but to the real system's state. By doing
-so, the internal model's and the controller's states will always be valid.
+One way is to run all CGs in parallel. The optimization problem of the inactive
+units does not need to run with complete constraints. It can be relaxed only to
+contain the region constraint on the virtual reference; also, the observer can
+be ignored. It is necessary to find the virtual reference, which will be close
+to the constraint region's border, which is closest to the real system's state.
+Notice that, in this case, we are not looking for a virtual reference closest to
+the real reference but to the real system's state. By doing so, the internal
+model's and the controller's states will always be valid.
 
 However, this approach can be resource-intensive, as it still computes the
 optimization problem at every sample. It is also possible to run the observer
