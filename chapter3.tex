@@ -108,7 +108,7 @@ will be offline
 Particular regions can be easily described in a way that is easy to include in
 optimization problems. The ellipsoid is one such region, as it is described as
 \(x^{T}Px\leq{}1\) so that any point \(x\) that satisfies the inequality is inside
-the region. Many regions described by polynomials can be expressed in a matrix
+the region. Any region described by polynomials can be expressed in a matrix
 form and can quickly test membership. Such regions should use their inequation
 directly instead of a polytope approximation.  We do that to the Region of
 Attraction, and it is how we implemented the check to verify if the state is
@@ -117,7 +117,44 @@ inside it.
 \section{Internal Models}%
 \label{sec:internal-models}
 
-Internal Models
+To switch modes and controllers of a system the way we propose, one must pay
+attention to the controller's internal states and the control signal's
+continuity. Also, since every CG unit has its controller and model, the
+destination CG must be updated to a valid state before switching. There are many
+ways to do so, and we will present some.
+
+Probably the best way is to run all CGs in parallel. The optimization problem of
+the inactive units does not need to run with complete constraints. It can be
+relaxed only to contain the region constraint on the virtual reference; also,
+the observer can be ignored. It is necessary to find the virtual reference,
+which will be close to the constraint region's border, which is closest to the
+real system's state. Notice that, in this case, we are not looking for a virtual
+reference closest to the real reference but to the real system's state. By doing
+so, the internal model's and the controller's states will always be valid.
+
+However, this approach can be resource-intensive, as it still computes the
+optimization problem at every sample. It is also possible to run the observer
+and update the internal model's states without checking for constraint
+violations, but this does not solve the controller's state problem. Another
+technique needs to be combined to find them.
+
+Another way of guaranteeing valid states is to compute the states before
+changing mode. Two ways of computing the states are: by inverting the system and
+controller equations and by simulation. The first approach has a very low
+computational resource impact but may not be possible or yield not ideal values.
+For systems with integrators, for example, there will be infinitely many
+results. Another problem is that even though the system has only one
+steady-state solution, it can have many transient ones.
+
+The simulation becomes interesting, even though it is more computationally
+intensive, as it can calculate a state that better matches the current
+transitory characteristics of the real system. It can also find the model's and
+controller's states at once, guaranteeing that there is no mismatch. To use the
+simulation approach, execute the simulation right before changing modes, using
+the internal controller and model, and setting the reference to the real
+system's current state. This yields a valid steady-state model's and
+controller's state. However, this technique does not guarantee control signal
+continuity without adjustments.
 
 \section{Integrator Reset}%
 \label{sec:integrator-reset}
