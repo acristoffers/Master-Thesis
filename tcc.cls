@@ -69,6 +69,7 @@
 \RequirePackage{epsf}
 \RequirePackage{caption}
 \RequirePackage{subcaption}
+\RequirePackage{svg}
 
 % Math related
 \RequirePackage{amssymb}
@@ -100,6 +101,8 @@
 \RequirePackage[Lenny]{fncychap} % Square chapter
 \RequirePackage{acro} % abbreviations and accronyms
 \RequirePackage{tocloft}
+\RequirePackage{algpseudocode}
+\RequirePackage{algorithm}
 
 \if@useminted
     \RequirePackage[section]{minted} % Code highlighting with Pygments

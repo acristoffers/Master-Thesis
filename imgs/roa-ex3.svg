@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   preserveAspectRatio="xMidYMid meet"
+   viewBox="0 0 640 640"
+   width="640"
+   height="640"
+   id="svg87"
+   sodipodi:docname="roa-ex3.svg"
+   inkscape:version="1.0.1 (c497b03c, 2020-09-10)">
+  <metadata
+     id="metadata91">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1440"
+     inkscape:window-height="878"
+     id="namedview89"
+     showgrid="false"
+     inkscape:zoom="1.0523662"
+     inkscape:cx="320"
+     inkscape:cy="320"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g83"
+     inkscape:document-rotation="0"
+     showguides="false" />
+  <defs
+     id="defs23">
+    <marker
+       style="overflow:visible"
+       id="Arrow1Lstart"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lstart"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.8) translate(12.5,0)"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fill:#000000;fill-opacity:1"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path2093" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="Arrow1Lend"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.8) rotate(180) translate(12.5,0)"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fill:#000000;fill-opacity:1"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path2096" />
+    </marker>
+    <path
+       d="M368.89 219.8C368.89 333.66 344.24 426.11 313.87 426.11C283.51 426.11 258.86 333.66 258.86 219.8C258.86 105.93 283.51 13.49 313.87 13.49C344.24 13.49 368.89 105.93 368.89 219.8Z"
+       id="a1vNCi5NYM" />
+    <path
+       d="M217.48 534.67C129.44 606.87 42.33 646.44 23.07 622.96C3.82 599.48 59.66 521.8 147.7 449.59C235.74 377.38 322.85 337.82 342.11 361.29C361.37 384.77 305.52 462.46 217.48 534.67Z"
+       id="a2pXYGAmS0" />
+    <path
+       d="M486.75 447.06C576.55 517.07 634.3 593.35 615.63 617.3C596.96 641.24 508.9 603.85 419.1 533.84C329.3 463.83 271.55 387.55 290.22 363.6C308.89 339.65 396.95 377.05 486.75 447.06Z"
+       id="bMySyK3VJ" />
+    <path
+       d="M187.02 485.55L196.94 487.06L189.76 494.41L191.46 504.8L182.59 499.89L173.72 504.8L175.42 494.41L168.24 487.06L178.16 485.55L182.59 476.1L187.02 485.55Z"
+       id="g6HEetej7P" />
+    <path
+       d="M457.36 485.55L467.27 487.06L460.1 494.41L461.79 504.8L452.92 499.89L444.06 504.8L445.75 494.41L438.58 487.06L448.49 485.55L452.92 476.1L457.36 485.55Z"
+       id="d28UtX3IKc" />
+    <path
+       d="M318.31 200.55L328.22 202.06L321.05 209.42L322.74 219.8L313.87 214.9L305.01 219.8L306.7 209.42L299.53 202.06L309.44 200.55L313.87 191.1L318.31 200.55Z"
+       id="bD5sKDGEn" />
+    <path
+       d="M343.54 386.16C343.54 401.27 331.79 413.53 317.32 413.53C302.85 413.53 291.1 401.27 291.1 386.16C291.1 371.06 302.85 358.8 317.32 358.8C331.79 358.8 343.54 371.06 343.54 386.16Z"
+       id="f2swB1TMPV" />
+    <path
+       d="M375.51 480.35C375.51 583.57 291.71 667.38 188.48 667.38C85.26 667.38 1.46 583.57 1.46 480.35C1.46 377.13 85.26 293.32 188.48 293.32C291.71 293.32 375.51 377.13 375.51 480.35Z"
+       id="b2PON52hCY" />
+    <path
+       d="M627.91 487.45C627.91 590.67 544.11 674.48 440.88 674.48C337.66 674.48 253.86 590.67 253.86 487.45C253.86 384.23 337.66 300.42 440.88 300.42C544.11 300.42 627.91 384.23 627.91 487.45Z"
+       id="b1jQ3tvgFN" />
+    <path
+       d="M504.35 226.5C504.35 329.72 420.54 413.53 317.32 413.53C214.1 413.53 130.29 329.72 130.29 226.5C130.29 123.28 214.1 39.47 317.32 39.47C420.54 39.47 504.35 123.28 504.35 226.5Z"
+       id="e1TCzdDJE0" />
+    <path
+       d="M321.73 408.08C321.73 410.84 319.49 413.08 316.73 413.08C313.98 413.08 311.73 410.84 311.73 408.08C311.73 405.32 313.98 403.08 316.73 403.08C319.49 403.08 321.73 405.32 321.73 408.08Z"
+       id="akIpPFLTa" />
+    <path
+       d="M307.06 371.67C307.06 374.43 304.82 376.67 302.06 376.67C299.3 376.67 297.06 374.43 297.06 371.67C297.06 368.91 299.3 366.67 302.06 366.67C304.82 366.67 307.06 368.91 307.06 371.67Z"
+       id="i13pxMT7RS" />
+    <path
+       d="M339.04 371.67C339.04 374.43 336.8 376.67 334.04 376.67C331.29 376.67 329.04 374.43 329.04 371.67C329.04 368.91 331.29 366.67 334.04 366.67C336.8 366.67 339.04 368.91 339.04 371.67Z"
+       id="c1YnXsxhwZ" />
+  </defs>
+  <g
+     id="g85"
+     transform="matrix(0.94518397,0,0,0.96246429,22.564782,-11.313895)">
+    <g
+       id="g83">
+      <use
+         xlink:href="#a1vNCi5NYM"
+         opacity="1"
+         fill="#ec2a18"
+         fill-opacity="0.7"
+         id="use25"
+         x="0"
+         y="0"
+         width="100%"
+         height="100%" />
+      <use
+         xlink:href="#a2pXYGAmS0"
+         opacity="1"
+         fill="#1833ec"
+         fill-opacity="0.7"
+         id="use29"
+         x="0"
+         y="0"
+         width="100%"
+         height="100%" />
+      <use
+         xlink:href="#bMySyK3VJ"
+         opacity="1"
+         fill="#3dec18"
+         fill-opacity="0.7"
+         id="use33"
+         x="0"
+         y="0"
+         width="100%"
+         height="100%" />
+      <use
+         xlink:href="#d28UtX3IKc"
+         opacity="1"
+         fill="#000000"
+         fill-opacity="1"
+         id="use41"
+         x="0"
+         y="0"
+         width="100%"
+         height="100%"
+         transform="translate(-114.60401,-97.295)"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.04845;stroke-miterlimit:4;stroke-dasharray:1.04845, 2.09691;stroke-dashoffset:0;stroke-opacity:1" />
+      <use
+         xlink:href="#bD5sKDGEn"
+         opacity="1"
+         fill="#000000"
+         fill-opacity="1"
+         id="use45"
+         x="0"
+         y="0"
+         width="100%"
+         height="100%"
+         transform="translate(4.0213952,-119.46312)"
+         style="fill:#ffff00" />
+      <path
+         d="m 375.51,480.35 c 0,103.22 -83.8,187.03 -187.03,187.03 -103.22,0 -187.02,-83.81 -187.02,-187.03 0,-103.22 83.8,-187.03 187.02,-187.03 103.23,0 187.03,83.81 187.03,187.03 z"
+         id="use53"
+         style="fill-opacity:0;stroke:#5c6ff1;stroke-width:1;stroke-opacity:1" />
+      <path
+         d="m 627.91,487.45 c 0,103.22 -83.8,187.03 -187.03,187.03 -103.22,0 -187.02,-83.81 -187.02,-187.03 0,-103.22 83.8,-187.03 187.02,-187.03 103.23,0 187.03,83.81 187.03,187.03 z"
+         id="use59"
+         style="fill-opacity:0;stroke:#76f15c;stroke-width:1;stroke-opacity:1" />
+      <use
+         xlink:href="#e1TCzdDJE0"
+         opacity="1"
+         fill-opacity="0"
+         stroke="#f1695c"
+         stroke-width="1"
+         stroke-opacity="1"
+         id="use65"
+         x="0"
+         y="0"
+         width="100%"
+         height="100%" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:0.482851px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
+         d="M 338.42729,378.62135 318.21758,102.69872"
+         id="path1469" />
+      <use
+         xlink:href="#d28UtX3IKc"
+         opacity="1"
+         fill="#000000"
+         fill-opacity="1"
+         id="use41-3"
+         x="0"
+         y="0"
+         width="100%"
+         height="100%"
+         transform="translate(-83.644127,-86.662499)"
+         style="stroke:#000000;stroke-opacity:1;stroke-width:1.04845432;stroke-miterlimit:4;stroke-dasharray:1.04845432,2.09690864;stroke-dashoffset:0;fill:none" />
+    </g>
+  </g>
+</svg>
