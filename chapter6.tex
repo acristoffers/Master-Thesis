@@ -4,4 +4,28 @@
 \chapter{Final Considerations}%
 \label{chp:final-considerations}
 
-Final Considerations
+We presented two new schemes for Control Governor switching that do not use
+dwell-time, leading to faster closed-loop responses. When the control's
+objective is to take the system from one operational condition to another, it
+might not be necessary to calculate a dwell-time. A dwell-time is only necessary
+to prevent the system from switching back and forth and becoming unstable, which
+does not happen when the system switches and moves away from the switching
+condition.
+
+In the presented cases, the switch can only occur at the intersection of the
+constraints. The supervisor will move the reference to the next way-point as
+soon as the CGs are swapped, disqualifying any further CG change. It is then
+only necessary to show the stability of the switch.
+
+It is possible to calculate the region of attraction of the controller designed
+using the Lyapunov theorem. It is then possible to guarantee that, once
+switched, the system will converge to the new reference. Because of this, both
+methods avoid waiting for the system to converge to a way-point. The advantage
+is a shorter time to reach the real reference.
+
+The proposed method allow for faster mode switching when the system can not, by
+design, go back to the previous mode. The approach allow us to bypass the
+dwell-time and achieve better closed-loop performance indexes, such as the
+settling time. The use of the region of attraction can be further investigated
+to easy the work done by the command governor, by exploring the contractivity
+properties of the estimate region of attraction.
