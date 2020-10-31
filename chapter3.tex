@@ -16,8 +16,8 @@ conservative and not viable in many cases.
 As discussed in Section~\ref{sec:switched-systems}, the act of switching can
 cause instability, even if all modes are stable. Although it is possible to
 verify if the system is stable under arbitrary switching (and therefore to
-design controllers to do so), the procedure is not straight-forward, very
-conservative, and challenging to apply to most real-world situations.
+design controllers to do so), the procedure is not straight-forward and
+challenging to apply to most real-world situations.
 
 There are, however, other ways of verifying and guaranteeing the stability of
 systems under switches governed by some rules. The dwell-time is one of such
@@ -29,17 +29,17 @@ techniques that restricts the switching signal \(\sigma{}(t)\) to the set
 %
 where \(t_{k}\) and \(t_{k+1}\) are the switching instants, for all
 \(k\in{}\mathbb{R}\), which forces the system to remain for \(T\) seconds on a
-mode before switching to next one. This is called a slow switch. The timer is
-restarted every time the reference changes and switching is only allowed after
-\(T\) seconds has passed.  For large enough values of \(T\), this rule
-guarantees the system's stability.
+mode before switching to next one~\parencite{colaneri:dwell}. This is called a
+slow switch. The timer is restarted every time the reference changes and
+switching is only allowed after \(T\) seconds has passed.  For large enough
+values of \(T\), this rule guarantees the system's stability.
 
 As the dwell-time certifies stability of the switch, it decouples the switching
 logic and the system stability, making it possible to analyse the system
 stability for each mode independently. One problem, however, is that computing
 the minimum dwell-time is not easy and is the focus of current research. An
 easier problem is to find an upper bound for it, which can be done efficiently
-using numerical algorithms.
+using numerical algorithms~\parencite{colaneri:dwell}.
 
 Another technique that uses the concept of dwell-time is the average dwell-time,
 where the switching rule \(\sigma\) allows for a fixed number of discontinuities
@@ -50,7 +50,8 @@ where the switching rule \(\sigma\) allows for a fixed number of discontinuities
 	N_{\sigma}(t,\tau) \le{} N_{0} + \frac{t-\tau}{\tau_{D}},
 \end{equation}
 %
-where \(\tau_{D}\) is the average dwell-time and \(N_{0}\) is the chatter bound.
+where \(\tau_{D}\) is the average dwell-time and \(N_{0}\) is the chatter
+bound~\parencite{hespanha.morse:stability-of-switched-systems-with-average-dwell-time}.
 This set is larger than \(\mathcal{D}_{T}\) and allows for signals with
 discontinuities separated by at most \(\tau_{D}\).
 

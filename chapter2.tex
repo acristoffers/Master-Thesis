@@ -465,10 +465,10 @@ theorems, Lyapunov's stability criteria is often used to estimate the region of
 attraction.
 
 A common choice of \(V(x)\) is \(V(X)=x^{T}Px\), which is an ellipsoid. It is
-commonly used because it can be shown that, if there is a \(V(x)\) that
-satisfies Poincaré's and Lyapunov's criteria, then there are infinitely many and
-\(x^{T}Px\) is one of them. Since it is a simple region to describe, derive and
-can be written in matrix form, making it easy to use with LMI tools, it became
-the most commonly used candidate. Note, however, that the infinite possible
-areas are not the same, and \(V(X)=x^{T}Px\) is most certainly not the region
-with the largest area, making it a conservative solution.
+the most used candidate since it is easy to verify its positiviness:
+\(V(x)\ge{}0~\forall{}x\) if \(P\) is SDP (semidefinte
+positive)~\parencite{bochnak.coste.ea:real-algebraic-geometry}. It is also a
+simple region to describe and derive, making it easy to use with LMI tools.
+Note, however, that there are infinite possible regions, and \(V(X)=x^{T}Px\) is
+most certainly \textit{not} the largest region, making it a conservative
+solution.
