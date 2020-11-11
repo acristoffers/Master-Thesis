@@ -3,3 +3,4 @@ verbatimEnvironments:
     pythoncode: 1
     matlabcode: 1
     algorithmic: 1
+defaultIndent: "  "

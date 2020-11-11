@@ -24,8 +24,8 @@ them~\parencite{lucia.franzè:stabilization,liberzon.morse:basic}.
 A linear switched system has the description
 
 \begin{align}
-	\dot{x}(t) & = A_{\sigma(t)}x(t) + B_{\sigma(t)}u(t), \\
-	y(t)       & = C_{\sigma(t)}x(t) + D_{\sigma(t)}u(t),
+  \dot{x}(t) & = A_{\sigma(t)}x(t) + B_{\sigma(t)}u(t), \\
+  y(t)       & = C_{\sigma(t)}x(t) + D_{\sigma(t)}u(t),
 \end{align}
 
 where \(\sigma(t):t>0\rightarrow\mathbb{K}=\{1,\ldots,N\}\) is the switching function.
@@ -34,8 +34,8 @@ linearizations around different operation points. There are also nonlinear
 switched systems with the form
 
 \begin{align}
-	\dot{x}(t) & = f_{\sigma(t)}(t,x(t),u(t)), \\
-	y(t)       & = g_{\sigma(t)}(t,x(t)),
+  \dot{x}(t) & = f_{\sigma(t)}(t,x(t),u(t)), \\
+  y(t)       & = g_{\sigma(t)}(t,x(t)),
 \end{align}
 
 but those will not be discussed here. In both cases, \(t_{k}:k\in\mathbb{N}\) is
@@ -46,14 +46,14 @@ former, given \(J(\sigma)\) a switching criterion and
 \(\mathcal{D}_{T}=\sigma(\cdot):t_{k+1}-t_{k}\ge{}T~\forall{}~k\in{}\mathbb{N}\), we solve
 
 \begin{equation}
-	\sigma = \sup_{\sigma\in\mathcal{D}_{T}} J(\sigma),
+  \sigma = \sup_{\sigma\in\mathcal{D}_{T}} J(\sigma),
 \end{equation}
 
 and for the later, which is the one of interest for us, given \(\mathcal{S}\)
 the set of all stabilizing switching functions, we solve
 
 \begin{equation}
-	\sigma = \inf_{\sigma\in\mathcal{S}} J(\sigma).
+  \sigma = \inf_{\sigma\in\mathcal{S}} J(\sigma).
 \end{equation}
 
 This is, however, a very broad definition. In plain english, the pertubation
@@ -74,7 +74,7 @@ Borrowing from robust control, if we do in fact consider the system to be a
 polytope and can find \(P\succ{}0\) such that
 
 \begin{equation}
-	A_{i}^{T}P+PA_{i} \prec{} 0,
+  A_{i}^{\top}P+PA_{i} \prec{} 0,
 \end{equation}
 
 then the system is stable under arbitrary
@@ -83,18 +83,18 @@ solution and might yield very small regions of attraction. A more desirable
 result is to have
 
 \begin{equation}
-	A_{i}^{T}P_{i}+P_{i}A_{i} \prec{} 0,
+  A_{i}^{\top}P_{i}+P_{i}A_{i} \prec{} 0,
 \end{equation}
 
-but it is only stable under arbitrary switching, when switching from
-\(i\) to \(j\), if
+but it is only stable under arbitrary switching, when switching from \(i\) to
+\(j\), if
 
 \begin{align}
-	V(x(t_{k+1})) & = x^{T}(t_{k+1})P_{j}x(t_{k+1})                                     \\
-	              & = x^{T}(t_{k})e^{A^{T}_{i}T_{k}}P_{j}xe^{A_{i}T_{k}}(t_{k})         \\
-	              & < x^{T}(t_{k})e^{A^{T}_{i}(T_{k}-T)}P_{i}xe^{A_{i}(T_{k}-T)}(t_{k}) \\
-	              & < x^{T}(t_{k})P_{i}x(t_{k})                                         \\
-	              & = V(x(t_{k})),
+  V(x(t_{k+1})) & = x^{\top}(t_{k+1})P_{j}x(t_{k+1})                                        \\
+                & = x^{\top}(t_{k})e^{A^{\top}_{i}T_{k}}P_{j}xe^{A_{i}T_{k}}(t_{k})         \\
+                & < x^{\top}(t_{k})e^{A^{\top}_{i}(T_{k}-T)}P_{i}xe^{A_{i}(T_{k}-T)}(t_{k}) \\
+                & < x^{\top}(t_{k})P_{i}x(t_{k})                                            \\
+                & = V(x(t_{k})),
 \end{align}
 
 which also implies that all subsystems must be
@@ -104,7 +104,7 @@ Still on the realm of robust control, it is also possible to certify stability
 under arbitrary switching if~\parencite{liberzon.morse:basic}
 
 \begin{equation}
-	(\alpha{}A_{i}+(1-\alpha)A_{j})^{T}P_{ij}+P_{ij}(\alpha{}A_{i}+(1-\alpha)A_{j}) \prec{} 0,~\forall{}~\alpha{}\in{}[0,1].
+  (\alpha{}A_{i}+(1-\alpha)A_{j})^{\top}P_{ij}+P_{ij}(\alpha{}A_{i}+(1-\alpha)A_{j}) \prec{} 0,~\forall{}~\alpha{}\in{}[0,1].
 \end{equation}
 
 The solutions discussed so far allow arbitrary switching, but a large class of
@@ -129,12 +129,12 @@ A linear, switched, discrete-time system given in the state-space representation
 has the form
 
 \begin{equation}
-	\label{eq:state-space}
-	\begin{aligned}
-		x(k+1) & = A_{i}x(k)+B_{i}u(k), \\
-		y(k)   & = C_{i}x(k)+D_{i}u(k), \\
-		c(k)   & = E_{i}x(k)+F_{i}u(k),
-	\end{aligned}
+  \label{eq:state-space}
+  \begin{aligned}
+    x(k+1) & = A_{i}x(k)+B_{i}u(k), \\
+    y(k)   & = C_{i}x(k)+D_{i}u(k), \\
+    c(k)   & = E_{i}x(k)+F_{i}u(k),
+  \end{aligned}
 \end{equation}
 
 where \(x(k)\in\mathbb{R}^n\) is the state vector, \(y(k)\in\mathbb{R}^p\) is the
@@ -155,8 +155,8 @@ references at each mode \(i\), and thus the integral action is applied over the
 tracking error~\parencite{lopes.leite.ea:anti-windup}
 
 \begin{equation}
-	\label{eq:r-y-error}
-	e(k) = r(k)-y(k),
+  \label{eq:r-y-error}
+  e(k) = r(k)-y(k),
 \end{equation}
 
 where \(r(k)\) is the desired output of the system. The proportional action
@@ -166,26 +166,26 @@ estimate them. Figure~\ref{fig:pi-controller-diagram} depicts the topology of
 the considered controller with the observer.
 
 \begin{figure}[!htb]
-	\centering
-	\resizebox{0.98\linewidth}{!}{\input{imgs/topos2c.tex}}
-	\caption{PI-like controller.}%
-	\label{fig:pi-controller-diagram}
+  \centering
+  \resizebox{0.98\linewidth}{!}{\input{imgs/topos2c.tex}}
+  \caption{PI-like controller.}%
+  \label{fig:pi-controller-diagram}
 \end{figure}
 
 By defining an augmented state vector
 \[
-	\xi(k)=\begin{bmatrix}{\hat{x}(k)}^\top &v{(k)}^\top\end{bmatrix}^\top,
+  \xi(k)=\begin{bmatrix}{\hat{x}(k)}^\top &v{(k)}^\top\end{bmatrix}^\top,
 \]
 where \(v(k)\in\mathbb{R}^{n_u}\) is the vector of added integrators, the
 closed-loop system shown in Figure~\ref{fig:pi-controller-diagram} can be
 rewritten as
 
 \begin{equation}
-	\label{sistemaaum}
-	\begin{split}
-		\xi(k+1) &= \mathcal{A}_i\xi(k)+\mathcal{B}_{i}u(k), \\
-		y_{k}    &= \mathcal{C}_i\xi(k)+\mathcal{D}_{i}u(k),
-	\end{split}
+  \label{sistemaaum}
+  \begin{split}
+    \xi(k+1) &= \mathcal{A}_i\xi(k)+\mathcal{B}_{i}u(k), \\
+    y_{k}    &= \mathcal{C}_i\xi(k)+\mathcal{D}_{i}u(k),
+  \end{split}
 \end{equation}
 
 where \(\mathcal{A}_i=\begin{bmatrix}A_i & \textbf{0} \\-C_{i}A_i&\textbf{I}
@@ -207,8 +207,8 @@ ensuring the asymptotic convergence of the estimation error
 observers:
 
 \begin{equation}
-	\label{eq:observer}
-	\hat{x}(k+1) = A_{i}\hat{x}(k) + B_{i}u(k) + L_{i}(y(k)-C_{i}\hat{x}(k)).
+  \label{eq:observer}
+  \hat{x}(k+1) = A_{i}\hat{x}(k) + B_{i}u(k) + L_{i}(y(k)-C_{i}\hat{x}(k)).
 \end{equation}
 
 Conventional methods in the literature can calculate the gain
@@ -216,9 +216,9 @@ Conventional methods in the literature can calculate the gain
 law becomes
 
 \begin{equation}
-	\label{eq:control-law}
-	u(k)= K_i \hat{\xi}(k) = \begin{bmatrix}K_{Pi} & K_{Ii} \end{bmatrix}
-	\hat{\xi}(k),
+  \label{eq:control-law}
+  u(k)= K_i \hat{\xi}(k) = \begin{bmatrix}K_{Pi} & K_{Ii} \end{bmatrix}
+  \hat{\xi}(k),
 \end{equation}
 
 with \(\hat{\xi}(k) = \begin{bmatrix}\hat{x}{(k)}^\top & v{(k)}^\top
@@ -229,8 +229,8 @@ state \(\xi(k)\), taking into account the state of the integrator, i.e., \(c(k)\
 in~\eqref{eq:state-space} can be given by
 
 \begin{equation}
-	\label{eq:constrained-output}
-	c(k) = \mathcal{E}_i\hat{\xi}(k) + \mathcal{F}_i u(k),
+  \label{eq:constrained-output}
+  c(k) = \mathcal{E}_i\hat{\xi}(k) + \mathcal{F}_i u(k),
 \end{equation}
 
 with the mode-dependent matrices \(\mathcal{E}_i\) and \(\mathcal{F}_i\) with
@@ -239,13 +239,13 @@ adequate dimensions.
 \subsection{Command Governor}%
 \label{subsec:cg}
 
-The Command Governor (CG) is an add-on technique that extends existing
+The Command Governor (\CG{}) is an add-on technique that extends existing
 controllers with constraint enforcement. It uses the system model to predict
 states given a reference \(y(k)\) and computes the virtual reference \(g(k)\)
 closest to \(y(k)\) that keeps the system constrained.
 Figure~\ref{fig:cg-schematic} presents its block diagram, which shows that the
-CG is aware of the system and controller states. The constraint itself is an
-integral part of the CG.\
+\CG{} is aware of the system and controller states. The constraint itself is an
+integral part of the \CG{}.\
 
 \input{imgs/cg-schematic}
 
@@ -253,19 +253,17 @@ In what follows we use the sets \(\mathcal{C}\), \(\mathcal{W}\), and
 \(\mathcal{V}\) defined as follows:
 
 \begin{enumerate}
-	\item The set of values allowed to the  constrained output, \(c(k)\),
-	      defines the set \(\mathcal{C}\), which is the output restriction.
-	\item Let \(\omega\equiv g(k)\) for a constant \(g(k)\). \(\mathcal{W}\) is
-	      the set of all values \(\omega{}\) that keep \(c(k)\) constrained on
-	      the steady-state.
-	      \[\mathcal{W} = \{\omega\in\mathbb{R}^{n_y}:
-		      c(k)\in\mathcal{C},k\rightarrow\infty{}\}.\]
-	\item \(\mathcal{V}\) is the set of \(\omega{}\) values ensuring the
-	      constrained output to belong to \(\mathcal{C}\) in the next \(k_0\)
-	      samples
-	      \[
-		      \mathcal{V}=\{\omega\in\mathcal{W}:c(k)\in\mathcal{C},0<k\leq{}k_0\},
-	      \]
+  \item The set of values allowed to the constrained output, \(c(k)\), defines
+        the set \(\mathcal{C}\), which is the output restriction.
+  \item Let \(\omega\equiv g(k)\) for a constant \(g(k)\). \(\mathcal{W}\) is the set of
+        all values \(\omega{}\) that keep \(c(k)\) constrained on the steady-state.
+        \[\mathcal{W} = \{\omega\in\mathbb{R}^{n_y}:
+          c(k)\in\mathcal{C},k\rightarrow\infty{}\}.\]
+  \item \(\mathcal{V}\) is the set of \(\omega{}\) values ensuring the constrained
+        output to belong to \(\mathcal{C}\) in the next \(k_0\) samples
+        \[
+          \mathcal{V}=\{\omega\in\mathcal{W}:c(k)\in\mathcal{C},0<k\leq{}k_0\},
+        \]
 \end{enumerate}
 
 We write the set \(\mathcal{V}\) in terms of convex constraints on the virtual
@@ -276,10 +274,10 @@ The output of the Command Governor is given by the following convex optimization
 procedure:
 
 \begin{equation}
-	\begin{aligned}
-		g(k)=\argmin_{\omega\in\mathcal{V}} & \norm{\omega-r(k)}^2_\Psi
-	\end{aligned}
-	\label{eq:cg}
+  \begin{aligned}
+    g(k)=\argmin_{\omega\in\mathcal{V}} & \norm{\omega-r(k)}^2_\Psi
+  \end{aligned}
+  \label{eq:cg}
 \end{equation}
 
 where \(\Psi{}\) is a semi-definite positive weighing matrix and \(g(k)\) is the
@@ -291,12 +289,12 @@ samples ahead, and testing if the state sequence remains inside the constraints.
 \subsection{Supervisor}%
 \label{subsec:supervisor}
 
-The supervisor is responsible for selecting which i-th CG is currently active.
-Figure~\ref{fig:supervisor-schematic} shows its block diagram, in which we see
-that all CGs are continuously updated, but only one is active to send control
-signals to the system. The policy for switching CGs is problem-dependent. It
-might be another controller giving better performance, according to some metric,
-or being able to access a state-space region.
+The supervisor is responsible for selecting which i-th \CG{} is currently
+active. Figure~\ref{fig:supervisor-schematic} shows its block diagram, in which
+we see that all \CG{}s are continuously updated, but only one is active to send
+control signals to the system. The policy for switching \CG{}s is
+problem-dependent. It might be another controller giving better performance,
+according to some metric, or being able to access a state-space region.
 
 \input{imgs/supervisor-schematic}
 
@@ -304,50 +302,50 @@ However, even if the policy allows the change, it will not be admissible if
 \(x(k)\not\in\mathcal{X}_i\cap{}\mathcal{X}_j\), where
 
 \begin{equation}
-	\mathcal{X}_i =
-	\left\{
-	x\in\mathbb{R}^n | \begin{bmatrix}\omega\\x\end{bmatrix} \in
-	\mathcal{Z}_i \textrm{ for at least one } \omega\in\mathbb{R}^{n_y}
-	\right\}
+  \mathcal{X}_i =
+  \left\{
+  x\in\mathbb{R}^n | \begin{bmatrix}\omega\\x\end{bmatrix} \in
+  \mathcal{Z}_i \textrm{ for at least one } \omega\in\mathbb{R}^{n_y}
+  \right\}
 \end{equation}
 
 is the set of all states that can be steered to an equilibrium point without
 constraint violation, with
 
 \begin{equation}
-	\mathcal{Z}_i =
-	\left\{
-	\begin{bmatrix}r\\x\end{bmatrix}
-	\in\mathbb{R}^{n_y}\times\mathbb{R}^{n} | c(k)\in\mathcal{C}_i,
-	\forall{}k\in\mathbb{Z}^+
-	\right\}
+  \mathcal{Z}_i =
+  \left\{
+  \begin{bmatrix}r\\x\end{bmatrix}
+  \in\mathbb{R}^{n_y}\times\mathbb{R}^{n} | c(k)\in\mathcal{C}_i,
+  \forall{}k\in\mathbb{Z}^+
+  \right\}
 \end{equation}
 
 being the admissible output set.
 
-A system can have many CG units, each of them with its constraint region.  A
-generic CG switch \(CG_i\rightarrow{}CG_j\) is admissible (with respect to the plant
-constraints) if the two CG's domains have a nonempty intersection. If one wants
-to go from \(CG_1\) to \(CG_3\) and there is no intersection, one must find a
-path through other CGs with nonempty intersections. Therefore the union of all
-CG's domains cannot be a disconnected domain. To change the active CG, one needs
-to go to a point interior to the CG' domains intersection, called way-point.
-This point can be chosen arbitrarily inside the intersection of constraints.
-However, it is better to use points in the central area, not so close to the
-borders, to avoid problems involving disturbances and controller
-sensitivity~\parencite{keel.bhattacharyya:robust}. All the paths from one CG to
-another can be calculated offline, for example, using graph
+A system can have many \CG{} units, each of them with its constraint region. A
+generic \CG{} switch \(\CG{}_i\rightarrow{}\CG{}_j\) is admissible (with respect to the
+plant constraints) if the two \CG{}'s domains have a nonempty intersection. If
+one wants to go from \(\CG{}_1\) to \(\CG{}_3\) and there is no intersection,
+one must find a path through other \CG{}s with nonempty intersections. Therefore
+the union of all \CG{}'s domains cannot be a disconnected domain. To change the
+active \CG{}, one needs to go to a point interior to the \CG{}' domains
+intersection, called way-point. This point can be chosen arbitrarily inside the
+intersection of constraints. However, it is better to use points in the central
+area, not so close to the borders, to avoid problems involving disturbances and
+controller sensitivity~\parencite{keel.bhattacharyya:robust}. All the paths from
+one \CG{} to another can be calculated offline, for example, using graph
 theory\parencite{ahuja.mehlhorn.ea:faster,pettie:new}.
 
 In~\parencite{franzè.lucia.ea:command,lucia.franzè:stabilization} it has been
-shown that any \(CG\) switch, e.g.  \(CG_i\rightarrow{}CG_j\) can be safely accomplished
-(preserving the constraints) form any point belonging to the intersection
-between the two CGs' domains. Therefore, a possible way to achieve a safe switch
-is to define a waypoint reference in the intersection set. Once the plant
-trajectory, under the action of \(CG_i\) is confined in the intersection region,
-then \(CG_j\) is activated. Moreover, the minimum waiting time assuring that the
-state of the system enters \(CG_j\)'s domain is defined resorting to the concept
-of guaranteed dwell-time.
+shown that any \(\CG{}\) switch, e.g. \(\CG{}_i\rightarrow{}\CG{}_j\) can be safely
+accomplished (preserving the constraints) form any point belonging to the
+intersection between the two \CG{}s' domains. Therefore, a possible way to
+achieve a safe switch is to define a waypoint reference in the intersection set.
+Once the plant trajectory, under the action of \(\CG{}_i\) is confined in the
+intersection region, then \(\CG{}_j\) is activated. Moreover, the minimum
+waiting time assuring that the state of the system enters \(\CG{}_j\)'s domain
+is defined resorting to the concept of guaranteed dwell-time.
 
 This approach is a way of guaranteeing stability, as the dwell-time is
 calculated not to allow the switching to occur neither too soon nor too often,
@@ -370,8 +368,8 @@ All differential equations that represent the dynamics of a real-world, physical
 system satisfy this condition. The condition is
 
 \begin{equation}
-	\label{eq:lipschitz}
-	\norm{\frac{\partial{}f(x,t)}{\partial{}x}} \le L,
+  \label{eq:lipschitz}
+  \norm{\frac{\partial{}f(x,t)}{\partial{}x}} \le L,
 \end{equation}
 
 where \(L\) is a real, positive constant. This condition is important as it
@@ -381,20 +379,19 @@ guarantees that the equation \(\dot{x}=f(x,t)\) with initial condition
 differential equation has only unique solutions.
 
 For equations satisfying this condition, the Poincaré-Bendixson theorem states
-that you can define a closed region \(V(x)\) on the plane containing  one
+that you can define a closed region \(V(x)\) on the plane containing one
 equilibrium point~\parencite{bendixson:sur}. Then:
 
 \begin{enumerate}
-	\item if the point is unstable (the jacobian at the point has positive
-	      eigenvalues) and \(\nabla{}V\cdot{}f(x) < 0\) (where \(\nabla{}V(x)\) is the
-	      gradient of \(V(x)\)), then there is a stable cycle inside the region
-	      \(V(x)\);
-	\item if the point is unstable and \(\nabla{}V\cdot{}f(x) > 0\), then there is an
-	      unstable cycle inside the region \(V(x)\) or no cycles;
-	\item if the point is stable and \(\nabla{}V\cdot{}f(x) < 0\), then there is a
-	      semi-stable cycle inside the region \(V(x)\) or no cycles;
-	\item if the point is stable and \(\nabla{}V\cdot{}f(x) > 0\), then there is a
-	      semi-stable cycle inside the region \(V(x)\).
+  \item if the point is unstable (the jacobian at the point has positive
+        eigenvalues) and \(\nabla{}V\cdot{}f(x) < 0\) (where \(\nabla{}V(x)\) is the gradient
+        of \(V(x)\)), then there is a stable cycle inside the region \(V(x)\);
+  \item if the point is unstable and \(\nabla{}V\cdot{}f(x) > 0\), then there is an
+        unstable cycle inside the region \(V(x)\) or no cycles;
+  \item if the point is stable and \(\nabla{}V\cdot{}f(x) < 0\), then there is a
+        semi-stable cycle inside the region \(V(x)\) or no cycles;
+  \item if the point is stable and \(\nabla{}V\cdot{}f(x) > 0\), then there is a
+        semi-stable cycle inside the region \(V(x)\).
 \end{enumerate}
 
 Figure~\ref{fig:poincare-cycles} shows some possible gradients.
@@ -414,31 +411,31 @@ outside the plotted region. You could call this region \(V(x)\) and it would be
 a Region of Attraction.
 
 \begin{figure}[!htb]
-	\centering
-	%
-	\begin{subfigure}[b]{0.45\linewidth}
-		\centering
-		\includegraphics[trim=116 155 125 55,clip,width=\linewidth]{imgs/stable-point}
-		\caption{Stable point}%
-		\label{fig:stable-point}
-	\end{subfigure}
-	%
-	\begin{subfigure}[b]{0.45\linewidth}
-		\centering
-		\includegraphics[trim=116 155 125 55,clip,width=\linewidth]{imgs/stable-cycle}
-		\caption{Stable cycle}%
-		\label{fig:stable-cycle}
-	\end{subfigure}
-	%
-	\begin{subfigure}[b]{0.5\linewidth}
-		\centering
-		\includegraphics[trim=116 155 125 55,clip,width=\linewidth]{imgs/semi-stable-cycle}
-		\caption{Semi-stable cycle}%
-		\label{fig:semi-stable-cycle}
-	\end{subfigure}
-	%
-	\caption{Different cycles' gradient maps}%
-	\label{fig:poincare-cycles}
+  \centering
+  %
+  \begin{subfigure}[b]{0.45\linewidth}
+    \centering
+    \includegraphics[trim=116 155 125 55,clip,width=\linewidth]{imgs/stable-point}
+    \caption{Stable point}%
+    \label{fig:stable-point}
+  \end{subfigure}
+  %
+  \begin{subfigure}[b]{0.45\linewidth}
+    \centering
+    \includegraphics[trim=116 155 125 55,clip,width=\linewidth]{imgs/stable-cycle}
+    \caption{Stable cycle}%
+    \label{fig:stable-cycle}
+  \end{subfigure}
+  %
+  \begin{subfigure}[b]{0.5\linewidth}
+    \centering
+    \includegraphics[trim=116 155 125 55,clip,width=\linewidth]{imgs/semi-stable-cycle}
+    \caption{Semi-stable cycle}%
+    \label{fig:semi-stable-cycle}
+  \end{subfigure}
+  %
+  \caption{Different cycles' gradient maps}%
+  \label{fig:poincare-cycles}
 \end{figure}
 
 So, by definition, a Region of Attraction is the closed region in the state
@@ -449,9 +446,9 @@ Lyapunov's stability criteria states that for the system \(\dot{x} = f(t, x)\),
 if there is a function \(V(x)\) such that
 
 \begin{align}
-	V(x)       & = 0 \iff x = 0,                                           \\
-	V(x)       & > 0 \iff x \ne 0,                                         \\
-	\dot{V}(x) & = \nabla{}V\cdot{}f(x) \le 0 \phantom{0} \forall x \ne 0,
+  V(x)       & = 0 \iff x = 0,                                           \\
+  V(x)       & > 0 \iff x \ne 0,                                         \\
+  \dot{V}(x) & = \nabla{}V\cdot{}f(x) \le 0 \phantom{0} \forall x \ne 0,
 \end{align}
 
 then the system is stable~\parencite{chen:linear,hespanha:linear}. Futhermore,
@@ -464,11 +461,11 @@ not contain cycles~\parencite{chen:linear}. Because of this link between the two
 theorems, Lyapunov's stability criteria is often used to estimate the region of
 attraction.
 
-A common choice of \(V(x)\) is \(V(X)=x^{T}Px\), which is an ellipsoid. It is
+A common choice of \(V(x)\) is \(V(X)=x^{\top}Px\), which is an ellipsoid. It is
 the most used candidate since it is easy to verify its positiviness:
 \(V(x)\ge{}0~\forall{}x\) if \(P\) is SDP (semidefinte
 positive)~\parencite{bochnak.coste.ea:real-algebraic-geometry}. It is also a
 simple region to describe and derive, making it easy to use with LMI tools.
-Note, however, that there are infinite possible regions, and \(V(X)=x^{T}Px\) is
+Note, however, that there are infinite possible regions, and \(V(X)=x^{\top}Px\) is
 most certainly \textit{not} the largest region, making it a conservative
 solution.

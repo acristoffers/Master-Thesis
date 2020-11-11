@@ -22,14 +22,58 @@
 \ExplSyntaxOff
 
 \DeclareAcronym{CG}{
-    short = CG,
+    short = \CG{},
     long  = Command Governor,
-    tag = abbrev
+    tag   = abbrev
 }
 
 \DeclareAcronym{AT}{
-    short = \(A^{T}\),
+    short = \(A^{\top}\),
     long  = Matrix transpose,
     sort  = A',
-    tag = nomencl
+    tag   = nomencl
 }
+
+\DeclareAcronym{Reals}{
+    short = \(\mathbb{R}\),
+    long  = Set of real numbers,
+    sort  = Reals,
+    tag   = nomencl
+}
+
+\DeclareAcronym{RealVec}{
+    short = \(\mathbb{R}^{n}\),
+    long  = Vector of \(n\) real elements,
+    sort  = Real Vector,
+    tag   = nomencl
+}
+
+\DeclareAcronym{Set}{
+    short = \(\mathcal{C}\),
+    long  = A set,
+    sort  = set,
+    tag   = nomencl
+}
+
+\DeclareAcronym{gk}{
+    short = \(g(k)\),
+    long  = Discrete time signal,
+    sort  = dsignal,
+    tag   = nomencl
+}
+
+\DeclareAcronym{gt}{
+    short = \(g(t)\),
+    long  = Continuous time signal,
+    sort  = csignal,
+    tag   = nomencl
+}
+
+\DeclareAcronym{WeighedNorm}{
+    short = \(\norm{x}^2_\Psi{}\),
+    long  = {\(x^\top\Psi{}x~|~x\in{}\mathbb{R}^n,~\Psi{} \in{} \mathbb{R}^{n \times n}\)},
+    sort  = csignal,
+    tag   = nomencl
+}
+
+\acuseall

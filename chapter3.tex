@@ -24,14 +24,14 @@ systems under switches governed by some rules. The dwell-time is one of such
 techniques that restricts the switching signal \(\sigma{}(t)\) to the set
 %
 \begin{equation}
-	\mathcal{D}_{T} := \{\sigma(\cdot):t_{k+1}-t_{k}\ge{}T\},
+  \mathcal{D}_{T} := \{\sigma(\cdot):t_{k+1}-t_{k}\ge{}T\},
 \end{equation}
 %
 where \(t_{k}\) and \(t_{k+1}\) are the switching instants, for all
 \(k\in{}\mathbb{R}\), which forces the system to remain for \(T\) seconds on a
 mode before switching to next one~\parencite{colaneri:dwell}. This is called a
 slow switch. The timer is restarted every time the reference changes and
-switching is only allowed after \(T\) seconds has passed.  For large enough
+switching is only allowed after \(T\) seconds has passed. For large enough
 values of \(T\), this rule guarantees the system's stability.
 
 As the dwell-time certifies stability of the switch, it decouples the switching
@@ -47,7 +47,7 @@ where the switching rule \(\sigma\) allows for a fixed number of discontinuities
 \(\mathcal{D}_{T_{D},N_{0}}\) satisfies
 %
 \begin{equation}
-	N_{\sigma}(t,\tau) \le{} N_{0} + \frac{t-\tau}{\tau_{D}},
+  N_{\sigma}(t,\tau) \le{} N_{0} + \frac{t-\tau}{\tau_{D}},
 \end{equation}
 %
 where \(\tau_{D}\) is the average dwell-time and \(N_{0}\) is the chatter
@@ -62,10 +62,10 @@ waypoint and the yellow star the reference. The system will use the dwell-time
 rule to switch.
 
 \begin{figure}[!htb]
-	\centering
-	\includesvg[width=0.5\linewidth]{imgs/dt-ex1}
-	\caption{System to be considered in the example}%
-	\label{fig:dt-ex1}
+  \centering
+  \includesvg[width=0.5\linewidth]{imgs/dt-ex1}
+  \caption{System to be considered in the example}%
+  \label{fig:dt-ex1}
 \end{figure}
 
 To avoid constraint violation, the reference is first set to the waypoint by the
@@ -75,10 +75,10 @@ system may fully converge to the waypoint before that, making it just wait,
 idle, for the timer to ellapse, as depicted in Figure~\ref{fig:dt-ex2}.
 
 \begin{figure}[!htb]
-	\centering
-	\includesvg[width=0.5\linewidth]{imgs/dt-ex2}
-	\caption{First state's path: convergence to the waypoint}%
-	\label{fig:dt-ex2}
+  \centering
+  \includesvg[width=0.5\linewidth]{imgs/dt-ex2}
+  \caption{First state's path: convergence to the waypoint}%
+  \label{fig:dt-ex2}
 \end{figure}
 
 The system will change modes after the timer ellapses and the reference will be
@@ -87,10 +87,10 @@ again, the timer will restart again, with the dwell-time of the second mode.
 Figure~\ref{fig:dt-ex3} shows this movement.
 
 \begin{figure}[!htb]
-	\centering
-	\includesvg[width=0.5\linewidth]{imgs/dt-ex3}
-	\caption{Second state's path: convergence to the final reference}%
-	\label{fig:dt-ex3}
+  \centering
+  \includesvg[width=0.5\linewidth]{imgs/dt-ex3}
+  \caption{Second state's path: convergence to the final reference}%
+  \label{fig:dt-ex3}
 \end{figure}
 
 As it is the final reference, this timer will not affect the overall
@@ -101,18 +101,18 @@ dwell-times that need to be executed on the path to the final reference.
 Algorithm~\ref{alg:dwell-time} formalizes this procedure.
 
 \begin{algorithm}[H]
-	\begin{algorithmic}[1]
-		\State{}\textbf{Input}: \(CG_i\) \(\leftarrow{}\) current CG,~\(CG_j\) \(\leftarrow{}\) target GG.\@
-		\State{}change \(r(k)\) to next way-point
-		\While{dwell-time of \(CG_{i}\) not ellapsed}
-			\State{}calculate \(g(k)\)
-			\State{}execute controller
-		\EndWhile{}
-		\State{}change to \(CG_j\)
-		\State{}restart algorithm
-	\end{algorithmic}
-	\caption{dwell-time implementation}%
-	\label{alg:dwell-time}
+  \begin{algorithmic}[1]
+	\State{}\textbf{Input}: \(\CG{}_i\) \(\leftarrow{}\) current \CG{},~\(\CG{}_j\) \(\leftarrow{}\) target GG.\@
+	\State{}change \(r(k)\) to next way-point
+	\While{dwell-time of \(\CG{}_{i}\) not ellapsed}
+		\State{}calculate \(g(k)\)
+		\State{}execute controller
+	\EndWhile{}
+	\State{}change to \(\CG{}_j\)
+	\State{}restart algorithm
+  \end{algorithmic}
+  \caption{dwell-time implementation}%
+  \label{alg:dwell-time}
 \end{algorithm}
 
 \section{Region of Attraction}%
@@ -123,8 +123,8 @@ final reference when going through a path of restricted mode switches. To do so,
 it is necessary to:
 
 \begin{enumerate}
-	\item guarantee stability after switching modes,
-	\item switch modes as soon as possible.
+  \item guarantee stability after switching modes,
+  \item switch modes as soon as possible.
 \end{enumerate}
 
 To guarantee stability, the concept of a controller's region of attraction is
@@ -140,10 +140,10 @@ Nonetheless, the following region of attraction based rule guarantees that the
 system will remain stable after switching:
 
 \begin{align}
-	\sigma_{i} = \begin{cases}
-		1 & \textrm{if}~f\hat{\xi}_{i}(k)\in\mathcal{L}_V(P_i) \\
-		0 & \textrm{otherwise}
-	\end{cases},
+  \sigma_{i} = \begin{cases}
+    1 & \textrm{if}~f\hat{\xi}_{i}(k)\in\mathcal{L}_V(P_i) \\
+    0 & \textrm{otherwise}
+  \end{cases},
 \end{align}
 %
 where \(\hat{\xi}_{i}(t)\) is the mode's state, \(\mathcal{L}_V(P_i)\) is the
@@ -194,10 +194,10 @@ ellipses are the mode's constraints and the circles are the regions of
 attraction.
 
 \begin{figure}[!htb]
-	\centering
-	\includesvg[width=0.45\linewidth]{imgs/roa-ex1}
-	\caption{System to be considered in the example}%
-	\label{fig:roa-ex1}
+  \centering
+  \includesvg[width=0.45\linewidth]{imgs/roa-ex1}
+  \caption{System to be considered in the example}%
+  \label{fig:roa-ex1}
 \end{figure}
 
 As the system cannot violate constraints, the supervisor will set the reference
@@ -209,10 +209,10 @@ what we call a hybrid switch. This is opitional, but may yield better overall
 performance.
 
 \begin{figure}[!htb]
-	\centering
-	\includesvg[width=0.45\linewidth]{imgs/roa-ex2}
-	\caption{System's state crossing the region of attraction's border}%
-	\label{fig:roa-ex2}
+  \centering
+  \includesvg[width=0.45\linewidth]{imgs/roa-ex2}
+  \caption{System's state crossing the region of attraction's border}%
+  \label{fig:roa-ex2}
 \end{figure}
 
 The system will then continue to converge to the waypoint, since it can only
@@ -224,10 +224,10 @@ system does not fully converge to the waypoint. This step is shown in
 Figure~\ref{fig:roa-ex3}.
 
 \begin{figure}[!htb]
-	\centering
-	\includesvg[width=0.45\linewidth]{imgs/roa-ex3}
-	\caption{System's state crossing the constraint's intersection's border}%
-	\label{fig:roa-ex3}
+  \centering
+  \includesvg[width=0.45\linewidth]{imgs/roa-ex3}
+  \caption{System's state crossing the constraint's intersection's border}%
+  \label{fig:roa-ex3}
 \end{figure}
 
 With this switching rule, there is no wait: the system will change mode as soon
@@ -239,28 +239,28 @@ the use of a Command Governor, which is always recommended for this rule as it
 helps to guarantee stability.
 
 \begin{algorithm}[H]
-	\begin{algorithmic}[1]
-		\State{}\textbf{Input}: \(CG_i\) \(\leftarrow{}\) current CG,~\(CG_j\) \(\leftarrow{}\)
-				target GG.\@
-		\State{}let \(P_1\) and \(P_2\) be regions of attraction for \(CG_i\)
-				and \(CG_j\), respectively.
-		\If{should switch controllers earlier}
-			\While{\(\hat{\xi}(k)\not\in\mathcal{L}_V(P_2)\)}
-				\State{}calculate \(g(k)\)
-				\State{}execute controller
-			\EndWhile{}
-			\State{}change current controller and model to \(CG_j\)'s ones
-			\State{}reset integrators
-		\EndIf{}
-		\While{\(x(k)\not\in\mathcal{X}_i\cap\mathcal{X}_j\) or \(\hat{\xi}(k)\not\in\mathcal{L}_V(P_2)\)}
-			\State{}calculate \(g(k)\)
-			\State{}execute controller
-		\EndWhile{}
-		\State{}change to \(CG_j\)
-		\State{}reset integrators if not already done
-		\State{}change \(r(k)\) to next way-point
-		\State{}restart algorithm
-	\end{algorithmic}
-	\caption{Switching rule based on region of attraction}%
-	\label{alg:roa-rule}
+  \begin{algorithmic}[1]
+    \State{}\textbf{Input}: \(\CG{}_i\) \(\leftarrow{}\) current \CG{},~\(\CG{}_j\) \(\leftarrow{}\)
+        target GG.\@
+    \State{}let \(P_1\) and \(P_2\) be regions of attraction for \(\CG{}_i\)
+        and \(\CG{}_j\), respectively.
+    \If{should switch controllers earlier}
+      \While{\(\hat{\xi}(k)\not\in\mathcal{L}_V(P_2)\)}
+        \State{}calculate \(g(k)\)
+        \State{}execute controller
+      \EndWhile{}
+      \State{}change current controller and model to \(\CG{}_j\)'s ones
+      \State{}reset integrators
+    \EndIf{}
+    \While{\(x(k)\not\in\mathcal{X}_i\cap\mathcal{X}_j\) or \(\hat{\xi}(k)\not\in\mathcal{L}_V(P_2)\)}
+      \State{}calculate \(g(k)\)
+      \State{}execute controller
+    \EndWhile{}
+    \State{}change to \(\CG{}_j\)
+    \State{}reset integrators if not already done
+    \State{}change \(r(k)\) to next way-point
+    \State{}restart algorithm
+  \end{algorithmic}
+  \caption{Switching rule based on region of attraction}%
+  \label{alg:roa-rule}
 \end{algorithm}

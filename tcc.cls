@@ -130,7 +130,7 @@
 
 % End of \RequirePackage's
 
-\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{shapes,arrows,positioning}
 
 \renewcommand{\rm}{\textrm} % needed with memoir
 \renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter. \ #1}{ }}
@@ -258,8 +258,8 @@
     %================================================================================================
     \vspace*{1.0cm}
     \begin{center}
-        \textsc{Centro Federal de Educaçào Tecnológica de Minas Gerais\\
-            Universidade Federal de São Jõal del-Rei \\
+        \textsc{Centro Federal de Educação Tecnológica de Minas Gerais\\
+            Universidade Federal de São João del-Rei \\
             Graduate Program in Electrical Engineering\\
             Master's Thesis}
     \end{center}
@@ -294,14 +294,16 @@
     \vspace*{1.5cm}
     \begin{flushright}
         \begin{minipage}{9.0cm}
-          Master's thesis presented to Minas Gerais' Federal Centre of
-          Technological Education's (Centro Federal de Educação Tecnológica de
+          Master's thesis presented to the Federal Centre of Technological
+          Education of Minas Gerais's (Centro Federal de Educação Tecnológica de
           Minas Gerais) Graduate Program in Electrical Engineering (PPGEL -
-          Programa de Pós Graduação em Engenharia Elétrica), as a requisite to
+          Programa de Pós-Graduação em Engenharia Elétrica), as a requisite to
           obtain the title of Master in Electrical Engineering.\\
-            \vspace*{0.25cm}\\
-            Supervisor: \getorientador\\
-            Co-supervisor: \getcoorientadores{}
+          \vspace*{0.25cm}\\
+          Supervisor: \getorientador\\
+          {\scriptsize Federal Centre of Technological Education of Minas Gerais}\\
+          Co-supervisor: \getcoorientadores{}\\
+          {\scriptsize Concordia University}
         \end{minipage}
     \end{flushright}
     \null\vfill
@@ -399,11 +401,9 @@
     %     \thispagestyle{plain}
     %     \cleardoublepage{}
     % \fi
-    % \printacronyms[include=abbrev,name=Abbreviations]
-    % \thispagestyle{plain}
-    % \printacronyms[include=nomencl,name=Nomenclature]
-    % \thispagestyle{plain}
-    % \cleardoublepage{}
+    \printacronyms[include={abbrev,nomencl},name=Notations]
+    \thispagestyle{plain}
+    \cleardoublepage{}
     \pagenumbering{arabic}
     \pagestyle{cefet}
     \aliaspagestyle{chapter}{cefetchapter}

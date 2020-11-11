@@ -4,41 +4,88 @@
 \chapter{Introduction}%
 \label{chp:introduction}
 
-The fundamental frameworks of classical and modern control theory are conceived
-for unconstrained systems. Therefore, if constraints are of interest, ad-hoc
-solutions must used. Some approaches handle saturating actuators by using a
-polytopic representation or generalized sector
-conditions~\parencite{tarbouriech.garcia.ea:stability}. However, these
-techniques cannot handle the state's constraints directly, requiring the
-inclusion of state-space constraints~\parencite{klug.castelan.ea:fuzzy}. Some
-techniques started to be developed that enforces constraints, like the model
-predictive control (MPC)~\parencite{wang:model,zhang:fast}. However, they
-require the design of a new controller following the framework. Another line of
-research tried to solve the same problem by using existing controllers. Instead
-of trying to compute the optimal control path that keeps the system constrained,
-it uses model prediction to change the reference given to existing controllers
-to keep the system constrained. The first of such techniques were reference
-filters that also imposed only
-soft-constraints~\parencite{vahidi.kolmanovsky.ea:constraint}.
+Physical systems have constraints on their inputs, outputs, and states, which
+are usually ignored to facilitate the controller's design. Such constraints can
+result from physical limitations, such as a tank's capacity or a turbine's
+maximum power output, or can be mathematically imposed to achieve some goal,
+like keeping a process' pH bounded. The most common form of constraint found in
+literature is actuator saturation, and many techniques exist to deal with it,
+like using a polytopic representation or a generalized sector
+condition~\parencite{klug.castelan.ea:fuzzy,tarbouriech.garcia.ea:stability}.
+However, those techniques do not enforce constraints but merely design
+conservative controllers that avoid the borders of constraints or even allow the
+system to violate them for a short period.
 
-The idea then evolved into Reference Governors (RG), which makes use of
-optimization to find the best reference to
-follow~\parencite{gilbert.kolmanovsky.ea:discrete‐time}. The RG gives a virtual
-reference \(g(k)\) to the controller, which is a scaled version of the real
-reference \(r(k)\), read \(g(k)=\delta r(k)\). The optimization problem finds the
-best \(\delta r(k)\) that minimizes the distance between \(g(k)\) and \(y(k)\)
-without violating the constraints. Because of the simplicity of the optimization
-problem, this approach has an easy implementation but suffers from loss of
-dimensions. Such a loss comes from the fact that variation is one-dimensional
-while \(r(k)\) may be multidimensional~\parencite{gilbert.kolmanovsky:fast}.
+By taking advantage of optimization techniques, new solutions to the problem
+appeared. Model Predictive Control uses an online optimization procedure to
+compute a system's optimal control trajectory and allows constraints to be
+applied to states, inputs, outputs, and their
+variations~\parencite{wang:model,zhang:fast}. As the optimization procedure is
+online, constraints are enforced, and the controller will actively avoid
+violations while allowing for less conservative control paths.
+
+Another technique was developed simultaneously, but instead of computing the
+optimal control path that keeps the system constrained, it uses model prediction
+to change the reference given to existing controllers to keep the system
+constrained. The first of such techniques were reference filters, which imposed
+only soft-constraints~\parencite{vahidi.kolmanovsky.ea:constraint}, i.e.
+constraints which penalize the objective function when violated instead of
+rendering the problem infeasible.
+
+Such an idea then evolved into Reference Governors (RG), which uses optimization
+to find a virtual reference \(g(k)\), which is as close as possible to the real
+reference \(r(k)\) but keeps the system
+constrained~\parencite{gilbert.kolmanovsky.ea:discrete‐time}.
+Figure~\ref{fig:rg-block-diagram} shows a block diagram for this technique. The
+RG gives the controller the virtual reference \(g(k)\), which is a scaled
+version of the real reference \(r(k)\), read \(g(k)=\delta{}r(k)\). The optimization
+problem finds the best \(\delta\) that minimizes the distance between \(g(k)\) and
+\(r(k)\) without violating constraints. Because of the simplicity of the
+optimization problem, this approach has an easy implementation but suffers from
+loss of dimensions. Such a loss comes from the fact that \(\delta\) is
+one-dimensional while \(r(k)\) may be
+multidimensional~\parencite{gilbert.kolmanovsky:fast}.
+
+\begin{figure}
+  \centering
+  \tikzstyle{block}    = [draw, rectangle, minimum height=3em, minimum width=6em]
+  \tikzstyle{sum}      = [draw, circle, node distance=1cm]
+  \tikzstyle{point}    = [coordinate]
+  \tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+  \begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    % We start by placing the blocks
+    \node [point, name=input] {};
+    \node [sum] (prod) [right=4cm of input] {\Large \(\times\)};
+    \node [block] (controller) [right=1cm of prod] {Controller};
+    \node [block, above of=prod] (rg) {Reference Governor};
+    \node [block] (system) [right=1cm of controller] {System};
+    \node [point, name=output, node distance=3cm, right of=system] {};
+    \node [point, name=state, above of=system] {};
+    \node [point, name=ref, left of=rg] {};
+
+    \draw [draw,->] (input) -- node [name=r] {\(r(k)\)} (prod);
+    \draw [] (r) |- (ref);
+    \draw [->] (ref) -- (rg);
+    \draw [->] (rg) -- node {\(\delta\)} (prod);
+    \draw [->] (prod) -- node {\(g(k)\)} (controller);
+    \draw [->] (controller) -- node {\(u(k)\)} (system);
+    \draw [->] (system) -- node {\(y(k)\)} (output);
+    \draw [] (system) -- node {\(x(k)\)} (state);
+    \draw [->] (state) -- node {} (rg);
+  \end{tikzpicture}
+  \caption{Reference Governor's block diagram}%
+  \label{fig:rg-block-diagram}
+\end{figure}
 
 Building on this idea,~\textcite{bemporad.casavola.ea:nonlinear}
-and~\textcite{bemporad.casavola.ea:nonlinear} developed what is known today as
-the \ac{CG} approach. The difference to RG is that the CG technique optimizes
-\(g(k)\) directly, requiring more computational processing power but yielding
-better system performance, especially when the reference has dimension greater
-than 1. They also built on the work of~\textcite{kapasouris.athans.ea:design},
-which explores the ideas of the Lyapunov Theorem and Invariant Sets Theorem.
+and~\textcite{casavola.mosca.ea:robust} developed what is known today as the
+\ac{CG} approach. The difference to RG is that the \CG{} technique optimizes the
+\(g(k)\) vector directly, requiring more computational processing power but
+yielding better system performance since the values of the vector are calculated
+independently and freely instead of as a factor of the reference. This approach
+also builds on the work of~\textcite{kapasouris.athans.ea:design}, which
+explores the ideas of the Lyapunov Theorem and Invariant Sets
+Theorem~\parencite{blanchini.miani:set-theoretic}.
 
 Reference and Command Governors are still subjects of studies, and used in
 conjunction with other techniques. It has been of particular interest on the
@@ -48,14 +95,16 @@ as a mean to add constraints to the system. It has also been used to constrain
 switching networks \parencite{ong.djamari.ea:governor}, networks with delays
 \parencite{shen.song.ea:constrained} and interconnected systems
 \parencite{tedesco.casavola:turn-based}. \textcite{peng.wang.ea:constrained}
-also used it to develop an anti-disturbance controller for a uncertain,
-constrained system and~\textcite{schwerdtner.bortoff.ea:projection-based}
-developed a anti-windup controller for systems with saturated inputs.
+also used a Command Governor to develop an anti-disturbance controller for a
+uncertain, constrained system
+and~\textcite{schwerdtner.bortoff.ea:projection-based} developed a anti-windup
+controller for systems with saturated inputs.
 \textcite{seeber.golles.ea:reference} provides a real-time implementation of
-reference shaping for a biomass grate boiler.
+reference shaping for a biomass grate boiler, based on Command Governor, to
+avoid actuator saturation and constrain mass-flow.
 
 What makes it possible to use the Command Governor in so many different
-scenarios is the fact that it is an add-in technique, that does not require
+scenarios is the fact that it is an add-on technique, that does not require
 adaptation from the controller or system. On the other hand, different ways of
 calculating the virtual reference are explored, since the optimization based
 procedure, although the best in guaranteeing hard-constraints, can be very
@@ -65,14 +114,18 @@ decision to be made on what strategy to follow in the case in which no virtual
 reference that satisfies the constraints exists, which can happen if the model
 deviates significantly from the real system, for example. A common technique is
 to re-apply the last reference, but it can lead to instability if the situation
-persists for extended periods of time~\parencite{garone.di-cairano.ea:reference}.
+persists for extended periods of
+time~\parencite{garone.di-cairano.ea:reference}.
 
 Switching systems are composed of many subsystems, called modes, which switch
 according to a switching
 rule~\parencite{liberzon:switching,liberzon.morse:basic}. Only one subsystem can
 be active at a given time. The switching can cause instability even when all
-subsystems are stable, which leads to the notion of a dwell-time: how long a
-subsystem must remain active after switching to avoid
+subsystems are stable. Techniques exist to guarantee stability under abirtrary
+switching, such as using polytopic linear parameter varying
+representations~\parencite{deaecto.geromel.ea:robust} , but they are extremely
+conservative. Development then lead to the notion of a dwell-time: how long a
+subsystem must remain active before switching to avoid
 instability~\parencite{liberzon.morse:basic}. Different approaches have been
 proposed to compute the minimum dwell time
 (see~\parencite{chesi.colaneri.ea:computing} and reference therein) and
@@ -81,38 +134,38 @@ linear systems). Fewer solutions exist to deal with constrained switching
 systems, see e.g.~\parencite{franzè.lucia.ea:command,lucia.franzè:stabilization}
 and references therein.
 
-In \parencite{franzè.lucia.ea:command,lucia.franzè:stabilization}, the CG
+In \parencite{franzè.lucia.ea:command,lucia.franzè:stabilization}, the \CG{}
 framework is used to supervise the system mode switches and assure both
 stability and constraint satisfaction.
-
-\textbf{Notations:} The set of real numbers is denoted by \(\mathbb{R}\).
-\(\mathbb{R}^n\) denotes a vector of \(n\) real elements. \(\mathcal{V}\),
-\(\mathcal{W}\) and \(\mathcal{C}\) represent sets. \ac{AT} represents the
-conjugate transpose of \(A\). \(g(k)\) represents a discrete-time signal. We
-define \(x^\top\Psi x\) with \(x\in\mathbb{R}^n\) and semidefinite positive matrix
-\(\Psi \in \mathbb{R}^{n \times n}\) as the norm \(\norm{x}^2_\Psi{}\).
 
 \section{Objectives}%
 \label{sec:objectives}
 
-In this work, considering the class of switched systems (switching systems with
-controlled switching signals), we propose a novel switching rule based on the
-switching CG's region of attraction. The presented approach consists of a
-two-step switch, which uses an intermediate CG.\ This intermediate CG has the
-constraints of the source CG and the controller of the target CG.\ To change
-from \(CG_i\) to \(CG_j\), you first switch from \(CG_i\) to a \(CG_{ij}\) when
-the system enters the region of attraction of \(CG_{ij}\)'s controller, and then
-changes to \(CG_j\) when the system enters the intersection of the constraint
-regions between \(CG_{ij}\) and \(CG_j\). Thus, if it is verified that the
-controller of \(CG_j\) has better performance than that of \(CG_1\), it can be
-used from an earlier stage.
+In this work, considering the class of constrained switched systems (switching
+systems with controlled switching signals), we propose a novel switching rule
+based on the controllers's region of attraction. Two rules can be stated:
+
+\begin{enumerate}
+  \item the system's state is inside the next controller's region of attraction.
+  \item the system's state is inside the command governors' constraint's
+        intersection.
+\end{enumerate}
+
+This allows for 2 switching rules. In the first scenario, the first rule
+triggers a partial switch, in which only the controller is changed. The second
+rule is used to complete the switch, swaping the active command governor unit.
+We call this a hybrid switch. The second scenario makes a complete switch using
+only the second rule. However, everything that needs to be done to guarantee
+stability in the first scenario also has to be done in the second scenario. The
+only difference is that the second avoids the first set membership check, at the
+cost of possibly missing on convergence's speed gains opportunities.
 
 \section{Document organization}%
 \label{sec:organization}
 
 The main concepts involved in this work are explained in
 Chapter~\ref{chp:theoretical-foundations} -
-\nameref{chp:theoretical-foundations}.  The proposed technique is explained in
+\nameref{chp:theoretical-foundations}. The proposed technique is explained in
 Chapter~\ref{chp:switching-rules} - \nameref{chp:switching-rules}.
 Chapter~\ref{chp:practival-implementation-aspects} -
 \nameref{chp:practival-implementation-aspects} discusses some practical aspects
