@@ -32,7 +32,7 @@ the outputs of the tanks, \(a\) (\si{\square\centi\metre}); \(g\)
 Bernoulli's equations, we have:
 %
 \begin{equation}
-  \label{eq:formula-height-variation}
+  \label{eq:formula-height-variation-lin}
   \begin{aligned}
     \dot{h}_1(t) & = \frac{u_1(t)-q_1(t)\pm{}q_{12}}{A}, \\
     \dot{h}_2(t) & = \frac{u_2(t)-q_2(t)\mp{}q_{12}}{A},
@@ -45,7 +45,7 @@ where the flows are given by \(q_1(t) = a\sqrt{2gh_1(t)}\),
 
 This is a nonlinear and switching system, as the model changes depending on the
 height of the tanks' water column. At each mode, \(h_1>h_2\) or \(h_1\leq h_2\),
-equation~\eqref{eq:formula-height-variation} can be linearized around an
+equation~\eqref{eq:formula-height-variation-lin} can be linearized around an
 equilibrium operational point \((x_{eq},u_{eq})\) by using Jacobian matrices. In
 what follows, we use \(a=5.9\), \(A=961\pi{}\), and \(g=980.665\).
 
@@ -409,8 +409,8 @@ linearized and discretized (with a sampling time of \SI{5}{\second}) systems are
 \end{align}
 
 To develop the controllers we applied the LMI described in the
-subsection~\ref{subsec:roa-calc} -~\nameref{subsec:roa-calc} to the
-integral-augmented system. The points forced to be inside the region of
+subsection~\ref{sec:region-of-attraction} -~\nameref{sec:region-of-attraction}
+to the integral-augmented system. The points forced to be inside the region of
 attraction are the previous' and next's operation point. It creates an
 intersection that allows the early switching of controllers, which speeds up
 convergence. The following controllers were obtained:
