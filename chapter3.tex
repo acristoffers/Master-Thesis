@@ -6,9 +6,9 @@
 
 This chapter presents two switching rules: the dwell-time, the most employed and
 studied of such techniques in literature, and the proposed rule based on the
-region of attraction. Other techniques exist, like using robust control to find
-a controller that never makes the system unstable; however, they are more
-conservative and not viable in many cases.
+region of attraction. Other techniques exist, like using robust control to
+design a controller that never allows the system to unstabilize; however, they
+are more conservative and not viable in many cases.
 
 \section{Dwell-time}%
 \label{sec:dwell-time}
@@ -55,65 +55,66 @@ bound~\parencite{hespanha.morse:stability}. This set is larger than
 \(\mathcal{D}_{T}\) and allows for signals with discontinuities separated by at
 most \(\tau_{D}\).
 
-To illustrate how the dwell-time works, consider the fictional system if
-Figure~\ref{fig:dt-ex1}. The ellipses represent each mode's constraint region,
-the black star is the system state, the orange star (in the middle) is the
-waypoint and the yellow star the reference. The system will use the dwell-time
-rule to switch.
+To illustrate how the dwell-time works, consider the state-space of a fictional
+two-state system shown in Figure~\ref{fig:dt-example}. \(\bullet\) marks the system's
+initial state, \(\diamond\) are the waypoints and \(\star\) is the reference. The collored
+ellipses are each mode's state's constraints, numbered 1, 2, 3 from left to
+right. Since there are three ellipses, we have three modes, meaning three
+command governors, controllers and linearized systems. The waypoints are
+intermediate references, chosen to allow the system to travel from the current
+state (\(\bullet\)) to the reference (\(\star\)) without violating any constraint.
 
-\begin{figure}[!htb]
-  \centering
-  \includesvg[width=0.5\linewidth]{imgs/dt-ex1}
-  \caption{System to be considered in the example}%
-  \label{fig:dt-ex1}
-\end{figure}
+\input{imgs/dwell-time-example}
 
-To avoid constraint violation, the reference is first set to the waypoint by the
-supervisor. As the reference changed, the timer will be restarted and the system
-will only be allowed to change mode after the dwell-time ellapses. However, the
-system may fully converge to the waypoint before that, making it just wait,
-idle, for the timer to ellapse, as depicted in Figure~\ref{fig:dt-ex2}.
+Consider that the system is on steady-state at \(\bullet\) when the reference switched
+to \(\star\). Since there are three constraints, the supervisor scheme shown in
+Figure~\ref{fig:supervisor-schematic} is the same as this examle's one. The
+supervisor will receive the new reference \(r(k)\) and, because the system is
+currently on mode 1, will set \(r'(k)\) to the first waypoint's coordinates,
+since it is not possible to gro from \(\bullet\) to \(\star\) directly without violating
+the constraints.
 
-\begin{figure}[!htb]
-  \centering
-  \includesvg[width=0.5\linewidth]{imgs/dt-ex2}
-  \caption{First state's path: convergence to the waypoint}%
-  \label{fig:dt-ex2}
-\end{figure}
+Because a reference change occurred, the supervisor will start a timer, counting
+down from the first mode's dwell-time, \(T_{1}\). Even if \(r(k)\) changes
+again, \(r'(k)\) will not be changed until this timer expires. This gives the
+first mode's controller enough time to converge to the first waypoint,
+guaranteeing stability.
 
-The system will change modes after the timer ellapses and the reference will be
-set to the desired reference, in yellow. Because the reference was changed
-again, the timer will restart again, with the dwell-time of the second mode.
-Figure~\ref{fig:dt-ex3} shows this movement.
+Because the waypoint is at mode 1's and mode 2's constraints intersection, the
+supervisor is allowed to change the the system to the second mode and change the
+reference \(r'(k)\) to the second waypoint's coordinates, as soon as the
+dwell-time's timers expire (both changes happen simultaniously). Again, because
+the reference changed, a new timer will start, but now counting down from mode
+2's dwell-time, \(T_{2}\). The same procedure will be repeated once the system's
+state reaches the second waypoint, when \(r'(k)\) will finally be set to
+\(r(k)\).
 
-\begin{figure}[!htb]
-  \centering
-  \includesvg[width=0.5\linewidth]{imgs/dt-ex3}
-  \caption{Second state's path: convergence to the final reference}%
-  \label{fig:dt-ex3}
-\end{figure}
-
-As it is the final reference, this timer will not affect the overall
-performance, however, if there were more modes to go through, their dwell time
-would be summed, and the total convergence time would be at least the sum of all
-dwell-times that need to be executed on the path to the final reference.
-
-Algorithm~\ref{alg:dwell-time} formalizes this procedure.
+Algorithm~\ref{alg:dwell-time} presents a generalized version of the algorith
+described in the given example.
 
 \begin{algorithm}[H]
   \begin{algorithmic}[1]
-	\State{}\textbf{Input}: \(\CG{}_i\) \(\leftarrow{}\) current \CG{},~\(\CG{}_j\) \(\leftarrow{}\) target GG.\@
-	\State{}change \(r(k)\) to next way-point
-	\While{dwell-time of \(\CG{}_{i}\) not ellapsed}
-		\State{}calculate \(g(k)\)
-		\State{}execute controller
-	\EndWhile{}
-	\State{}change to \(\CG{}_j\)
-	\State{}restart algorithm
+  \State{}\textbf{Input}: \(\CG{}_i\) \(\leftarrow{}\) current \CG{},~\(\CG{}_j\) \(\leftarrow{}\) target \CG{}.
+  \State{}change \(r'(k)\) to next way-point
+  \While{dwell-time of \(\CG{}_{i}\) not ellapsed}
+    \State{}calculate \(g(k)\)
+    \State{}execute controller
+  \EndWhile{}
+  \State{}change to \(\CG{}_j\)
+  \State{}restart algorithm
   \end{algorithmic}
   \caption{dwell-time implementation}%
   \label{alg:dwell-time}
 \end{algorithm}
+
+Firstly, \(\CG{}_{i}\) is set to the currently active \CG{} and \(\CG{}_{j}\) to
+the next \CG{} in the path (briefly disscussed in
+Subsection~\ref{subsec:supervisor}). Then the reference \(r'(k)\) is set to the
+next waypoint in the path. The timer is started and the supervisor will wait for
+it to ellapse before making any change to the system. While it is not ellapsed,
+the active \CG{} and controller will drive the system to the reference
+\(r'(k)\). As soon as the time ellapses, the system switches modes, activating
+\(\CG{}_{j}\). The procedure is then repeated.
 
 \section{Region of Attraction}%
 \label{sec:roa-switching-rule}
@@ -127,11 +128,29 @@ it is necessary to:
   \item switch modes as soon as possible.
 \end{enumerate}
 
-To guarantee stability, the concept of a controller's region of attraction is
-used. As described in Section~\ref{sec:region-of-attraction}, the controller's
-region of attraction is a closed region in the state-space such that every
-initial state inside it will remain inside it as well as asymptotically converge
-to a point inside it (usually the origin of the linearized system).
+The main contribution of this work is to propose a switching rule based on the
+controller's region of attraction yielding a guaranteed stable closed-loop
+system. As described in Section~\ref{sec:region-of-attraction}, the controller's
+region of attraction is the forward invariant neighbourhood under the flow
+generated by a critical point. On a switched system, there is one controller and
+linearized system for each mode, therefore there is also one region of
+attraction for each mode.
+
+Since the definition of a Region of Attraction undesirably allows the existence
+of limit-cycles within the region, we turn to Lyapunov's theorem to further
+restrict the region, eliminating them. The set which represents the region of
+attraction becomes \textit{contractive}, becoming smaller as the system's state
+converges to the critical point. The Lyapunov function is seen as an energy
+function, and its value at some point in the state-space is an energy level.
+This leads to the so called level sets, which are all points that yield the same
+energy level, in Lyapunov's sense.
+
+The level set, denoted \(\mathcal{L}_{V}(P)\), where \(P\) is the matrix used in
+the function \(V(x)=x^{\top}Px\), is an estimative of the region of attraction and,
+being contractive, implies that, once the system reaches a lower energy level,
+in Lyapunov's sense, it can not go to a state with higher energy and can only
+stay at the same level if it is zero, which guarantees convergence, as the only
+point with zero energy is the origin of the linear system.
 
 The region of attraction is, therefore, a certificate of stability for a system.
 However, as stated in Section~\ref{sec:switched-systems}, having stable modes is
@@ -141,41 +160,41 @@ system will remain stable after switching:
 
 \begin{align}
   \sigma_{i} = \begin{cases}
-    1 & \textrm{if}~f\hat{\xi}_{i}(k)\in\mathcal{L}_V(P_i) \\
+    1 & \textrm{if}~\xi_{i}(k)\in\mathcal{L}_V(P_i) \\
     0 & \textrm{otherwise}
   \end{cases},
 \end{align}
 %
-where \(\hat{\xi}_{i}(t)\) is the mode's state, \(\mathcal{L}_V(P_i)\) is the
-region of attraction (level set of the \(P_{i}\) matrix from the Lyapunov
-function), and \(\sigma_{i}\) is the switching rule, meaning that the system can
-switch to the \(i\)th mode if \(\sigma_{i}=1\).
+where \(\xi_{i}(k)\) is the mode's state, and \(\sigma_{i}\) is the switching rule,
+meaning that the system can switch to the \(i\)th mode if \(\sigma_{i}=1\).
 
 Let us discuss the stability of the system when this rule is used. Suppose a
-system is currently in mode 1, and the supervisor has deemed that it needs to go
-mode 2. The switch will only occur when the system's state is inside the second
-mode's controller's region of attraction. Because it is inside the region of
-attraction, it guarantees that it will converge, and therefore the switch is
-stable.
+system with two modes is currently in mode 1, and the supervisor has deemed that
+it needs to go mode 2. The switch will only occur when the system's state is
+inside the second mode's controller's region of attraction. Because it is inside
+the region of attraction, it guarantees that it will converge, and therefore the
+switch is stable.
 
-Now consider the same scenario, but the mode change follows the path
-\(1 \rightarrow 3 \rightarrow 8 \rightarrow 2\), meaning that, to go from \(1\) to \(2\), it first needs to
-switch to \(3\), then to \(8\) and only then to \(2\). The worst-case would be
-if the system is in the middle of the intersection of all regions of attraction.
-In this case, the system will instantly switch modes, going from \(1\) to \(2\)
-in \(3\) sample times, in the case of a discrete system. However, since the
-switch can only happen when the state is inside the next mode's controller's
-region of attraction, it will simply cause the previous scenario to be applied
-recursivelly, and the system will remain stable after it reaches the last mode.
+Consider the same scenario, however the system has 10 modes and the switch from
+mode 1 to mode 2 follows the path \(1 \rightarrow 3 \rightarrow 8 \rightarrow 2\), meaning that, to go from
+\(1\) to \(2\), it first needs to switch to \(3\), then to \(8\) and only then
+to \(2\). The worst-case would be if the system is in the middle of the
+intersection of all regions of attraction. In this case, the system will
+instantly switch modes, going from \(1\) to \(2\) in \(3\) sample times, in the
+case of a discrete system. However, since the switch can only happen when the
+state is inside the next mode's controller's region of attraction, it will
+simply cause the previous scenario to be applied recursivelly, and the system
+will remain stable after it reaches the last mode.
 
-In another scenario, the supervisor might malfunction or have a badly defined
-rule that will make the reference jump between many values, making the system
-try to switch modes seemly randomly. In this case the system will do the
-switches as long as it is allowed, but the state will always be inside some
-controller's region of attraction. It will then either never converge nor
-diverge (because of the ever-changing reference) or enter a state that is only
-inside one mode's controller's region of attraction, at which point it will not
-switch modes anymore.
+In another scenario, the software generating the references for the supervisor
+(i.e. generating \(r(k)\)) might malfunction or have a badly defined rule that
+will make the reference jump between many values, making the system try to
+switch modes seemly randomly. In this case the system will do the switches as
+long as it is allowed, but the state will always be inside some controller's
+region of attraction. It will then either never converge nor diverge (because of
+the ever-changing reference) or enter a state that is only inside one mode's
+controller's region of attraction, at which point it will not switch modes
+anymore.
 
 The illustrative scenarios show that the state will always be inside some
 controller's region of attraction, and therefore it is not possible for the
@@ -187,48 +206,37 @@ region is completely contained inside it), even if the supervisor's reference is
 not, eliminating the possible scenario where the system diverges because the
 reference is outside the region of attraction, dragging the system out of it.
 
-To visually illustrate the technique, consider the fictional system depicted in
-Figure~\ref{fig:roa-ex1}, where the black star is the system's state, the yellow
-star is the supervisor's reference, the orange star is the waypoint, the filled
-ellipses are the mode's constraints and the circles are the regions of
-attraction.
+To illustrate, we will use the same example of Section~\ref{sec:dwell-time}, but
+this time applying the region of attraction based rule. A difference, seen in
+Figure~\ref{fig:roa-example}, is the presence of the dashed circles,
+representing each controller's region of attraction. When the reference
+\(r'(k)\) changes to the first waypoint's coordinates, the supervisor will start
+checking whether the system's state is inside the region of attraction of the
+next mode's controller and, when it enters this region, the controller and
+linearized model will be changed to those of the system's mode 2, but the
+constraints will still be those of mode 1. We call this a hybrid switch. In
+Figure~\ref{fig:roa-example}, the dashed arrows represent a path followed while
+in a hybrid mode.
 
-\begin{figure}[!htb]
-  \centering
-  \includesvg[width=0.45\linewidth]{imgs/roa-ex1}
-  \caption{System to be considered in the example}%
-  \label{fig:roa-ex1}
-\end{figure}
+\input{imgs/roa-example}
 
-As the system cannot violate constraints, the supervisor will set the reference
-to the waypoint, and the system will converge to it. However, as soon as it
-crosses the next mode's controller's region of attraction (or after some
-distance is travelled inside it, just to be safe), as shown if
-Figure~\ref{fig:roa-ex2}, it can switch modes without switching the constraints,
-what we call a hybrid switch. This is opitional, but may yield better overall
-performance.
+The advantage of the hybrid switch is the possibility to speedup convergence. It
+is not required, but if the second controller is known to have a desired better
+performance index, it can be allowed. If it is known that it performs worse,
+this rule can be ignored. Here we assume that switching earlier always results
+in faster convergence to highlight in the figure when those changes would occur.
 
-\begin{figure}[!htb]
-  \centering
-  \includesvg[width=0.45\linewidth]{imgs/roa-ex2}
-  \caption{System's state crossing the region of attraction's border}%
-  \label{fig:roa-ex2}
-\end{figure}
+While in this hybrid mode, the system continues to converge to the waypoint. The
+supervisor checks at each instant whether the system's state is inside the
+current and next mode's constraint's intersection. Upon entering the
+intersection, a full mode switch is performed, activating mode 2's command
+governor and constraints. The supervisor sets the reference \(r'(k)\) to the
+next waypoint in path, in this case the second one, and system is free to
+converge to it.
 
-The system will then continue to converge to the waypoint, since it can only
-change to the next reference once it is inside the constraint's intersection. As
-soon as it enters the intersection the full mode change will be performed,
-changing the current constraint to that of the next mode and setting the
-reference to the global one, represented by the yellow star. Note that the
-system does not fully converge to the waypoint. This step is shown in
-Figure~\ref{fig:roa-ex3}.
-
-\begin{figure}[!htb]
-  \centering
-  \includesvg[width=0.45\linewidth]{imgs/roa-ex3}
-  \caption{System's state crossing the constraint's intersection's border}%
-  \label{fig:roa-ex3}
-\end{figure}
+The same procedure will be repeated, with a hybrid switch occurring when the
+system's states enters the third mode's controller's region of attraction and
+another full switch when it enters modes 2 and 3's constraints intersection.
 
 With this switching rule, there is no wait: the system will change mode as soon
 as possible, yielding faster overall convergence. The hybrid switching is an
@@ -240,19 +248,17 @@ helps to guarantee stability.
 
 \begin{algorithm}[H]
   \begin{algorithmic}[1]
-    \State{}\textbf{Input}: \(\CG{}_i\) \(\leftarrow{}\) current \CG{},~\(\CG{}_j\) \(\leftarrow{}\)
-        target GG.\@
-    \State{}let \(P_1\) and \(P_2\) be regions of attraction for \(\CG{}_i\)
-        and \(\CG{}_j\), respectively.
+    \State{}\textbf{Input}: \(\CG{}_i\leftarrow{}\) current \CG{},~\(\CG{}_j\leftarrow{}\) target \CG{}.
+    \State{}\textbf{let} \(P_j\) be the \(P\) matrix of \(\CG{}_j\)'s Lyapunov function.
     \If{should switch controllers earlier}
-      \While{\(\hat{\xi}(k)\not\in\mathcal{L}_V(P_2)\)}
+      \While{\(\xi(k)\not\in\mathcal{L}_V(P_j)\)}
         \State{}calculate \(g(k)\)
         \State{}execute controller
       \EndWhile{}
       \State{}change current controller and model to \(\CG{}_j\)'s ones
       \State{}reset integrators
     \EndIf{}
-    \While{\(x(k)\not\in\mathcal{X}_i\cap\mathcal{X}_j\) or \(\hat{\xi}(k)\not\in\mathcal{L}_V(P_2)\)}
+    \While{\(x(k)\not\in\mathcal{X}_i\cap\mathcal{X}_j\) or \(\hat{\xi}(k)\not\in\mathcal{L}_V(P_j)\)}
       \State{}calculate \(g(k)\)
       \State{}execute controller
     \EndWhile{}
@@ -264,6 +270,20 @@ helps to guarantee stability.
   \caption{Switching rule based on region of attraction}%
   \label{alg:roa-rule}
 \end{algorithm}
+
+\(\CG{}_{i}\) is the currently active \CG{} and \(\CG{}_{2}\) is the next \CG{}
+in the path. \(P_{j}\) is next \CG{}'s Lyapunov function's \(P\) matrix.
+\texttt{should switch controllers earlier} tests whether a hybrid from
+\(\CG{}_{i}\) to \(\CG{}_{j}\) is allowed. If it is, the supervisor checks if
+the system's state is inside next mode's controller's region of attraction.
+While it is not, the current controller is executed, alogside its \CG{} unit.
+Once the system enters the next mode's controller's region of attraction, the
+controller and internal linearized model are switched, taking the necessary
+measures to guarantee continuity of signals, specially control signal, such as
+resetting integrators. This controller is executed until the system's state
+enters the current and next mode's constraint's intersection, when the full mode
+switch occurs. The reference \(r'(k)\) is set to the next waypoint's coordinates
+and the algorithm is restarted.
 
 \section{Practical Implementation Aspects}%
 \label{sec:practival-implementation-aspects}

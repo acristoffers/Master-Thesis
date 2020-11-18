@@ -130,7 +130,7 @@
 
 % End of \RequirePackage's
 
-\usetikzlibrary{matrix,shapes,arrows,positioning,fit}
+\usetikzlibrary{backgrounds,shapes,arrows,positioning,fit,intersections,calc}
 
 \renewcommand{\rm}{\textrm} % needed with memoir
 \renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter. \ #1}{ }}
