@@ -1,235 +1,457 @@
 % !TeX root = document.tex
 % !TeX encoding = UTF-8 Unicode
 
-\chapter{Practical Implementation Aspects}%
-\label{chp:practival-implementation-aspects}
+\chapter{Results}%
+\label{chp:results}
 
-When implementing the techniques described in this thesis, some details need
-attention. For example, it is easy to say
-\enquote{\(\mathrm{minimize}~f(x)~|~x\in\mathcal{X}\)}, however it is not so
-simple (and sometimes even possible) to implement the \(x\in\mathcal{X}\) bit.
-Describing the set and finding a way to test membership numerically can be
-challenging. That is one reason why we choose convex sets: we know how to
-implement membership tests and use it in common optimization frameworks.
+This chapter presents both simulations and experimental results that show the
+technique working and compares it with dwell-time implementations.
 
-This chapter will discuss how to represent the constraints and region of
-attraction and provide some insight into how to implement the models of the
-command governor with a supervisor structure, and the problems faced when
-estimating the region of attraction.
+\section{Simulation}%
+\label{sec:simulation}
 
-\section{Polytope representations}%
-\label{sec:polytope-representation}
+\subsection{Level Control System}%
+\label{subsec:tanks-system}
 
-A convex polytope can approximate any convex region. A convex polytope is a
-compact convex set with a finite number of extreme points such that, for any two
-distinct points \((a,b)\) belonging to the region, a closed segment with
-endpoints \((a,b)\) is entirely contained within the
-region~\parencite{grünbaum:convex}. In other words, it is a convex hull of a
-finite number of points, called vertices. This representation is called the
-\enquote{V-representation} and is not useful to test membership. However, it is
-straightforward to sample points from the desired region's border to create a
-V-representation of a polytope approximating it. It is also useful for plotting.
-The Figure~\ref{fig:v-rep-example} illustrates a region in its V-representation,
-where the red dots are the vertices, and all blue dots are inside the region.
-The set of vertices is \resizebox{\linewidth}{!}{%
-  \(\{(0.02,0.71),(0.31,0.02),(0.82,0.04),(0.87,0.13),(0.99,0.88),(0.60,0.98),(0.38,0.97),(0.04,0.88),(0.02,0.82)\}\)}.
+Consider an interactive tank system as indicated in Figure~\ref{fig:tanks-sim}.
+It consists of two coupled tanks, namely \(T1\) and \(T2\), that are feed by two
+with controlled outflows \(u_1\) and \(u_2\), measured in
+\si{\cubic\centi\metre\per\second}. The levels of each tank, \(h_1\) and \(h_2\)
+(\si{\centi\metre}), are the control objective variables.
 
-\begin{figure}[!htb]
-  \centering
-  \includegraphics[width=\linewidth]{imgs/v-rep}
-  \caption{Visualization of the V-representation of a set}%
-  \label{fig:v-rep-example}
-\end{figure}
+\input{imgs/tanks-sim}
 
-A more useful representation of such regions is the \enquote{H-representation}.
-In this representation, the intersection of a finite number of half-spaces
-describes the region. A half-space is one of the two parts in which a
-hyper-plane divides an affine space. Since half-spaces are linear inequalities,
-the H-representation becomes the matrix inequality
+The output flow of the \(T1\) and \(T2\) are denoted by \(q_1\) and \(q_2\)
+(\si{\cubic\centi\metre\per\second}), respectively, and the flow between them is
+noted by \(q_{12}\) (\si{\cubic\centi\metre\per\second}).
+
+Both tanks have the same cross-section area, denoted as \(A\)
+(\si{\square\centi\metre}), as well as the cross-section areas of the restrictions in
+the outputs of the tanks, \(a\) (\si{\square\centi\metre}); \(g\)
+(\si{\centi\metre\per\square\second}) is the gravity acceleration. By using
+Bernoulli's equations, we have:
 %
 \begin{equation}
-  Ax\leq{}b,
+  \label{eq:formula-height-variation-lin}
+  \begin{aligned}
+    \dot{h}_1(t) & = \frac{u_1(t)-q_1(t)\pm{}q_{12}}{A}, \\
+    \dot{h}_2(t) & = \frac{u_2(t)-q_2(t)\mp{}q_{12}}{A},
+  \end{aligned}
 \end{equation}
 %
-where \(A\) is a matrix of coefficients, \(x\) is a point in space and \(b\) is
-a vector of real numbers. The number of rows in \(A\) and \(b\) is the same as
-the number of half-spaces defining the region. All points satisfying the
-inequality are in the region's interior, making it easy to test set membership.
-Figure~\ref{fig:h-rep-example} shows the half-spaces that compose the
-H-representation of the same convex polytope presented in
-Figure~\ref{fig:v-rep-example}. Equation~\ref{eq:h-rep-example} shows the
-inequation that describes the region. The selected side is not shown for each
-half-space but is the one in which intersections with the other selected halves
-make the convex region in the middle.
+where the flows are given by \(q_1(t) = a\sqrt{2gh_1(t)}\),
+\(q_2(t) = a\sqrt{2gh_2(t)}\), and
+\(q_{12}(t) = a\sqrt{2g\left|h_2(t)-h_1(t)\right|}\).
 
-\begin{equation}
-  \label{eq:h-rep-example}
+This is a nonlinear and switching system, as the model changes depending on the
+height of the tanks' water column. At each mode, \(h_1>h_2\) or \(h_1\leq h_2\),
+equation~\eqref{eq:formula-height-variation-lin} can be linearized around an
+equilibrium operational point \((x_{eq},u_{eq})\) by using Jacobian matrices. In
+what follows, we use \(a=5.9\), \(A=961\pi{}\), and \(g=980.665\).
+
+Two operational conditions with
+\(x(k) = \begin{bmatrix}h_1(k) & h_2(k)\end{bmatrix}^\top{}\), are such that:
+%
+\begin{equation*}
+  x_{eq}^1 =\! \begin{bmatrix}
+    57.5 \\ 43.61
+  \end{bmatrix}\!,
+  u_{eq}^1 =\! \begin{bmatrix}
+    744 \\ 2960
+  \end{bmatrix}\!,
+  x_{eq}^2 = \begin{bmatrix}
+    43.61 \\ 57.5
+  \end{bmatrix}\!,
+  u_{eq}^2 =\! \begin{bmatrix}
+    2960 \\ 744
+  \end{bmatrix}\!,
+\end{equation*}
+%
+yielding two operational modes, each of them corresponding to a \CG{}.\@
+%
+After the linearization, we discretized the continuous-time model using a sample
+time of \SI{5}{\second} and Euler equations to get discrete-time model given
+by~\eqref{eq:state-space} with matrices:
+%
+\begin{align*}
+  A_1 & =
   \begin{bmatrix}
-    -0.91 & -0.39 \\
-    0.04  & -0.99 \\
-    0.98  & -0.15 \\
-    0.84  & -0.54 \\
-    -0.24 & 0.96  \\
-    0.24  & 0.97  \\
-    -0.06 & 0.99  \\
-    -0.99 & 0.03  \\
-    -0.93 & 0.34
-  \end{bmatrix}x \leq
+    0.92  & 0.053 \\
+    0.053 & 0.91
+  \end{bmatrix}, ~~~ A_2 = \begin{bmatrix}
+    0.91  & 0.053 \\
+    0.053 & 0.92
+  \end{bmatrix} \\
+  B_1 & =
   \begin{bmatrix}
-    -0.30 \\
-    -0.01 \\
-    0.84  \\
-    0.66  \\
-    0.84  \\
-    1.10  \\
-    0.94  \\
-    0.00  \\
-    0.26
-  \end{bmatrix}
-\end{equation}
-
-\begin{figure}[!htb]
-  \centering
-  \includegraphics[width=\linewidth]{imgs/h-rep}
-  \caption{Visualization of the H-representation of a set}%
-  \label{fig:h-rep-example}
-\end{figure}
-
-Given that the V-representation is easier to obtain from generic shapes, but the
-H-representation is more useful when verifying set membership, it is essential
-to have a way to switch between them. Unfortunately, this is not
-straightforward, but some algorithms allow us to enumerate the facets given the
-vertices. Some problems of such algorithms are the time needed to find the
-facets of many vertices and how to find facets in higher-order spaces. However,
-good algorithms can be used for the conversion, especially if the computation
-will be offline
-\parencite{avis.bremner.ea:how,graham.frances-yao:finding,lee:on,mccallum.avis:linear}.
-
-Particular regions can be easily described in a way that is easy to include in
-optimization problems. The ellipsoid is one such region, as it is described as
-\(x^{\top}Px\leq{}1\) so that any point \(x\) that satisfies the inequality is inside
-the region. Any region described by polynomials can be expressed in a matrix
-form and can quickly test membership. Such regions should use their inequation
-directly instead of a polytope approximation. We do that to the Region of
-Attraction, and it is how we implemented the check to verify if the state is
-inside it.
-
-\section{Internal Models}%
-\label{sec:internal-models}
-
-To switch modes and controllers of a system the way we propose, one must pay
-attention to the controller's internal states and the control signal's
-continuity. Also, since every \CG{} unit has its controller and model, the
-destination \CG{} must be updated to a valid state before switching. There are
-many ways to do so, and we will present some.
-
-One way is to run all \CG{}s in parallel. The optimization problem of the
-inactive units does not need to run with complete constraints. It can be relaxed
-only to contain the region constraint on the virtual reference; also, the
-observer can be ignored. It is necessary to find the virtual reference, which
-will be close to the constraint region's border, which is closest to the real
-system's state. Notice that, in this case, we are not looking for a virtual
-reference closest to the real reference but to the real system's state. By doing
-so, the internal model's and the controller's states will always be valid.
-
-However, this approach can be resource-intensive, as it still computes the
-optimization problem at every sample. It is also possible to run the observer
-and update the internal model's states without checking for constraint
-violations, but this does not solve the controller's state problem. Another
-technique needs to be combined to find them.
-
-Another way of guaranteeing valid states is to compute the states before
-changing mode. Two ways of computing the states are: by inverting the system and
-controller equations and by simulation. The first approach has a very low
-computational resource impact but may not be possible or yield not ideal values.
-For systems with integrators, for example, there will be infinitely many
-results. Another problem is that even though the system has only one
-steady-state solution, it can have many transient ones.
-
-The simulation becomes interesting, even though it is more computationally
-intensive, as it can calculate a state that better matches the current
-transitory characteristics of the real system. It can also find the model's and
-controller's states at once, guaranteeing that there is no mismatch. To use the
-simulation approach, execute the simulation right before changing modes, using
-the internal controller and model, and setting the reference to the real
-system's current state. This yields a valid steady-state model's and
-controller's state. However, this technique does not guarantee control signal
-continuity (which might even be impossible on some systems) without adjustments.
-
-\section{Region of Attraction Estimation}%
-\label{sec:roa-estimation}
-
-The Lyapunov approach presented in Section~\ref{sec:region-of-attraction} can
-easily estimate the region of attraction. The presented approach makes use of a
-quadratic Lyapunov candidate, but it is not necessary, as it is possible to find
-functions of any form. The function should easily to check if a point belongs to
-the region, as it will be done frequently. Quadratic forms, such as the simple
-one presented or those generated by Sum Of Squares techniques, are recommended
-since they easily and computationally inexpensively check set membership.
-
-The region of attraction needs to be larger than the constraints region and
-needs to intersect all mode's regions of attraction to and from which it can
-switch. Because of this, it is necessary to guarantee the intersection. However,
-LMIs usually try to optimize the size of the region of attraction by making it
-as big as possible or as small as possible. Since the exponential stability
-tries to minimize the size of the region of attraction, we need a way to ensure
-a minimum region size.
-
-Consider the region of attraction described by
-%
-\begin{equation}
-  x^{\top}Px \le{} 1,
-\end{equation}
-%
-where \(x\) is the point that should be inside the region of attraction. (Note
-that, numerically, a number smaller than \(1\) may be necessary to make the
-problem feasible).
-
-If the LMI is written in terms os \(P\), it can be used directly to force the
-region to be big enough to contain the point \(x\). If the LMI is written in
-terms of \(P^{-1}\), simply applying Schur's complement yields a valid LMI:
-%
-\begin{equation}
-  \label{eq:lmi-point-inside-roa}
-  \begin{bmatrix}
-    P^{-1}   & x \\
-    x^{\top} & 1
-  \end{bmatrix} \succ \mathbf{0},
-\end{equation}
-
-You need to add one of such LMIs to your optimization problem for each mode that
-is allowed to switch from or to the current mode. The point \(x\) does not need
-to be the same for two modes that intersect, as placing the points some distance
-apart creates a larger region of intersection, which gives a margin for errors.
-
-To illustrate the choice of \(x\), consider the switched system composed of
-three modes shown in Figure~\ref{fig:choice-x-roa-diff}. The stars represent
-each mode's linearization point, the filled ellipses its constraints regions,
-the unfilled circles the regions of attractions and the black dots the points
-used in the LMIs to ensure the RoA's size. Note the intersection region formed
-in the middle, displayed in yellow.
-
-Now compare it with the same system, but only one point used for all systems,
-depicted in Figure~\ref{fig:choice-x-roa-same}. See how smaller is the
-intersection of regions of attraction and constraints (in yellow). The proposed
-technique will be much more efficient in the first case, since it will result in
-an earlier switch.
-
-\begin{figure}[!htb]
-  \centering
-  \begin{subfigure}[b]{.45\linewidth}
-    \centering
-    \includesvg[width=\linewidth]{imgs/roa-choice-of-x-diff.svg}
-    \caption{Choosing different \(x\) for each RoA}%
-    \label{fig:choice-x-roa-diff}
-  \end{subfigure}
+    0.0016          & 4.5\cdot10^{-5} \\
+    4.5\cdot10^{-5} & 0.0016
+  \end{bmatrix},
+  B_2 = \begin{bmatrix}
+    0.0016          & 4.5\cdot10^{-5} \\
+    4.5\cdot10^{-5} & 0.0016
+  \end{bmatrix},                              \\
   %
-  \begin{subfigure}[b]{.45\linewidth}
-    \centering
-    \includesvg[width=\linewidth]{imgs/roa-choice-of-x-same.svg}
-    \caption{Choosing the same \(x\) for all RoA}%
-    \label{fig:choice-x-roa-same}
-  \end{subfigure}
-  \caption{Different RoA's intesections}%
-  \label{fig:choices-of-x}
+  C_1 & = C_2 =
+  \begin{bmatrix}
+    1 & 0 \\
+    0 & 1
+  \end{bmatrix},
+\end{align*}
+%
+and \(s=2\). Using Lyapunov's and Kalman's
+approaches~\parencite{chen:linear,hespanha:linear} we got the following
+controller and observer gains:
+%
+\begin{align*}
+  K_1 & = \begin{bmatrix}
+    -875.384 & -9.217   & -297.447 & 7.982    \\
+    -8.505   & -849.853 & 8.514    & -279.434
+  \end{bmatrix}, \\
+  %
+  K_2 & = \begin{bmatrix}
+    -849.853 & -8.505   & -279.434 & 8.514    \\
+    -9.217   & -875.384 & 7.982    & -297.447
+  \end{bmatrix}, \\
+  %
+  L_1 & = \begin{bmatrix}
+    -0.919 & -0.053 \\
+    -0.053 & -0.915
+  \end{bmatrix},
+  %
+  L_2 = \begin{bmatrix}
+    -0.915 & -0.053 \\
+    -0.053 & -0.919
+  \end{bmatrix},   \\
+\end{align*}
+%
+for the operational modes \(1\) and \(2\).
+
+We simulated our approaches described by algorithm~\ref{alg:roa-rule} to switch
+between the \CG{}s 1 and 2. In both cases the system starts in \(x(0) =
+\begin{bmatrix}43.61 & 57.5\end{bmatrix}\). The references are \(r =
+\begin{bmatrix}57.5 & 43.61\end{bmatrix}\), for \(0\leq k\leq 10 \cup 50 \leq k
+\leq\infty{}\), and \(r = \begin{bmatrix}43.61& 57.5\end{bmatrix}\), for \(11
+\leq k \leq 49\). Therefore, the system must perform a closed path.
+
+Fig.~\ref{fig:states} shows the path taken by the closed-loop system over the
+space of the system's state. The trajectory marked with
+\textcolor{red}{red-dashed line} concerns the results achieved without
+early-switch, and the \textcolor{blue}{solid-blue line} is related to ones with
+early-switch. The shadow regions concern the constraints of each mode. Also,
+Fig.~\ref{fig:states} shows the borders of the estimates of the regions of
+attraction, RoA, for each mode, with dot-dashed lines.
+
+It is clear that the path taken under each algorithm are almost the same. The
+respective control signals are given in Fig.~\ref{fig:control-signals}, pointing
+to no relevant difference between the methods.
+
+\begin{figure}[ht!]
+  \centering
+  \captionsetup{justification=centering}
+  \includegraphics[width=0.9\linewidth]{imgs/tanks-states}
+  \caption{States trajectory for Example 1.}%
+  \label{fig:states}
+\end{figure}
+
+\begin{figure}[ht!]
+  \centering
+  \captionsetup{justification=centering}
+  \includegraphics[width=\linewidth]{imgs/tanks-control-signal}
+  \caption{Control signals for Example 1.}%
+  \label{fig:control-signals}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Unstable System}%
+\label{subsec:unstable-system}
+
+Consider the unstable switching system with matrices
+%
+\begin{align*}
+  A_1 & =
+  \begin{bmatrix}
+    1 & 0.003 \\
+    0 & 1
+  \end{bmatrix},
+  A_2 = \begin{bmatrix}
+    1 & 0.0074 \\
+    0 & 1.1
+  \end{bmatrix}, \\
+  B_1 & =
+  \begin{bmatrix}
+    0.0005 & 1.2\cdot{}10^{-6} \\
+    0      & 0.0008
+  \end{bmatrix},
+  B_2 = \begin{bmatrix}
+    0.0019 & 3.6\cdot{}10^{-5} \\
+    0      & 0.011
+  \end{bmatrix}, \\
+  %
+  C_1 & = C_2 =
+  \begin{bmatrix}
+    1 & 0 \\
+    0 & 1
+  \end{bmatrix},       \\
+\end{align*}
+%
+and operational points
+%
+\[
+  x_{eq}^1 = \begin{bmatrix}
+    1 \\ 1
+  \end{bmatrix},
+  u_{eq}^1 = \begin{bmatrix}
+    -2 \\ \frac{-5}{4}
+  \end{bmatrix},
+  x_{eq}^2 = \begin{bmatrix}
+    -1 \\ 1
+  \end{bmatrix},
+  u_{eq}^2 = \begin{bmatrix}
+    \frac{-30}{19} \\ -10
+  \end{bmatrix}.
+\]
+%
+The sample-period was \SI{0.1}{\second}, and controller and observer gains are
+given by:
+%
+\scriptsize
+\begin{align*}
+  K_1 & = \begin{bmatrix}
+    -2.669\cdot{}10^3   & -1.993            & -6.741\cdot{}10^2    & 1.010             \\
+    3.582\cdot{}10^{-4} & -1.669\cdot{}10^3 & -3.103\cdot{}10^{-4} & -4.210\cdot{}10^2
+  \end{bmatrix}, \\
+  %
+  K_2 & = \begin{bmatrix}
+    -7.034\cdot{}10^2    & -1.268            & -1.769\cdot{}10^2    & 6.097\cdot{}10^{-1} \\
+    -3.903\cdot{}10^{-6} & -1.370\cdot{}10^2 & -1.292\cdot{}10^{-5} & -3.202\cdot{}10^1
+  \end{bmatrix}, \\
+  L_1 & = \begin{bmatrix}
+    0.89374311 & 0.01193574 \\
+    0.00922275 & 0.91488323
+  \end{bmatrix},
+  L_2 = \begin{bmatrix}
+    0.64130679 & 0.0107965 \\
+    0.00533561 & 0.8518838
+  \end{bmatrix}.
+\end{align*}
+\normalsize
+
+With the same procedures and considerations of the previous example, including
+the used color codes, we simulated the unstable system.
+Figure~\ref{fig:unstable-states} shows the same system trajectory for both
+methods.
+
+\begin{figure}[ht!]
+  \centering
+  \captionsetup{justification=centering}
+  \includegraphics[width=\linewidth]{imgs/unstable_states}
+  \caption{States trajectory for Example 2}%
+  \label{fig:unstable-states}
+\end{figure}
+
+The second method shows better performance under control signal restrictions.
+Figure~\ref{fig:unstable-control-signals} reveals a difference in the control
+signals, where the first method, displayed in \textcolor{red}{red dashed-line}
+and \textcolor{green}{green dashed-line}, have higher control signal outputs
+than the second method, shown by \textcolor{blue}{blue solid-line} and
+\textcolor{orange}{orange solid-line}.
+
+\begin{figure}[ht!]
+  \centering
+  \captionsetup{justification=centering}
+  \includegraphics[width=\linewidth]{imgs/unstable_control_signal}
+  \caption{Control signals for Example 2}%
+  \label{fig:unstable-control-signals}
+\end{figure}
+
+Both methods results in the same settling time, but with much lower control
+effort with the strategy of early switching.
+
+\FloatBarrier
+
+\subsection{Cessna 182}%
+\label{subsec:cessna}
+
+\textcite{franzè.lucia.ea:command} present a Cessna 182 aircraft model, which
+they used to simulate the dwell-time technique they proposed. They describe the
+model, the operation points they chose, and the constraints applied to it. As
+with the tank, we used the same system changing only the switch technique to
+compare the performance. The proposed technique took \SI{6}{\second} to
+converge, whereas the dwell-time technique took over \SI{20}{\second}.
+
+Figure~\ref{fig:cessna-u} shows both actuators' control signals, which are kept
+mostly invariant, except at the mode transitions, where the integrator reset
+created a discontinuity. Figure~\ref{fig:cessna-x} shows each state. In both
+figures, the solid black lines at the plot's top and bottom are the signal's
+constraints. The last state (\(x_4)\) is the output, and its plot also shows the
+reference and command governor's output.
+
+\begin{figure}[ht!]
+  \centering \captionsetup{justification=centering}
+  \includegraphics[height=0.3\textheight]{imgs/cessna-u}
+  \caption{Cessna simulation control signal}%
+  \label{fig:cessna-u}
+\end{figure}
+
+\begin{figure}[ht!]
+  \centering \captionsetup{justification=centering}
+  \includegraphics[height=0.6\textheight]{imgs/cessna-x}
+  \caption{Cessna simulation states}%
+  \label{fig:cessna-x}
+\end{figure}
+
+\section{Experimental Results}%
+\label{sec:experimental-results}
+
+Consider an interactive tank system as indicated in Figure~\ref{fig:tanks}. It
+describes the physical system present at the System Analysis Laboratory of
+CEFET-MG campus V, shown in Figure~\ref{fig:tanks-real}. It consists of two
+coupled tanks, \(T1\) and \(T2\), that are fed by a pump with controlled flow
+\(u(t)\), measured in \si{\cubic\centi\metre\per\second}. The levels of each
+tank, \(h_1\) and \(h_2\) (\si{\centi\metre}), are the control objective
+variables.
+
+\begin{figure}[ht!]
+  \centering \captionsetup{justification=centering}
+  \includegraphics[height=.5\textheight]{imgs/tanks-real}
+  \caption{Tank system}%
+  \label{fig:tanks-real}
+\end{figure}
+
+\begin{figure}[ht!]
+  \centering \captionsetup{justification=centering}
+  \includegraphics[width=0.9\linewidth]{imgs/tanks}
+  \caption{Tank system diagram}%
+  \label{fig:tanks}
+\end{figure}
+
+Both tanks have the same cross-section area, denoted as \(A\)
+(\si{\square\centi\metre}), however, there is a solid inside \(T1\) that makes its
+area non-linear and adds uncertainties to its model. The cross-section area of
+\(T1\) becomes
+%
+\begin{equation}
+  \label{eq:t1-area}
+  A_{1}(h_{1}(t)) = \frac{3r}{5} \left(
+  2.7r - \frac{cos(2.5\pi{}((h_{1}(t)-8)\cdot{}10^{-2}-\mu))}{\sigma{}\sqrt{2\pi}}
+  e^{-\frac{((h_{1}(t)-8)\cdot{}10^{-2}-\mu^{2})^{2}}{2\sigma^{2}}}
+  \right),
+\end{equation}
+%
+where \(\mu=0.4\), \(\sigma=0.55\) and \(r=0.31\). The cross-section area of \(T2\) is
+\(\SI{0.31}{\square\metre}\).
+
+By using Bernoulli's equations, the system's dynamics can be described by:
+%
+\begin{equation}
+  \label{eq:formula-height-variation}
+  \begin{aligned}
+    \dot{h}_1(t) & = \frac{R_{12}(h_{1}(t),h_{2}(t))\cdot{}K_{b}\cdot{}u(t)-h_{1}(t)+h_{2}(t)}
+    {A_{1}(h_{1}(t))\cdot{}R_{12}(h_{1}(t),h_{2}(t))}                                                                 \\
+    \dot{h}_2(t) & = \frac{h_{1}(t)-h_{2}(t)}{R_{12}(h_{1}(t),h_{2}(t))\cdot{}A_{2}} - \frac{q_{o}(h_{2}(t))}{A_{2}},
+  \end{aligned}
+\end{equation}
+%
+where \(R_{12}(h_{1}(t),h_{2}(t))=(0.412(h_{1}(t-h_{2}(t))+11.488)\cdot{}10^{-3}\)
+and \(q_{o}(h_{2}(t))=11.941h_{2}(t)+787.586\). A frequency inverter controls
+the pump through the percentage of maximum flow, and this value can be converted
+to flow by \(q_{i}=13.201u_{t}+220.085\). Applying this before inputing in
+Equation~\eqref{eq:formula-height-variation} results in \(u(t)\) becoming this
+percentual value instead of the flow directly.
+
+We chose four operation points to cover a significant portion of the available
+\(h_{1}\) range (0 to \SI{70}{\centi\metre}). The points and their respective
+linearized and discretized (with a sampling time of \SI{5}{\second}) systems are
+
+\begin{align}
+  \label{eq:op-points}
+  \left[\begin{array}{c|c}
+      x_{eq}^{\top} & u_{eq} \\
+      \hline
+      A             & B
+    \end{array}\right]_{1} & = \left[\begin{array}{cc|c}
+      19.5  & 5    & 15     \\
+      \hline
+      0.91  & 0.14 & 0.028  \\
+      0.085 & 0.9  & 0.0013
+    \end{array}\right], \\
+  \left[\begin{array}{c|c}
+      x_{eq}^{\top} & u_{eq} \\
+      \hline
+      A             & B
+    \end{array}\right]_{2} & = \left[\begin{array}{cc|c}
+      27.5  & 11.6 & 20     \\
+      \hline
+      0.94  & 0.19 & 0.04   \\
+      0.084 & 0.9  & 0.0018
+    \end{array}\right], \\
+  \left[\begin{array}{c|c}
+      x_{eq}^{\top} & u_{eq} \\
+      \hline
+      A             & B
+    \end{array}\right]_{3} & = \left[\begin{array}{cc|c}
+      37.3  & 17.8 & 25     \\
+      \hline
+      1.1   & 0.47 & 0.1    \\
+      0.086 & 0.92 & 0.0042
+    \end{array}\right], \\
+  \left[\begin{array}{c|c}
+      x_{eq}^{\top} & u_{eq} \\
+      \hline
+      A             & B
+    \end{array}\right]_{4} & = \left[\begin{array}{cc|c}
+      47.4  & 24.9 & 30     \\
+      \hline
+      0.49  & 0.96 & 0.22   \\
+      0.053 & 0.95 & 0.0096
+    \end{array}\right].
+\end{align}
+
+To develop the controllers we applied the LMI described in the
+subsection~\ref{sec:region-of-attraction} -~\nameref{sec:region-of-attraction}
+to the integral-augmented system. The points forced to be inside the region of
+attraction are the previous' and next's operation point. It creates an
+intersection that allows the early switching of controllers, which speeds up
+convergence. The following controllers were obtained:
+
+\begin{align}
+  K_{1} & = \begin{bmatrix} -12.884 & -97.540 & -13.975 \end{bmatrix}, \\
+  K_{2} & = \begin{bmatrix} -10.054 & -73.777 & -10.523 \end{bmatrix}, \\
+  K_{3} & = \begin{bmatrix} -5.840  & -31.622 & -4.148 \end{bmatrix}, \\
+  K_{4} & = \begin{bmatrix} -1.832  & -21.527 & -4.177 \end{bmatrix}.
+\end{align}
+
+To calculate each of the described modes' dwell-time, we applied the technique
+described by~\textcite{franzè.lucia.ea:command}. We then ran both approaches ---
+the dwell-time and the proposed one --- on the physical system.
+Figures~\ref{fig:tanks-dwell} and~\ref{fig:tanks-roa} show the result of the
+experiments.
+
+The proposed technique has a faster overall convergence, entering the final mode
+after 215 seconds while the dwell-time approach takes 340 seconds. The proposed
+approach also shows no overshoot, since it does not give the system enough time
+to converge to the waypoints and keeps it always moving towards the reference.
+Because of that, it also has a smaller control effort, producing smaller control
+signal variation.
+
+The last mode should also have an overshoot on the proposed technique. However,
+the command governor's optimization problem generated virtual references that
+slowly guided the system to the real reference, making it take longer than
+necessary to converge. The behaviour was present on every test repetition, just
+like the dwell-time approach's overshoots.
+
+\begin{figure}[ht!]
+  \centering \captionsetup{justification=centering}
+  \includegraphics[width=\linewidth]{imgs/tanks-dwell}
+  \caption{Dwell-time approach}%
+  \label{fig:tanks-dwell}
+\end{figure}
+
+\begin{figure}[ht!]
+  \centering \captionsetup{justification=centering}
+  \includegraphics[width=\linewidth]{imgs/tanks-roa}
+  \caption{Proposed RoA-based approach}%
+  \label{fig:tanks-roa}
 \end{figure}

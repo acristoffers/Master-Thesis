@@ -1,5 +1,6 @@
-\tikzstyle{block} = [draw, rectangle, minimum height=3em, minimum width=6em]
-\tikzstyle{sum}   = [draw, circle, node distance=1cm]
+\tikzstyle{block} = [draw, rectangle, minimum height=3em, minimum width=6em,
+very thick]
+\tikzstyle{sum}   = [draw, circle, node distance=1cm, very thick]
 \tikzstyle{point} = [coordinate]
 \def\windup{
   \tikz[remember picture, overlay]{
@@ -7,7 +8,7 @@
     \draw (-0.7,-0.5) -- (-0.5,-0.5) -- (0.5,0.5) -- (0.7,0.5);
   }
 }
-\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+\begin{tikzpicture}[auto,node distance=2cm,>={Stealth}]
   \node [point, name=input] {};
   \node [sum]   (sum1)   [right=1cm of input] {\Large \(\Sigma\)};
   \node [block] (delay)  [right=1cm of sum1]  {\(z^{-1}\)};
@@ -21,14 +22,14 @@
   \node [point] (eiw)    [below=1cm of delay] {};
   \node [scale=0.7] at (sat) {\windup};
 
-  \draw [->] (input)  --  node []         {\(r(k)\)}               (sum1);
-  \draw [->] (sum1)   --  node []         {\(e(k)\)}               (delay);
-  \draw [->] (delay)  --  node [name=el]  {\(\int{}e(k)\)}            (ki);
-  \draw [->] (ki)     --  node []         {}                       (sum2);
-  \draw [->] (sum2)   --  node []         {\(u(k)\)}               (sat);
-  \draw [->] (sat)    --  node []         {\(\mathrm{sat}(u(k))\)} (system);
-  \draw [->] (system) |- node [near end] {\(x(k)\)}               (kp);
-  \draw [->] (kp)     -|                                          (sum2);
-  \draw [->] (system) -- (output) |- (y) -| node [near end] {\(y(k)\)} (sum1);
-  \draw [->] (el) |- (eiw) -- (sum1);
+  \draw [->, very thick] (input)  --  node []         {\(r(k)\)}               (sum1);
+  \draw [->, very thick] (sum1)   --  node []         {\(e(k)\)}               (delay);
+  \draw [->, very thick] (delay)  --  node [name=el]  {\(\int{}e(k)\)}            (ki);
+  \draw [->, very thick] (ki)     --  node []         {}                       (sum2);
+  \draw [->, very thick] (sum2)   --  node []         {\(u(k)\)}               (sat);
+  \draw [->, very thick] (sat)    --  node []         {\(\mathrm{sat}(u(k))\)} (system);
+  \draw [->, very thick] (system) |- node [near end] {\(x(k)\)}               (kp);
+  \draw [->, very thick] (kp)     -|                                          (sum2);
+  \draw [->, very thick] (system) -- (output) |- node [near start] {\(y(k)\)} (y) -| node [pos=0.99] {\(-\)} (sum1);
+  \draw [->, very thick] (el) |- (eiw) -- (sum1);
 \end{tikzpicture}

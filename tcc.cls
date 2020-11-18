@@ -130,7 +130,7 @@
 
 % End of \RequirePackage's
 
-\usetikzlibrary{shapes,arrows,positioning}
+\usetikzlibrary{matrix,shapes,arrows,positioning,fit}
 
 \renewcommand{\rm}{\textrm} % needed with memoir
 \renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter. \ #1}{ }}
@@ -408,6 +408,7 @@
     \pagestyle{cefet}
     \aliaspagestyle{chapter}{cefetchapter}
     \newtheorem{theorem}{Theorem}
+    \newtheorem{definition}{Definition}
     \counterwithin{figure}{chapter}
     \counterwithin{table}{chapter}
 }
