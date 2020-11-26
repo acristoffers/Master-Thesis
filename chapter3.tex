@@ -291,10 +291,11 @@ and the algorithm is restarted.
 When implementing the techniques described in this thesis, some details need
 attention. For example, it is easy to say
 \enquote{\(\mathrm{minimize}~f(x)~|~x\in\mathcal{X}\)}, however it is not so
-simple (and sometimes even possible) to implement the \(x\in\mathcal{X}\) bit.
-Describing the set and finding a way to test membership numerically can be
-challenging. That is one reason why we choose convex sets: we know how to
-implement membership tests and use it in common optimization frameworks.
+simple (and sometimes even impossible) to implement the set membership check
+\(x\in\mathcal{X}\). Describing the set and finding a way to test membership
+numerically can be challenging. That is one reason why we choose convex sets: we
+know how to implement membership tests and use it in common optimization
+frameworks.
 
 This chapter will discuss how to represent the constraints and region of
 attraction and provide some insight into how to implement the models of the
@@ -310,12 +311,13 @@ distinct points \((a,b)\) belonging to the region, a closed segment with
 endpoints \((a,b)\) is entirely contained within the
 region~\parencite{grünbaum:convex}. In other words, it is a convex hull of a
 finite number of points, called vertices. This representation is called the
-\enquote{V-representation} and is not useful to test membership. However, it is
-straightforward to sample points from the desired region's border to create a
-V-representation of a polytope approximating it. It is also useful for plotting.
-The Figure~\ref{fig:v-rep-example} illustrates a region in its V-representation,
-where the red dots are the vertices, and all blue dots are inside the region.
-The set of vertices is \resizebox{\linewidth}{!}{%
+\enquote{V-representation} in \(\mathcal{R}^{2}\) and is not useful to test
+membership. However, it is straightforward to sample points from the desired
+region's border to create a V-representation of a polytope approximating it. It
+is also useful for plotting. The Figure~\ref{fig:v-rep-example} illustrates a
+region in its V-representation, where the red dots are the vertices, and all
+blue dots are inside the region. The set of vertices is
+\resizebox{\linewidth}{!}{%
   \(\{(0.02,0.71),(0.31,0.02),(0.82,0.04),(0.87,0.13),(0.99,0.88),(0.60,0.98),(0.38,0.97),(0.04,0.88),(0.02,0.82)\}\)}.
 
 \begin{figure}[!htb]
@@ -326,7 +328,7 @@ The set of vertices is \resizebox{\linewidth}{!}{%
 \end{figure}
 
 A more useful representation of such regions is the \enquote{H-representation}.
-In this representation, the intersection of a finite number of half-spaces
+In such a representation, the intersection of a finite number of half-spaces
 describes the region. A half-space is one of the two parts in which a
 hyper-plane divides an affine space. Since half-spaces are linear inequalities,
 the H-representation becomes the matrix inequality
@@ -465,9 +467,9 @@ Consider the region of attraction described by
   x^{\top}Px \le{} 1,
 \end{equation}
 %
-where \(x\) is the point that should be inside the region of attraction. (Note
+where \(x\) is the point that should be inside the region of attraction. Note
 that, numerically, a number smaller than \(1\) may be necessary to make the
-problem feasible).
+problem feasible.
 
 If the LMI is written in terms os \(P\), it can be used directly to force the
 region to be big enough to contain the point \(x\). If the LMI is written in
