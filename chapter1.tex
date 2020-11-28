@@ -8,34 +8,42 @@ Physical systems have constraints on their inputs, outputs, and states, which
 are usually ignored to facilitate the controller's design. Such constraints can
 result from physical limitations, such as a tank's capacity or a turbine's
 maximum power output, or can be mathematically imposed to achieve some goal,
-like keeping a process' pH bounded. In the literature, different solutions exists to address actuator saturation constraints, see e.g.~\parencite{klug.castelan.ea:fuzzy,tarbouriech.garcia.ea:stability}.
-However, those techniques do not enforce constraints but design
-controllers that avoid the borders of constraints or even allow the
-system to violate them for a short period.
+like keeping a process' pH bounded. In the literature, different solutions
+exists to address actuator saturation constraints, see
+e.g.~\parencite{klug.castelan.ea:fuzzy,tarbouriech.garcia.ea:stability}.
+However, those techniques do not enforce constraints but design controllers that
+avoid the borders of constraints or even allow the system to violate them for a
+short period.
 
-By taking advantage of optimization techniques, 
-Model Predictive Control uses an online optimization procedure to predict a system's state evolution on a prediction horizon and
-compute a system's optimal control trajectory and allows constraints to be
-imposed to states, inputs, outputs, and their
+By taking advantage of optimization techniques, Model Predictive Control uses an
+online optimization procedure to predict a system's state evolution on a
+prediction horizon and compute a system's optimal control trajectory and allows
+constraints to be imposed to states, inputs, outputs, and their
 variations~\parencite{wang:model,zhang:fast}. As the optimization procedure is
 online, constraints are enforced, and the controller will actively avoid
 violations while allowing for less conservative control paths.
 
-Another technique was developed, but instead of computing the
-optimal control path that keeps the system constrained, it uses model prediction
-to change the reference given to existing controllers to keep the system
-constrained. The first of such techniques were reference filters, which imposed
-only soft-constraints~\parencite{vahidi.kolmanovsky.ea:constraint}, i.e.
-constraints which penalize the objective function when violated instead of
-rendering the problem infeasible.
+Another technique was developed, but instead of computing the optimal control
+path that keeps the system constrained, it uses model prediction to change the
+reference given to existing controllers to keep the system constrained. The
+first of such techniques were reference filters, which imposed only
+soft-constraints~\parencite{vahidi.kolmanovsky.ea:constraint}, i.e. constraints
+which penalize the objective function when violated instead of rendering the
+problem infeasible.
 
-Such an idea then evolved into Reference Governors (RG), which divides the problem into two parts: tracking and constraint enforcement. The (possibly already existing) controller solves the tracking problem in the inner loop without taking constraints into account, and the Reference Governor solves the constraint enforcement problem in the outer loop by using the reference and system's output to change the inner loop's reference. Figure~\ref{fig:rg-block-diagram} shows a block diagram for this technique. 
- The optimization
-problem finds the best \(\delta\) that minimizes the distance between \(g(k)\) and
-\(r(k)\) without violating constraints. Because of the numerical simplicity of the
-optimization problem, this approach has an easy implementation but suffers from
-loss of dimensions. Such a loss comes from the fact that \(\delta\in\mathcal{R}\) 
-while \(r(k)\in\mathcal{R}^n\)~\parencite{gilbert.kolmanovsky:fast}.
+Such an idea then evolved into Reference Governors (RG), which divides the
+problem into two parts: tracking and constraint enforcement. The (possibly
+already existing) controller solves the tracking problem in the inner loop
+without taking constraints into account, and the Reference Governor solves the
+constraint enforcement problem in the outer loop by using the reference and
+system's output to change the inner loop's reference.
+Figure~\ref{fig:rg-block-diagram} shows a block diagram for this technique. The
+optimization problem finds the best \(\delta\) that minimizes the distance between
+\(g(k)\) and \(r(k)\) without violating constraints. Because of the numerical
+simplicity of the optimization problem, this approach has an easy implementation
+but suffers from loss of dimensions. Such a loss comes from the fact that
+\(\delta\in\mathcal{R}\) while
+\(r(k)\in\mathcal{R}^n\)~\parencite{gilbert.kolmanovsky:fast}.
 
 \begin{figure}
   \centering
@@ -69,13 +77,16 @@ while \(r(k)\in\mathcal{R}^n\)~\parencite{gilbert.kolmanovsky:fast}.
   \label{fig:rg-block-diagram}
 \end{figure}
 
-Building on this idea and on the work of~\textcite{kapasouris.athans.ea:design}, which
-explores the ideas of the Lyapunov Theorem and Invariant Sets
-Theorem~\parencite{blanchini.miani:set-theoretic}, \textcite{bemporad.casavola.ea:nonlinear}
+Building on this idea and on the work of~\textcite{kapasouris.athans.ea:design},
+which explores the ideas of the Lyapunov Theorem and Invariant Sets
+Theorem~\parencite{blanchini.miani:set-theoretic},
+\textcite{bemporad.casavola.ea:nonlinear}
 and~\textcite{casavola.mosca.ea:robust} developed what is known today as the
-\ac{CG} approach. 
-The difference is that Reference Governors optimize a number \(\delta\), which multiplies the reference \(r(k)\) to create the virtual reference \(g(k)\), whereas Command Governors optimize the the vector \(g(k)\) directly,
- requiring more computational processing power but yielding better closed-loop performance.
+\ac{CG} approach. The difference is that Reference Governors optimize a number
+\(\delta\), which multiplies the reference \(r(k)\) to create the virtual reference
+\(g(k)\), whereas Command Governors optimize the the vector \(g(k)\) directly,
+requiring more computational processing power but yielding better closed-loop
+performance.
 
 Reference and Command Governors are still subjects of studies, and used in
 conjunction with other techniques. It has been of particular interest on the
@@ -93,7 +104,17 @@ controller for systems with saturated inputs.
 reference shaping for a biomass grate boiler, based on Command Governor, to
 avoid actuator saturation and constrain mass-flow.
 
-What makes it possible to use the Command Governor in so many different scenarios is the fact that it is an add-on technique, that does not require adaptation from the controller or system. This is one main advantage of the Command Governor, as well as the fact that it enforces hard-constraints. The main drawback is that it requires an online optimization procedure, which might not be doable on systems with fast dynamics. Another concern is that the optimization problem might not be feasible in the presence of model uncertainties. A common technique is to re-apply the last reference when the optimization problem is unfeasible, but it can lead to instability if the situation persists for extended periods of time~\parencite{garone.di-cairano.ea:reference}.
+What makes it possible to use the Command Governor in so many different
+scenarios is the fact that it is an add-on technique, that does not require
+adaptation from the controller or system. This is one main advantage of the
+Command Governor, as well as the fact that it enforces hard-constraints. The
+main drawback is that it requires an online optimization procedure, which might
+not be doable on systems with fast dynamics. Another concern is that the
+optimization problem might not be feasible in the presence of model
+uncertainties. A common technique is to re-apply the last reference when the
+optimization problem is unfeasible, but it can lead to instability if the
+situation persists for extended periods of
+time~\parencite{garone.di-cairano.ea:reference}.
 
 Switching systems are composed of many subsystems, called modes, which switch
 according to a switching

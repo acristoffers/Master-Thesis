@@ -4,16 +4,20 @@
 \chapter{Theoretical Foundations}%
 \label{chp:theoretical-foundations}
 
-This work presents a Command Governor-based control strategy, based on the concept of region of attraction, for switched systems. Thus, those are the main concepts involved in this work and
-will be further explained in the following sections.
+This work presents a Command Governor-based control strategy, based on the
+concept of region of attraction, for switched systems. Thus, those are the main
+concepts involved in this work and will be further explained in the following
+sections.
 
 \section{Switched Systems}%
 \label{sec:switched-systems}
 
-A switched system is a system composed of many subsystems, called modes, and a mode-transition rule. It is often used to divide non-linear systems into many linear systems around different operation points, creating linear
-approximations, which are active one at a time. Differently from
-switching systems, in which mode transition can happen arbitrarily, in
-the switched system, a supervisor orchestrates
+A switched system is a system composed of many subsystems, called modes, and a
+mode-transition rule. It is often used to divide non-linear systems into many
+linear systems around different operation points, creating linear
+approximations, which are active one at a time. Differently from switching
+systems, in which mode transition can happen arbitrarily, in the switched
+system, a supervisor orchestrates
 them~\parencite{lucia.franzè:stabilization,liberzon.morse:basic}.
 
 A linear switched system can be described as follows
@@ -25,8 +29,8 @@ A linear switched system can be described as follows
 %
 where \(\sigma(t):t>0\rightarrow\mathbb{K}=\{1,\ldots,N\}\) is the switching function.
 \(A_{i}, B_{i}, C_{i}\) and \(D_{i}\) are real matrices and represent
-linearizations around different operation points. On the other hand, there are also nonlinear
-switched systems with the form
+linearizations around different operation points. On the other hand, there are
+also nonlinear switched systems with the form
 %
 \begin{align}
   \dot{x}(t) & = f_{\sigma(t)}(t,x(t),u(t)), \\
@@ -113,7 +117,8 @@ See~\textcite{geromel.deaecto:stability,liberzon.morse:basic,geromel.colaneri:st
 \subsection{System Description}%
 \label{subsec:system-description}
 
-A linear, switched, discrete-time system given in the state-space representation can be described as follows
+A linear, switched, discrete-time system given in the state-space representation
+can be described as follows
 %
 \begin{equation}
   \label{eq:state-space}
