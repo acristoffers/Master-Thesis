@@ -4,22 +4,19 @@
 \chapter{Theoretical Foundations}%
 \label{chp:theoretical-foundations}
 
-This work presents a new mode-switching strategy for Command Governors based on
-the concept of a Region of Attraction. The Command Governor framework requires
-the system to be divided into modes, turning it into a switched system if it was
-not already one. Thus, those are the main concepts involved in this work and
+This work presents a Command Governor-based control strategy, based on the concept of region of attraction, for switched systems. Thus, those are the main concepts involved in this work and
 will be further explained in the following sections.
 
 \section{Switched Systems}%
 \label{sec:switched-systems}
 
 A switched system is a system composed of many subsystems, called modes, and a mode-transition rule. It is often used to divide non-linear systems into many linear systems around different operation points, creating linear
-approximations, which are active one at a time. Please do not confuse it with
-switching systems, in which mode transition can happen arbitrarily, whereas, in
+approximations, which are active one at a time. Differently from
+switching systems, in which mode transition can happen arbitrarily, in
 the switched system, a supervisor orchestrates
 them~\parencite{lucia.franzè:stabilization,liberzon.morse:basic}.
 
-A linear switched system has the description
+A linear switched system can be described as follows
 %
 \begin{align}
   \dot{x}(t) & = A_{\sigma(t)}x(t) + B_{\sigma(t)}u(t), \\
@@ -28,7 +25,7 @@ A linear switched system has the description
 %
 where \(\sigma(t):t>0\rightarrow\mathbb{K}=\{1,\ldots,N\}\) is the switching function.
 \(A_{i}, B_{i}, C_{i}\) and \(D_{i}\) are real matrices and represent
-linearizations around different operation points. There are also nonlinear
+linearizations around different operation points. On the other hand, there are also nonlinear
 switched systems with the form
 %
 \begin{align}
@@ -116,7 +113,7 @@ See~\textcite{geromel.deaecto:stability,liberzon.morse:basic,geromel.colaneri:st
 \subsection{System Description}%
 \label{subsec:system-description}
 
-A linear, switched, discrete-time system given in the state-space representation has the form
+A linear, switched, discrete-time system given in the state-space representation can be described as follows
 %
 \begin{equation}
   \label{eq:state-space}
@@ -134,9 +131,7 @@ matrices \(A_{i}\in\mathbb{R}^{n\times{}n}\), \(B_{i}\in\mathbb{R}^{n\times{}n_u
 system's dynamic and output, matrices \(E_{i}\in\mathbb{R}^{n_c\times{}n}\) and
 \(F_{i}\in\mathbb{R}^{n_c\times{}n_u}\) concern the constrained output and are chosen
 by the designer to take into account the constraints associate with the state
-and control signal. The sub-index \(i = 1,\ldots,N\) refers to the active model. In
-many cases the mode \(i\) is switched depending on the state-vector, and thus on
-its trajectory.
+and control signal. The sub-index \(i = 1,\ldots,N\) refers to the active model.
 
 We exploit the state-feedback structure to propose a mode-dependent
 proportional-integral (PI) action for the system~\eqref{eq:state-space}. The

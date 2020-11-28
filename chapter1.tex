@@ -8,23 +8,20 @@ Physical systems have constraints on their inputs, outputs, and states, which
 are usually ignored to facilitate the controller's design. Such constraints can
 result from physical limitations, such as a tank's capacity or a turbine's
 maximum power output, or can be mathematically imposed to achieve some goal,
-like keeping a process' pH bounded. The most common form of constraint found in
-literature is actuator saturation, and many techniques exist to deal with it,
-like using a polytopic representation or a generalized sector
-condition~\parencite{klug.castelan.ea:fuzzy,tarbouriech.garcia.ea:stability}.
-However, those techniques do not enforce constraints but merely design
-conservative controllers that avoid the borders of constraints or even allow the
+like keeping a process' pH bounded. In the literature, different solutions exists to address actuator saturation constraints, see e.g.~\parencite{klug.castelan.ea:fuzzy,tarbouriech.garcia.ea:stability}.
+However, those techniques do not enforce constraints but design
+controllers that avoid the borders of constraints or even allow the
 system to violate them for a short period.
 
-By taking advantage of optimization techniques, new solutions to the problem
-appeared. Model Predictive Control uses an online optimization procedure to
+By taking advantage of optimization techniques, 
+Model Predictive Control uses an online optimization procedure to predict a system's state evolution on a prediction horizon and
 compute a system's optimal control trajectory and allows constraints to be
-applied to states, inputs, outputs, and their
+imposed to states, inputs, outputs, and their
 variations~\parencite{wang:model,zhang:fast}. As the optimization procedure is
 online, constraints are enforced, and the controller will actively avoid
 violations while allowing for less conservative control paths.
 
-Another technique was developed simultaneously, but instead of computing the
+Another technique was developed, but instead of computing the
 optimal control path that keeps the system constrained, it uses model prediction
 to change the reference given to existing controllers to keep the system
 constrained. The first of such techniques were reference filters, which imposed
@@ -32,19 +29,13 @@ only soft-constraints~\parencite{vahidi.kolmanovsky.ea:constraint}, i.e.
 constraints which penalize the objective function when violated instead of
 rendering the problem infeasible.
 
-Such an idea then evolved into Reference Governors (RG), which uses optimization
-to find a virtual reference \(g(k)\), which is as close as possible to the real
-reference \(r(k)\) but keeps the system
-constrained~\parencite{gilbert.kolmanovsky.ea:discrete‐time}.
-Figure~\ref{fig:rg-block-diagram} shows a block diagram for this technique. The
-RG gives the controller the virtual reference \(g(k)\), which is a scaled
-version of the real reference \(r(k)\), read \(g(k)=\delta{}r(k)\). The optimization
+Such an idea then evolved into Reference Governors (RG), which divides the problem into two parts: tracking and constraint enforcement. The (possibly already existing) controller solves the tracking problem in the inner loop without taking constraints into account, and the Reference Governor solves the constraint enforcement problem in the outer loop by using the reference and system's output to change the inner loop's reference. Figure~\ref{fig:rg-block-diagram} shows a block diagram for this technique. 
+ The optimization
 problem finds the best \(\delta\) that minimizes the distance between \(g(k)\) and
-\(r(k)\) without violating constraints. Because of the simplicity of the
+\(r(k)\) without violating constraints. Because of the numerical simplicity of the
 optimization problem, this approach has an easy implementation but suffers from
-loss of dimensions. Such a loss comes from the fact that \(\delta\) is
-one-dimensional while \(r(k)\) may be
-multidimensional~\parencite{gilbert.kolmanovsky:fast}.
+loss of dimensions. Such a loss comes from the fact that \(\delta\in\mathcal{R}\) 
+while \(r(k)\in\mathcal{R}^n\)~\parencite{gilbert.kolmanovsky:fast}.
 
 \begin{figure}
   \centering
@@ -72,20 +63,19 @@ multidimensional~\parencite{gilbert.kolmanovsky:fast}.
     \draw [->] (system) -- node {\(y(k)\)} (output);
     \draw [] (system) -- node {\(x(k)\)} (state);
     \draw [->] (state) -- node {} (rg);
+    \draw [->] (state) -| node {} (controller);
   \end{tikzpicture}
   \caption{Reference Governor's block diagram}%
   \label{fig:rg-block-diagram}
 \end{figure}
 
-Building on this idea,~\textcite{bemporad.casavola.ea:nonlinear}
-and~\textcite{casavola.mosca.ea:robust} developed what is known today as the
-\ac{CG} approach. The difference to RG is that the \CG{} technique optimizes the
-\(g(k)\) vector directly, requiring more computational processing power but
-yielding better system performance since the values of the vector are calculated
-independently and freely instead of as a factor of the reference. This approach
-also builds on the work of~\textcite{kapasouris.athans.ea:design}, which
+Building on this idea and on the work of~\textcite{kapasouris.athans.ea:design}, which
 explores the ideas of the Lyapunov Theorem and Invariant Sets
-Theorem~\parencite{blanchini.miani:set-theoretic}.
+Theorem~\parencite{blanchini.miani:set-theoretic}, \textcite{bemporad.casavola.ea:nonlinear}
+and~\textcite{casavola.mosca.ea:robust} developed what is known today as the
+\ac{CG} approach. 
+The difference is that Reference Governors optimize a number \(\delta\), which multiplies the reference \(r(k)\) to create the virtual reference \(g(k)\), whereas Command Governors optimize the the vector \(g(k)\) directly,
+ requiring more computational processing power but yielding better closed-loop performance.
 
 Reference and Command Governors are still subjects of studies, and used in
 conjunction with other techniques. It has been of particular interest on the
@@ -103,19 +93,7 @@ controller for systems with saturated inputs.
 reference shaping for a biomass grate boiler, based on Command Governor, to
 avoid actuator saturation and constrain mass-flow.
 
-What makes it possible to use the Command Governor in so many different
-scenarios is the fact that it is an add-on technique, that does not require
-adaptation from the controller or system. On the other hand, different ways of
-calculating the virtual reference are explored, since the optimization based
-procedure, although the best in guaranteeing hard-constraints, can be very
-resource intensive, making it impracticable for systems with fast dynamics. It
-remains suitable for systems with slow dynamics and simulations. There is also a
-decision to be made on what strategy to follow in the case in which no virtual
-reference that satisfies the constraints exists, which can happen if the model
-deviates significantly from the real system, for example. A common technique is
-to re-apply the last reference, but it can lead to instability if the situation
-persists for extended periods of
-time~\parencite{garone.di-cairano.ea:reference}.
+What makes it possible to use the Command Governor in so many different scenarios is the fact that it is an add-on technique, that does not require adaptation from the controller or system. This is one main advantage of the Command Governor, as well as the fact that it enforces hard-constraints. The main drawback is that it requires an online optimization procedure, which might not be doable on systems with fast dynamics. Another concern is that the optimization problem might not be feasible in the presence of model uncertainties. A common technique is to re-apply the last reference when the optimization problem is unfeasible, but it can lead to instability if the situation persists for extended periods of time~\parencite{garone.di-cairano.ea:reference}.
 
 Switching systems are composed of many subsystems, called modes, which switch
 according to a switching
@@ -160,7 +138,7 @@ stability in the first scenario also has to be done in the second scenario. The
 only difference is that the second avoids the first set membership check, at the
 cost of possibly missing on convergence's speed gains opportunities.
 
-\section{Document organization}%
+\section{Thesis organization}%
 \label{sec:organization}
 
 The main concepts involved in this work are explained in
