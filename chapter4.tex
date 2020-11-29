@@ -109,8 +109,8 @@ by~\eqref{eq:state-space} with matrices:
 \end{align*}
 %
 and number of modes \(s=2\). Using Lyapunov's
-approach~\parencite{chen:linear,hespanha:linear} we got the following
-controller:
+approach~\parencite{chen:linear,hespanha:linear}, on the system augmented with 2
+integrators (one for each state), we got the following controller:
 %
 \begin{align*}
   K_1 & = \begin{bmatrix}
@@ -248,8 +248,7 @@ and operational points
   \end{bmatrix}.
 \]
 %
-The sample-period was \SI{0.1}{\second}, and controller and observer gains are
-given by:
+The sample-period was \SI{0.1}{\second}, and controller gains are given by:
 %
 \scriptsize
 \begin{align*}
@@ -261,14 +260,6 @@ given by:
   K_2 & = \begin{bmatrix}
     -7.034\times{}10^2    & -1.268            & -1.769\times{}10^2    & 6.097\times{}10^{-1} \\
     -3.903\times{}10^{-6} & -1.370\times{}10^2 & -1.292\times{}10^{-5} & -3.202\times{}10^1
-  \end{bmatrix}, \\
-  L_1 & = \begin{bmatrix}
-    0.89374311 & 0.01193574 \\
-    0.00922275 & 0.91488323
-  \end{bmatrix},
-  L_2 = \begin{bmatrix}
-    0.64130679 & 0.0107965 \\
-    0.00533561 & 0.8518838
   \end{bmatrix}.
 \end{align*}
 \normalsize
@@ -346,7 +337,8 @@ CEFET-MG campus V, shown in Figure~\ref{fig:tanks-real}. It consists of two
 coupled tanks, \(T1\) and \(T2\), that are fed by a pump with controlled flow
 \(u(t)\), measured in \si{\cubic\centi\metre\per\second}. The levels of each
 tank, \(h_1\) and \(h_2\) (\si{\centi\metre}), are the control objective
-variables, and are measured directly~\parencite{franco.oliveira.ea:síntese}.
+variables, and are measured
+directly~\parencite{franco.oliveira.ea:síntese,sousa.leite.ea:affordable,lopes.leite.ea:anti-windup}.
 
 \begin{figure}[ht!]
   \centering \captionsetup{justification=centering}
