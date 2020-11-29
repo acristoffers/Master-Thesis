@@ -230,7 +230,7 @@ calculate it is already used during the design of the \CG{} logic, so it can be
 reconstructed from the augmented vector.
 
 In what follows we use the sets \(\mathcal{C}\), \(\mathcal{W}\), and
-\(\mathcal{V}\) defined as follows:
+\(\mathcal{V}(x(k))\) defined as follows:
 
 \begin{enumerate}
   \item \(\mathcal{C}\) is the set of restrictions, which contains all allowed
@@ -239,15 +239,15 @@ In what follows we use the sets \(\mathcal{C}\), \(\mathcal{W}\), and
         \(c(k)\) constrained on the steady-state as \(k\) goes to infinity.
         \[\mathcal{W} = \{\omega\in\mathbb{R}^{n_y}:
           c(k)\in\mathcal{C},k\rightarrow\infty{}\}.\]
-  \item \(\mathcal{V}\) is the set of \(\omega{}\) values which ensures that the
+  \item \(\mathcal{V}(x(k))\) is the set of \(\omega{}\) values which ensures that the
         constrained output belongs to \(\mathcal{C}\) in the next \(k_0\)
         samples
         \[
-          \mathcal{V}=\{\omega\in\mathcal{W}:c(k)\in\mathcal{C},0<k\leq{}k_0\},
+          \mathcal{V}(x(k))=\{\omega\in\mathcal{W}:c(k)\in\mathcal{C},0<k\leq{}k_0\},
         \]
 \end{enumerate}
 
-We write the set \(\mathcal{V}\) in terms of convex constraints on the virtual
+We write the set \(\mathcal{V}(x(k))\) in terms of convex constraints on the virtual
 reference, the \(k_{0}\) future states, the minimization of the distance to the
 desired reference, and actuator saturation bound.
 
@@ -256,14 +256,14 @@ procedure:
 
 \begin{equation}
   \begin{aligned}
-    g(k)=\argmin_{\omega\in\mathcal{V}} & \norm{\omega-r(k)}^2_\Psi
+    g(k)=\argmin_{\omega\in\mathcal{V}(x(k))} & \norm{\omega-r(k)}^2_\Psi
   \end{aligned}
   \label{eq:cg}
 \end{equation}
 %
 where \(\Psi{}\) is a semi-definite positive weighing matrix and \(g(k)\) is the
 virtual reference closest to the desired reference, not allowing the system to
-violate the constraints. Observe that the set \(\mathcal{V}\) is defined by
+violate the constraints. Observe that the set \(\mathcal{V}(x(k))\) is defined by
 evolving the system in closed-loop, without disturbances, a number \(k_0\) of
 samples ahead, and testing if the state sequence do not violate constraints.
 
@@ -277,7 +277,7 @@ active, sending control signals to the system. The policy for switching \CG{}s
 is problem-dependent. It might be another controller giving better performance,
 according to some metric, or being able to access a state-space region. Note
 that each \CG{} unit has its \(\mathcal{C}_{i}\), \(\mathcal{W}_{i}\) and
-\(\mathcal{V}_{i}\) sets.
+\(\mathcal{V}(x(k))_{i}\) sets.
 
 \input{imgs/supervisor-schematic}
 

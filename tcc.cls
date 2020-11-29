@@ -77,6 +77,7 @@
 \RequirePackage{amsfonts} % Mathematical fonts
 \RequirePackage{cancel} % In math mode, variables to strike
 \RequirePackage{subscript} % For subscript
+\RequirePackage{mathtools} % For subscript
 
 % Table manipulation
 \RequirePackage{longtable} % For long tables that take more than one page

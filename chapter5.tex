@@ -4,6 +4,33 @@
 \chapter{Final Considerations}%
 \label{chp:final-considerations}
 
+Switched systems usually lose stability under arbitrary switching, requiring the
+development of switching rules that keep the system stable after the switch. A
+class of switching rules denominated slow-switching guarantees stability by not
+switching between modes too fast. Most of such techniques try to determine the
+minimum amount of time the system needs to remain on a mode before switching to
+remain stable.
+
+Command Governors enforces constraints on dynamic systems. When used with
+switched systems, it enforces constraints on each mode, aggravating the
+stability problem. Now the system is not allowed to switch from any state, only
+from a subset inside the constraints' intersection. The design of slow-switching
+rules must take this into account to avoid violating constraints.
+
+In this work, we studied switched systems' constraints enforcement through
+Command Governors. The switched systems' stability problem, usually solved using
+dwell time, was reviewed under a new light, resulting in the proposed Region of
+Attraction-based switching rule, something not found in literature. The rule,
+shown in Algorithm~\ref{alg:roa-rule}, guarantees the system stability after
+mode switches by only allowing the switch if the system's states remain inside
+the controller's Region of Attraction and are inside constraints' intersection.
+
+On the same algorithm, we can switch the controller earlier while keeping the
+constraints, which we call a hybrid change. It allows for faster convergence
+when the next controller performs better than the current one. However, if that
+is undesirable, the switch can happen at once on the constraints' intersection,
+still having all stability guarantees from the Region of Attraction.
+
 The presented technique allows faster overall convergence of constrained
 switched systems while ensuring stability after switches. It is based on
 well-consolidated concepts and builds on them to provide stability to
@@ -16,3 +43,36 @@ controllers since their region of attraction might not satisfy the necessary
 criteria of size and intersections. Because of this, the main advantage of the
 Command Governor is lost and new controllers will most probably need to be
 synthetized.
+
+On Chapter~\ref{chp:results} we apply the technique on different simulated
+systems as well as a real one. The simulations illustrate how the proposed rule
+works and compares it with results from an article. The experimental result
+shows the convergence time gain when compared to the dwell-time technique as
+well as the better control signal trajectory. The simplicity of the algorithm
+does not put a burden in the hardware implementation and the design requires the
+estimation of the Region of Attraction where other slow-switch techniques
+require the estimation of the dwell-time.
+
+This work resulted in the publication of an article at Congresso Brasileiro de
+Automática --- CBA in November 2020 \parencite{sousa.silva.ea:command}. An
+extended version, including the experimental results obtained, is being prepared
+to be submitted to a journal.
+
+\section{Perspectives}%
+\label{sec:perspectives}
+
+This work only deals with LTI systems. Future research can extend the technique
+to models with uncertainties, varying the region of attraction or modifying the
+switching rule to accommodate them. In this case, the designer must pay
+attention to the possibility of the system becoming unstable if the switch
+happens when the system is not inside the region of attraction due to model
+mismatch, possibly leading to instability.
+
+On those lines, switched systems composed of LPV subsystems also need special
+attention. In this case, the Region of Attraction can also become a function of
+the states, and special attention might be necessary to ensure there are
+intersections.
+
+Last but not least, the extension of the proposed rule to non-command governor
+schemes also needs consideration. The Command Governor plays a role in not
+letting the system destabilize, so it becomes necessary in the proposed schema.
