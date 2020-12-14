@@ -33,17 +33,16 @@ which penalize the objective function when constraints are violated instead of
 rendering the problem infeasible.
 
 This idea then evolved into Reference Governors (RG), which divides the problem
-into two parts: tracking and constraint enforcement. The (possibly already
-existing) controller solves the tracking problem in the inner loop without
-taking constraints into account, and the Reference Governor solves the
-constraint enforcement problem in the outer loop by using the reference and
-system's output to change the inner loop's reference.
-Figure~\ref{fig:rg-block-diagram} shows a block diagram for this technique. The
-optimization problem finds the best \(\delta\) that minimizes the distance between
-\(g(k)\) and \(r(k)\) without violating constraints. Because of the numerical
-simplicity of the optimization problem, this approach has an easy implementation
-but suffers from loss of dimensions. Such a loss comes from the fact that
-\(\delta\in\mathcal{R}\) while
+into two parts: tracking and constraint enforcement. The controller solves the
+tracking problem in the inner loop without taking constraints into account, and
+the Reference Governor solves the constraint enforcement problem in the outer
+loop by using the reference and system's output to change the inner loop's
+reference. Figure~\ref{fig:rg-block-diagram} shows a block diagram for this
+technique. The optimization problem finds the best \(\delta\) that minimizes the
+distance between \(g(k)\) and \(r(k)\) without violating constraints. Because of
+the numerical simplicity of the optimization problem, this approach has an easy
+implementation but suffers from loss of dimensions. Such a loss comes from the
+fact that \(\delta\in\mathcal{R}\) while
 \(r(k)\in\mathcal{R}^n\)~\parencite{gilbert.kolmanovsky:fast}.
 
 \begin{figure}
@@ -111,18 +110,20 @@ is one main advantage of the Command Governor, as well as the fact that it
 enforces hard-constraints. The main drawback is that it requires an online
 optimization procedure, which might not be doable on systems with fast dynamics.
 Another concern is that the optimization problem might not be feasible in the
-presence of model uncertainties. A common technique is to re-apply the last
-calculated reference value when the optimization problem is unfeasible, but it
-can lead to instability if the situation persists for extended periods of
+presence of model uncertainties, as, for example, an observer might put the
+model's state on an invalid state for the optimization problem. A common
+technique is to re-apply the last calculated reference value when the
+optimization problem is unfeasible, but it can lead to instability if the
+situation persists for extended periods of
 time~\parencite{garone.di-cairano.ea:reference}.
 
-Switching systems are composed of many subsystems, called modes, which switch
-according to a switching
+This work applies the \CG{} technique to switched systems. Switched systems are
+composed of many subsystems, called modes, which switch according to a switching
 rule~\parencite{liberzon:switching,liberzon.morse:basic}. Only one subsystem can
 be active at a given time. The switching can cause instability even when all
 subsystems are stable. Techniques exist to guarantee stability under abirtrary
 switching, such as using polytopic linear parameter varying
-representations~\parencite{deaecto.geromel.ea:robust} , but they are extremely
+representations~\parencite{deaecto.geromel.ea:robust}, but they are extremely
 conservative. Development leads to the notion of a dwell-time: how long a
 subsystem must remain active before switching to avoid
 instability~\parencite{liberzon.morse:basic}. Different approaches have been
