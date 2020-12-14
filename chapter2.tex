@@ -85,8 +85,8 @@ result is to have a mode dependent Lyapunov cadidate function leading to
   A_{i}^{\top}P_{i}+P_{i}A_{i} \prec{} 0,
 \end{equation}
 %
-which is, however, only stable under arbitrary switching, switching from any
-mode \(i\) to any mode \(j\), if
+which is, however, only stable under arbitrary switching, from any mode \(i\) to
+any mode \(j\), if
 %
 \begin{align}
   V(x(t_{k+1})) & = x^{\top}(t_{k+1})P_{j}x(t_{k+1})                                        \\
@@ -100,13 +100,15 @@ implying that all subsystems must be
 stable~\parencite{geromel.colaneri:stabilization}.
 
 The solutions discussed so far allow arbitrary switching, but a large class of
-systems will not satisfy the conditions required. If the switching is assumed to
+systems will not satisfy the required condition. If the switching is assumed to
 not be arbitrary, one can create a switching rule that will guarantee stability.
-One such rule is the slow-switching. The dwell-time is a way of slow switching
-requiring \(t_{k+1}-t_{k}>T\), and the goal is to minimize \(T\), forcing a
-system to be active for at least \(T\)
-seconds~\parencite{chesi.colaneri.ea:computing,franzè.lucia.ea:command,liberzon.morse:basic}.
-Note that may exist one dwell-time \(T\) for each mode.
+There is a class of such rules called slow-switching. The dwell-time is a rule
+of this class requiring \(t_{k+1}-t_{k}>T\), that is, the system must remain on
+a mode for \(T\) seconds before switching again. This time is counted from the
+moment the reference changes. The goal is to minimize \(T\), minimizing the time
+the system has to
+wait~\parencite{chesi.colaneri.ea:computing,franzè.lucia.ea:command,liberzon.morse:basic}.
+Note that there is one dwell-time \(T\) for each mode.
 
 Other ways of guaranteeing switching stability exists.
 See~\textcite{geromel.deaecto:stability,liberzon.morse:basic,geromel.colaneri:stabilization}.
@@ -138,11 +140,9 @@ system's dynamic and output, matrices \(E_{i}\in\mathbb{R}^{n_c\times{}n}\) and
 by the designer to take into account the constraints associate with the state
 and control signal. The sub-index \(i = 1,\ldots,N\) refers to the active model.
 
-We exploit the state-feedback structure to propose a mode-dependent
-proportional-integral (PI) action for the system~\eqref{eq:state-space}. The
-controller is designed to ensure null steady-state error for piecewise constant
-references at each mode \(i\), and thus the integral action is applied over the
-tracking error~\parencite{lopes.leite.ea:anti-windup}
+The controller is designed to ensure null steady-state error for piecewise
+constant references at each mode \(i\), and thus the integral action is applied
+over the tracking error~\parencite{lopes.leite.ea:anti-windup}
 %
 \begin{equation}
   \label{eq:r-y-error}
@@ -186,9 +186,8 @@ The design of each controller gain \(K_i\in\mathbb{R}^{n_u\times{}(n+p)}\) may u
 standard LMI based techniques, such as, for instance, pole
 placement~\parencite{yu:lmis}, LPV design~\parencite{briat:linear}, or robust
 control~\parencite{boyd.ghaoui.ea:linear}. In this case, the main issue is to
-ensure the stability between the switching instants, and our approach concerns
-such an aspect, as presented in the next section. It is important to note that,
-in practice, the controller may be designed independently for each mode.
+ensure the stability between the switching instants. It is important to note
+that, in practice, the controller may be designed independently for each mode.
 
 Note that the constrained output can also be expressed in terms of the augmented
 state \(\xi(k)\), taking into account the state of the integrator, i.e., \(c(k)\)
@@ -207,8 +206,8 @@ adequate dimensions.
 
 The Command Governor (\CG{}) is an add-on technique that extends existing
 controllers with constraint enforcement. It uses the system model to predict
-states given a reference \(y(k)\) and computes the virtual reference \(g(k)\)
-closest to \(y(k)\) that keeps the system constrained.
+states given a reference \(r(k)\) and computes the virtual reference \(g(k)\)
+closest to \(r(k)\) that keeps the system constrained.
 Figure~\ref{fig:cg-schematic} presents a block diagram containing a single \CG{}
 unit.
 
@@ -306,8 +305,8 @@ constraint violation, with
 %
 being the admissible output set.
 
-A system can have many \CG{} units, each of them with its constraint region. A
-generic \CG{} switch from \(\CG{}_{i}\) to \(\CG{}_{j}\), denoted
+A switched system must have many \CG{} units, each of them with its constraint
+region. A generic \CG{} switch from \(\CG{}_{i}\) to \(\CG{}_{j}\), denoted
 \(\CG{}_i\rightarrow{}\CG{}_j\), is admissible (with respect to the plant constraints) if
 the two \CG{}'s domains have a nonempty intersection. If one wants to go from
 \(\CG{}_1\) to \(\CG{}_3\) and there is no intersection, one must find a path
@@ -332,8 +331,8 @@ achieve a safe switch is to define a waypoint reference in the intersection set.
 Once the plant trajectory, under the action of \(\CG{}_i\) is confined in the
 intersection region, then \(\CG{}_j\) is activated.
 
-Such an approach is a way of guaranteeing stability, as the dwell-time is
-calculated not to allow the switching to occur neither too soon nor too often,
+This approach is a way of guaranteeing stability, as the dwell-time is
+calculated to allow the switching to occur neither too soon nor too often,
 giving enough time to the current controller to stabilize the system before
 switching again. It is, however, a very conservative approach that assumes a
 worst-case scenario. Although it might be necessary to stabilize some systems,
@@ -368,12 +367,12 @@ the differential equation has only unique solutions.
 
 For equations satisfying this condition, \textcite{bendixson:sur} presents the
 definition of a region with interesting properties. First, he defines the
-existance of a critical point for differential functions, which are points such
+existence of a critical point for differential functions, which are points such
 that the differential function's derivative are zero and remain zero as the time
 goes to infinity. He then shows that there are two types of critical points:
 stable and unstable. A stable critical point is such that all states on a given
 neighbourhood converge to the point as time goes to infinity. For an unstable
-critical point, they diverge. He then proceeds to show the existance of
+critical point, they diverge. He then proceeds to show the existence of
 limit-cycles, which are not critical points, but, for a differential equation
 \(f(t,x,y)\), \(f(t,x,y)=f(t-t_{0},x,y)\), meaning that variables \((x,y)\), the
 state, are repeating thenselves cyclic every \(t-t_{0}\) time units. Cycles can
@@ -388,7 +387,7 @@ the resulting values need to be negative for the point to be a stable critical
 point, otherwise it is an unstable critical point. For a discrete-time system,
 their absolute values must be smaller than one for the point to be stable.
 Limit-cycles are only possible around critical points, so to test for their
-existance on a function \(f(x)\), one must analyze the stability of the
+existence on a function \(f(x)\), one must analyze the stability of the
 critical-point and then define a region \(H(x)\), which contains the critical
 point, and calculate the gradient (\(\nabla\)) of \(H(x)\) on \(f(x)\). The following
 list sumarizes the possible outcomes:

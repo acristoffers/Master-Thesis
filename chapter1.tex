@@ -23,18 +23,19 @@ variations~\parencite{wang:model,zhang:fast}. As the optimization procedure is
 online, constraints are enforced, and the controller will actively avoid
 violations while allowing for less conservative control paths.
 
-Another technique was developed, but instead of computing the optimal control
-path that keeps the system constrained, it uses model prediction to change the
-reference given to existing controllers to keep the system constrained. The
-first of such techniques were reference filters, which imposed only
+Besides MPC, other techniques were developed to keep systems constrained, but
+instead of computing the optimal control path that keeps the system constrained,
+it uses model prediction to change the reference given to existing controllers
+to keep the system constrained. The first of such techniques were reference
+filters, which imposed only
 soft-constraints~\parencite{vahidi.kolmanovsky.ea:constraint}, i.e. constraints
-which penalize the objective function when violated instead of rendering the
-problem infeasible.
+which penalize the objective function when constraints are violated instead of
+rendering the problem infeasible.
 
-Such an idea then evolved into Reference Governors (RG), which divides the
-problem into two parts: tracking and constraint enforcement. The (possibly
-already existing) controller solves the tracking problem in the inner loop
-without taking constraints into account, and the Reference Governor solves the
+This idea then evolved into Reference Governors (RG), which divides the problem
+into two parts: tracking and constraint enforcement. The (possibly already
+existing) controller solves the tracking problem in the inner loop without
+taking constraints into account, and the Reference Governor solves the
 constraint enforcement problem in the outer loop by using the reference and
 system's output to change the inner loop's reference.
 Figure~\ref{fig:rg-block-diagram} shows a block diagram for this technique. The
@@ -96,24 +97,23 @@ as a mean to add constraints to the system. It has also been used to constrain
 switching networks \parencite{ong.djamari.ea:governor}, networks with delays
 \parencite{shen.song.ea:constrained} and interconnected systems
 \parencite{tedesco.casavola:turn-based}. \textcite{peng.wang.ea:constrained}
-also used a Command Governor to develop an anti-disturbance controller for a
+also used a Command Governor to develop an anti-disturbance controller for an
 uncertain, constrained system
-and~\textcite{schwerdtner.bortoff.ea:projection-based} developed a anti-windup
+and~\textcite{schwerdtner.bortoff.ea:projection-based} developed an anti-windup
 controller for systems with saturated inputs.
-\textcite{seeber.golles.ea:reference} provides a real-time implementation of
+\textcite{seeber.golles.ea:reference} provide a real-time implementation of
 reference shaping for a biomass grate boiler, based on Command Governor, to
-avoid actuator saturation and constrain mass-flow.
+avoid actuator saturation and to constrain mass-flow.
 
-What makes it possible to use the Command Governor in so many different
-scenarios is the fact that it is an add-on technique, that does not require
-adaptation from the controller or system. This is one main advantage of the
-Command Governor, as well as the fact that it enforces hard-constraints. The
-main drawback is that it requires an online optimization procedure, which might
-not be doable on systems with fast dynamics. Another concern is that the
-optimization problem might not be feasible in the presence of model
-uncertainties. A common technique is to re-apply the last reference when the
-optimization problem is unfeasible, but it can lead to instability if the
-situation persists for extended periods of
+The Command Governor can be used in so many different scenarios because it is a
+add-on technique, not requiring adaptation from the controller or system. This
+is one main advantage of the Command Governor, as well as the fact that it
+enforces hard-constraints. The main drawback is that it requires an online
+optimization procedure, which might not be doable on systems with fast dynamics.
+Another concern is that the optimization problem might not be feasible in the
+presence of model uncertainties. A common technique is to re-apply the last
+calculated reference value when the optimization problem is unfeasible, but it
+can lead to instability if the situation persists for extended periods of
 time~\parencite{garone.di-cairano.ea:reference}.
 
 Switching systems are composed of many subsystems, called modes, which switch
@@ -123,7 +123,7 @@ be active at a given time. The switching can cause instability even when all
 subsystems are stable. Techniques exist to guarantee stability under abirtrary
 switching, such as using polytopic linear parameter varying
 representations~\parencite{deaecto.geromel.ea:robust} , but they are extremely
-conservative. Development then lead to the notion of a dwell-time: how long a
+conservative. Development leads to the notion of a dwell-time: how long a
 subsystem must remain active before switching to avoid
 instability~\parencite{liberzon.morse:basic}. Different approaches have been
 proposed to compute the minimum dwell time
@@ -134,13 +134,13 @@ systems, see e.g.~\parencite{franzè.lucia.ea:command,lucia.franzè:stabilizatio
 and references therein.
 
 In \parencite{franzè.lucia.ea:command,lucia.franzè:stabilization}, the \CG{}
-framework is used to supervise the system mode switches and assure both
+framework is used to supervise the system mode switches and to assure both
 stability and constraint satisfaction.
 
 \section{Objectives}%
 \label{sec:objectives}
 
-In this work, considering the class of constrained switched systems (switching
+In this work, considering a class of constrained switched systems (switching
 systems with controlled switching signals), we propose a novel switching rule
 based on the controllers's region of attraction. Two rules can be stated:
 
@@ -150,14 +150,13 @@ based on the controllers's region of attraction. Two rules can be stated:
         intersection.
 \end{enumerate}
 
-This allows for 2 switching rules. In the first scenario, the first rule
-triggers a partial switch, in which only the controller is changed. The second
-rule is used to complete the switch, swaping the active command governor unit.
-We call this a hybrid switch. The second scenario makes a complete switch using
-only the second rule. However, everything that needs to be done to guarantee
-stability in the first scenario also has to be done in the second scenario. The
-only difference is that the second avoids the first set membership check, at the
-cost of possibly missing on convergence's speed gains opportunities.
+This allows two switching rules. In the first scenario, the first rule triggers
+a partial switch, in which only the controller is changed. The second rule is
+used to complete the switch, swaping the active command governor unit. We call
+this a hybrid switch. The second scenario makes a complete switch using only the
+second rule. Both scenarios need the same stability condition, the only
+difference is that the second avoids the first set membership check, at the cost
+of possibly missing on convergence's speed gains opportunities.
 
 \section{Thesis organization}%
 \label{sec:organization}

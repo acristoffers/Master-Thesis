@@ -67,12 +67,11 @@ state (\(\bullet\)) to the reference (\(\star\)) without violating any constrain
 \input{imgs/dwell-time-example}
 
 Consider that the system is on steady-state at \(\bullet\) when the reference switched
-to \(\star\). Since there are three constraints, the supervisor scheme shown in
-Figure~\ref{fig:supervisor-schematic} is the same as this examle's one. The
-supervisor will receive the new reference \(r(k)\) and, because the system is
-currently on mode 1, will set \(r'(k)\) to the first waypoint's coordinates,
-since it is not possible to gro from \(\bullet\) to \(\star\) directly without violating
-the constraints.
+to \(\star\). The supervisor scheme used here is the one given in
+Figure~\ref{fig:supervisor-schematic}. The supervisor will receive the new
+reference \(r(k)\) and, because the system is currently on mode 1, will set
+\(r'(k)\) to the first waypoint's coordinates, since it is not possible to gro
+from \(\bullet\) to \(\star\) directly without violating the constraints.
 
 Because a reference change occurred, the supervisor will start a timer, counting
 down from the first mode's dwell-time, \(T_{1}\). Even if \(r(k)\) changes
@@ -316,12 +315,14 @@ region~\parencite{grünbaum:convex}. In other words, it is a convex hull of a
 finite number of points, called vertices. This representation is called the
 \enquote{V-representation} in \(\mathcal{R}^{2}\) and is not useful to test
 membership. However, it is straightforward to sample points from the desired
-region's border to create a V-representation of a polytope approximating it. It
-is also useful for plotting. The Figure~\ref{fig:v-rep-example} illustrates a
-region in its V-representation, where the red dots are the vertices, and all
-blue dots are inside the region. The set of vertices is
-\resizebox{\linewidth}{!}{%
-  \(\{(0.02,0.71),(0.31,0.02),(0.82,0.04),(0.87,0.13),(0.99,0.88),(0.60,0.98),(0.38,0.97),(0.04,0.88),(0.02,0.82)\}\)}.
+region's border to create a V-representation of a polytope approximating it and
+then convert it to the H-Representation, which can be used to easily test set
+membership. It is also useful for plotting. The Figure~\ref{fig:v-rep-example}
+illustrates a region in its V-representation, where the red dots are the
+vertices, and all blue dots are inside the region. The set of vertices is
+
+\resizebox*{0.95\linewidth}{!}{%
+  \[\{(0.02,0.71),(0.31,0.02),(0.82,0.04),(0.87,0.13),(0.99,0.88),(0.60,0.98),(0.38,0.97),(0.04,0.88),(0.02,0.82)\}\]}.
 
 \begin{figure}[!htb]
   \centering
@@ -343,7 +344,7 @@ the H-representation becomes the matrix inequality
 where \(A\) is a matrix of coefficients, \(x\) is a point in space and \(b\) is
 a vector of real numbers. The number of rows in \(A\) and \(b\) is the same as
 the number of half-spaces defining the region. All points satisfying the
-inequality are in the region's interior, making it easy to test set membership.
+inequality are inside the region, making it easy to test set membership.
 Figure~\ref{fig:h-rep-example} shows the half-spaces that compose the
 H-representation of the same convex polytope presented in
 Figure~\ref{fig:v-rep-example}. Equation~\ref{eq:h-rep-example} shows the
@@ -384,24 +385,25 @@ make the convex region in the middle.
   \label{fig:h-rep-example}
 \end{figure}
 
-Given that the V-representation is easier to obtain from generic shapes, but the
-H-representation is more useful when verifying set membership, it is essential
-to have a way to switch between them. Unfortunately, this is not
-straightforward, but some algorithms allow us to enumerate the facets given the
-vertices. Some problems of such algorithms are the time needed to find the
-facets of many vertices and how to find facets in higher-order spaces. However,
-good algorithms can be used for the conversion, especially if the computation
-will be offline
-\parencite{avis.bremner.ea:how,graham.frances-yao:finding,lee:on,mccallum.avis:linear}.
+Given a generic shape, it is easy to sample points and build a V-representation
+of the polytope, however we need the H-representation to easily test for set
+membership. Therefore, we need a way from transforming the V-representation into
+the H-representation. Unfortunately, this is not straightforward, but some
+algorithms allow us to enumerate the facets given the vertices. Some problems of
+such algorithms are the time needed to find the facets of many vertices and how
+to find facets in higher-order spaces. However, good algorithms can be used for
+the conversion, especially if the computation is done offline, not presenting a
+time limitation to the
+computation~\parencite{avis.bremner.ea:how,graham.frances-yao:finding,lee:on,mccallum.avis:linear}.
 
-Particular regions can be easily described in a way that is easy to include in
-optimization problems. The ellipsoid is one such region, as it is described as
-\(x^{\top}Px\leq{}1\) so that any point \(x\) that satisfies the inequality is inside
-the region. Any region described by polynomials can be expressed in a matrix
-form and can quickly test membership. Such regions should use their inequation
-directly instead of a polytope approximation. We do that to the Region of
-Attraction, and it is how we implemented the check to verify if the state is
-inside it.
+Particular regions can be easily described in a way that it is easy to include
+in optimization problems. The ellipsoid is one such region, as it is described
+as \(x^{\top}Px\leq{}1\) so that any point \(x\) that satisfies the inequality is
+inside the region. Any region described by polynomials can be expressed in a
+matrix form and can quickly test membership. Such regions should use their
+inequation directly instead of a polytope approximation. We do that to the
+Region of Attraction, and it is how we implemented the check to verify if the
+state is inside it.
 
 \subsection{Internal Models}%
 \label{subsec:internal-models}
@@ -430,10 +432,10 @@ technique needs to be combined to find them.
 Another way of guaranteeing valid states is to compute the states before
 changing mode. Two ways of computing the states are: by inverting the system and
 controller equations and by simulation. The first approach has a very low
-computational resource impact but may not be possible or yield not ideal values.
-For systems with integrators, for example, there will be infinitely many
-results. Another problem is that even though the system has only one
-steady-state solution, it can have many transient ones.
+computational resource impact but may not be possible or yield approximations
+due to uncertainties. For systems with integrators, for example, there will be
+infinitely many results. Another problem is that even though the system has only
+one steady-state solution, it can have many transient ones.
 
 The simulation becomes interesting, even though it is more computationally
 intensive, as it can calculate a state that better matches the current
@@ -451,10 +453,10 @@ continuity (which might even be impossible on some systems) without adjustments.
 The Lyapunov approach presented in Section~\ref{sec:region-of-attraction} can
 easily estimate the region of attraction. The presented approach makes use of a
 quadratic Lyapunov candidate, but it is not necessary, as it is possible to find
-functions of any form. The function should easily to check if a point belongs to
+functions of any form. The function should easily check if a point belongs to
 the region, as it will be done frequently. Quadratic forms, such as the simple
 one presented or those generated by Sum Of Squares techniques, are recommended
-since they easily and computationally inexpensively check set membership.
+since they can easily and computationally inexpensively check set membership.
 
 The region of attraction needs to be larger than the constraints region and
 needs to intersect all mode's regions of attraction to and from which it can
@@ -474,7 +476,7 @@ where \(x\) is the point that should be inside the region of attraction. Note
 that, numerically, a number smaller than \(1\) may be necessary to make the
 problem feasible.
 
-If the LMI is written in terms os \(P\), it can be used directly to force the
+If the LMI is written in terms of \(P\), it can be used directly to force the
 region to be big enough to contain the point \(x\). If the LMI is written in
 terms of \(P^{-1}\), simply applying Schur's complement yields a valid LMI:
 %

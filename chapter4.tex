@@ -162,11 +162,12 @@ following inequalities:
 where \(x=\begin{bsmallmatrix} x_{1} & x_{2} \end{bsmallmatrix}^{\top}\).
 
 Since the system is linearized around two different operation points, there are
-three bases, and the states need to be converted between them. The first is the
-basis of the non-linear system, called \enquote{global}. The second and third
-are those of the linearized systems. The constraints are written on the global
-basis and the regions of attraction in the respective mode's basis. Care must be
-taken to convert between the basis for set membership tests.
+three bases (the equilibrium points of each linearized model), and the states
+need to be converted between them. The first is the basis of the non-linear
+system, called \enquote{global}. The second and third are those of the
+linearized systems. The constraints are written on the global basis and the
+regions of attraction in the respective mode's basis. Care must be taken to
+convert between the basis for set membership tests.
 
 Fig.~\ref{fig:states} shows the path taken by the closed-loop system over the
 space of the system's state. The trajectory marked with
@@ -474,11 +475,12 @@ seen in the last plot, where the control signal constantly saturates in the
 dwell-time approach, but does not saturate and has a smaller variation in the
 proposed technique.
 
-The last mode should also have an overshoot on the proposed technique. However,
-the command governor's optimization problem generated virtual references that
-slowly guided the system to the real reference, making it take longer than
-necessary to converge. The behaviour was present on every test repetition, just
-like the dwell-time approach's overshoots.
+The last mode should also have an overshoot on the proposed technique, since it
+is part of the closed-loop dynamics. However, the command governor's
+optimization problem generated virtual references that slowly guided the system
+to the real reference, making it take longer than necessary to converge. The
+behaviour was present on every test repetition, just like the dwell-time
+approach's overshoots.
 
 \begin{figure}[ht!]
   \centering \captionsetup{justification=centering}
