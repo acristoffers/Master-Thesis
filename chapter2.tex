@@ -156,7 +156,9 @@ controller.
 \begin{figure}[!htb]
   \centering
   \resizebox{0.98\linewidth}{!}{\input{imgs/topos2c.tex}}
-  \caption{PI-like controller.}%
+  \caption[PI-like controller.]{PI-like controller. The states are fedback
+    proportionally and the output error is integrated to obtain reference
+    tracking.}%
   \label{fig:pi-controller-diagram}
 \end{figure}
 
@@ -444,7 +446,15 @@ a Region of Attraction.
     \label{fig:semi-stable-cycle}
   \end{subfigure}
   %
-  \caption{Different cycles' gradient maps}%
+  \caption[Different cycles' gradient maps.]{Different cycles' gradient maps.
+    In~\ref{fig:stable-point} there is a stable critical point and all values
+    converge to it. In~\ref{fig:stable-cycle} there is an unstable critical
+    point and stable limit-cycle, so all values converge to the limit-cycle and
+    remain cycling on its border. The vector field
+    in~\ref{fig:semi-stable-cycle} is the contrary of that on the previous
+    subfigure, and the values will only stay on the limit-cycle if they start
+    there and there is no pertubation or noise, otherwise they will either
+    converge to the critical point or diverge.}%
   \label{fig:poincare-cycles}
 \end{figure}
 

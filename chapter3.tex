@@ -326,7 +326,11 @@ vertices, and all blue dots are inside the region. The set of vertices is
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=\linewidth]{imgs/v-rep}
-  \caption{Visualization of the V-representation of a set}%
+  \caption[Visualization of the V-representation of a set.]{Visualization of the
+    V-representation of a set. The red dots are the vertices, which can be
+    obtained by sampling the border of the set. The blue dots are considered to
+    be inside the region, however it is not easy to test this with the
+    V-representation.}%
   \label{fig:v-rep-example}
 \end{figure}
 
@@ -380,7 +384,13 @@ make the convex region in the middle.
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=\linewidth]{imgs/h-rep}
-  \caption{Visualization of the H-representation of a set}%
+  \caption[Visualization of the H-representation of a set.]{Visualization of the
+    H-representation of a set. The set is defined as the intersection of many
+    half-hyperplanes. Only the lines that define the half-hyperplanes are
+    represented, to facilitate visualization. The easiest way to get this
+    representation is by transforming from the V-representation using one of the
+    available algorithms. However, it is easy to test for membership using this
+    representation.}%
   \label{fig:h-rep-example}
 \end{figure}
 
@@ -520,6 +530,8 @@ an earlier switch.
     \caption{Choosing the same \(x\) for all RoA}%
     \label{fig:choice-x-roa-same}
   \end{subfigure}
-  \caption{Different RoA's intesections}%
+  \caption[Different RoA's intesections.]{Different RoA's intesections. The
+    intersection in~\ref{fig:choice-x-roa-diff} is larger, so a hybrid switch
+    can be activated earlier.}%
   \label{fig:choices-of-x}
 \end{figure}

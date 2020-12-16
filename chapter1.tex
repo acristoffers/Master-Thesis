@@ -73,7 +73,10 @@ fact that \(\delta\in\mathcal{R}\) while
     \draw [->] (state) -- node {} (rg);
     \draw [->] (state) -| node {} (controller);
   \end{tikzpicture}
-  \caption{Reference Governor's block diagram}%
+  \caption[Reference Governor's block diagram for a linear system.]{Reference
+    Governor's block diagram for a linear system. The inner loop's controller
+    guarantees reference tracking and the outer loop guarantees constraints
+    satisfaction.}%
   \label{fig:rg-block-diagram}
 \end{figure}
 
