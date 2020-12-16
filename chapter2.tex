@@ -139,69 +139,6 @@ system's dynamic and output, matrices \(E_{i}\in\mathbb{R}^{n_c\times{}n}\) and
 by the designer to take into account the constraints associate with the state
 and control signal. The sub-index \(i = 1,\ldots,N\) refers to the active model.
 
-The controller is designed to ensure null steady-state error for piecewise
-constant references at each mode \(i\), and thus the integral action is applied
-over the tracking error~\parencite{lopes.leite.ea:anti-windup}
-%
-\begin{equation}
-  \label{eq:r-y-error}
-  e(k) = r(k)-y(k),
-\end{equation}
-%
-where \(r(k)\) is the desired output of the system. The proportional action
-comes from the system's state deviation with respect to the equilibrium point.
-Figure~\ref{fig:pi-controller-diagram} depicts the topology of the considered
-controller.
-
-\begin{figure}[!htb]
-  \centering
-  \resizebox{0.98\linewidth}{!}{\input{imgs/topos2c.tex}}
-  \caption[PI-like controller.]{PI-like controller. The states are fedback
-    proportionally and the output error is integrated to obtain reference
-    tracking.}%
-  \label{fig:pi-controller-diagram}
-\end{figure}
-
-By defining an augmented state vector
-\[
-  \xi(k)=\begin{bmatrix}{x(k)}^\top &v{(k)}^\top\end{bmatrix}^\top,
-\]
-where \(v(k)\in\mathbb{R}^{n_u}\) is the vector of added integrators, the
-closed-loop system shown in Figure~\ref{fig:pi-controller-diagram} can be
-rewritten as
-
-\begin{equation}
-  \label{sistemaaum}
-  \begin{split}
-    \xi(k+1) &= \mathcal{A}_i\xi(k)+\mathcal{B}_{i}u(k), \\
-    y_{k}    &= \mathcal{C}_i\xi(k)+\mathcal{D}_{i}u(k),
-  \end{split}
-\end{equation}
-
-where \(\mathcal{A}_i=\begin{bmatrix}A_i & \textbf{0} \\-C_{i}&\textbf{I}
-\end{bmatrix} \), \(\mathcal{B}_i=\begin{bmatrix}B_i\\D_i\end{bmatrix}\),
-\(\mathcal{C}_i=\begin{bmatrix} C_i & \textbf{0} \end{bmatrix}\),
-\(\mathcal{D}_i=\begin{bmatrix}\mathcal{D}_i^\top&\textbf{0}\end{bmatrix}^\top\).
-
-The design of each controller gain \(K_i\in\mathbb{R}^{n_u\times{}(n+p)}\) may use
-standard LMI based techniques, such as, for instance, pole
-placement~\parencite{yu:lmis}, LPV design~\parencite{briat:linear}, or robust
-control~\parencite{boyd.ghaoui.ea:linear}. In this case, the main issue is to
-ensure the stability between the switching instants. It is important to note
-that, in practice, the controller may be designed independently for each mode.
-
-Note that the constrained output can also be expressed in terms of the augmented
-state \(\xi(k)\), taking into account the state of the integrator, i.e., \(c(k)\)
-in~\eqref{eq:state-space} can be given by
-%
-\begin{equation}
-  \label{eq:constrained-output}
-  c(k) = \mathcal{E}_i\xi(k) + \mathcal{F}_i u(k),
-\end{equation}
-%
-with the mode-dependent matrices \(\mathcal{E}_i\) and \(\mathcal{F}_i\) with
-adequate dimensions.
-
 \subsection{Command Governor}%
 \label{subsec:cg}
 
@@ -236,12 +173,11 @@ In what follows we use the sets \(\mathcal{C}\), \(\mathcal{W}\), and
   \item \(\mathcal{C}\) is the set of restrictions, which contains all allowed
         values of \(c(k)\).
   \item \(\mathcal{W}\) is the set of all constant references \(\omega{}\) that keep
-        \(c(k)\) constrained on the steady-state as \(k\) goes to infinity.
+        \(c(k)\) constrained on the steady-state.
         \[\mathcal{W} = \{\omega\in\mathbb{R}^{n_y}:
           c(k)\in\mathcal{C},k\rightarrow\infty{}\}.\]
-  \item \(\mathcal{V}(x(k))\) is the set of \(\omega{}\) values which ensures that the
-        constrained output belongs to \(\mathcal{C}\) in the next \(k_0\)
-        samples
+  \item \(\mathcal{V}(x(k))\) is the set of \(\omega{}\) values which ensures that
+        the constrained output belongs to \(\mathcal{C}\) during the transitory
         \[
           \mathcal{V}(x(k))=\{\omega\in\mathcal{W}:c(k)\in\mathcal{C},0<k\leq{}k_0\},
         \]
