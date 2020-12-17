@@ -144,9 +144,13 @@ stability and constraint satisfaction.
 \section{Objectives}%
 \label{sec:objectives}
 
-In this work, considering a class of constrained switched systems (switching
-systems with controlled switching signals), we propose a novel switching rule
-based on the controllers's region of attraction. Two rules can be stated:
+In this work, considering a class of constrained switched systems, we propose a
+novel switching rule based on the controllers's region of attraction. There are
+other techniques for stabilizing switched systems, but for constrained switched
+systems, specially when using the Command Governor structure, the dwell-time
+seems to be the only one applied. Without employing the Command Governor
+structure, however, the Model Predictive Control technique accomplishes the same
+goal. For the proposed technique two rules can be stated:
 
 \begin{itemize}
   \item the system's state is inside the next controller's region of attraction.

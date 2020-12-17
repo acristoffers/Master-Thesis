@@ -40,7 +40,7 @@ closed-loop system shown in Figure~\ref{fig:pi-controller-diagram} can be
 rewritten as
 
 \begin{equation}
-  \label{sistemaaum}
+  \label{eq:augmented-system}
   \begin{split}
     \xi(k+1) &= \mathcal{A}_i\xi(k)+\mathcal{B}_{i}u(k), \\
     y_{k}    &= \mathcal{C}_i\xi(k)+\mathcal{D}_{i}u(k),
@@ -53,7 +53,7 @@ where \(\mathcal{A}_i=\begin{bmatrix}A_i & \textbf{0} \\-C_{i}&\textbf{I}
 \(\mathcal{D}_i=\begin{bmatrix}\mathcal{D}_i^\top&\textbf{0}\end{bmatrix}^\top\).
 
 The design of each controller gain \(K_i\in\mathbb{R}^{n_u\times{}(n+p)}\) may use
-standard LMI based techniques, such as, for instance, pole
+tandard LMI based techniques, such as, for instance, pole
 placement~\parencite{yu:lmis}, LPV design~\parencite{briat:linear}, or robust
 control~\parencite{boyd.ghaoui.ea:linear}. The exponential stability and
 saturation LMI's described below were used.
@@ -74,7 +74,7 @@ There are various ways to measure stability, with the asymptotic stability being
 the most common. However, other definitions might yield better results. One of
 such stability criteria is exponential stability, which guarantees fast
 convergence to the origin. A system is said to be exponentially stable if its
-states decay is upper-bounded by an exponential~\citep{Hespanha09}:
+states decay is upper-bounded by an exponential~\parencite{hespanha:linear}:
 %
 \begin{equation}
   \norm{x(t)} \le{} Ce^{-\lambda{}(t-t_{0})}\norm{x(0)}.
@@ -123,22 +123,23 @@ obtain our LMI, which can be used with the following optimization procedure:
   \end{bmatrix} \succ \mathbf{0}.
 \end{align}
 
-Considering~\eqref{eq:state-space} under input saturation, even though the input
-constraints are usually included in the set \(\mathcal{C}\) and are handled by
-the optimization machinery, at this point, we explicitly consider them, by using
-a saturating allowance approach~\citep{Tar+11}. In such a case, we assume
+Considering~\eqref{eq:augmented-system} under input saturation, even though the
+input constraints are usually included in the set \(\mathcal{C}\) and are
+handled by the optimization machinery, at this point, we explicitly consider
+them, by using a saturating allowance
+approach~\parencite{tarbouriech.garcia.ea:stability}. In such a case, we assume
 decentralized saturation function, \(\sat{u(k)}\), instead of \(u(k)\) as the
-input signal in~\eqref{eq:state-space}, where \(\bar{u}\) is the saturation
+input signal in~\eqref{eq:augmented-system}, where \(\bar{u}\) is the saturation
 value and
 %
 \[
-  \sat{u} = \mbox{\tt sign}(U_{\ell})\min\{|u_{(\ell)}|,\bar{u}_{(\ell)}\}, \quad \ell = 1,\ldots, m,
+  \sat{u} = \mbox{\textrm{sign}}(U_{\ell})\min\{|u_{(\ell)}|,\bar{u}_{(\ell)}\}, \quad \ell = 1,\ldots, m,
 \] where \(u_{(\ell)}\) means the \(\ell\)-th entry of \(u\). An estimate of the
 region of attraction can be computed by solving a suitable optimization
-procedure for each mode, such as~\citep{Klug2015}:
+procedure for each mode, such as~\parencite{klug.castelan.ea:fuzzy}:
 %
 \begin{align}
-  \min_{P_i,G_i,S_i} & \mbox{\tt Trace}(P_i) \nonumber                         \\
+  \min_{P_i,G_i,S_i} & \mbox{\textrm{Trace}}(P_i) \nonumber                         \\
   \textrm{s. t.}     & \begin{bmatrix}
     A_i^\top P_i A_{i} - P_i & \phantom{-} & -B_{i}S_i+G_i^\top \\
     \star                                        & \phantom{-} & -2S_i

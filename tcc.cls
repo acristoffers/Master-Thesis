@@ -416,7 +416,7 @@
 
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}%
 \renewcommand{\arraystretch}{1.2}%
-\newcommand{\sat}[1]{\mbox{\tt sat}\left(#1\right)}%
+\newcommand{\sat}[1]{\mbox{\texttt{sat}}\left(#1\right)}%
 \DeclareMathOperator*{\argmax}{arg\,max}%
 \DeclareMathOperator*{\argmin}{arg\,min}%
 \newcommand{\valter}[1]{{\color{red}\footnote{\color{blue}{Valter: #1}}}}%
