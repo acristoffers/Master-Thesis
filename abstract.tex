@@ -2,19 +2,28 @@
 % !TeX encoding = UTF-8 Unicode
 
 \begin{abstract}
-  The command governor (\CG{}) is a useful strategy to avoid constraints
-  violation in case of control reconfiguration or operational conditions
-  changes, like switched systems mode changes. In general, the structure of the
-  \CG{} specializes in producing an alternative reference signal to drive a
-  closed-loop system to the desired reference while avoiding constraints
-  violations in the control signal, state-space, or combinations of them. In
-  this paper, we propose a simple strategy that modifies the conventional
-  structures of the \CG{} and supervisor, yielding a switched rule based on the
-  estimated controllers' region of attraction. We present some simulations to
-  illustrate the proposal's potential and compare it with a scheme exploiting a
-  dwell-time approach. The results suggest that our approach adds new
-  possibilities of \CG{} and supervisor design, reducing the transition time
-  between system modes and improving the closed-loop performance indexes.
+  Physical systems are subject to constraints, like input saturation or physical
+  limits to the states, which also appears on each switched system mode. One way
+  of dealing with them is to apply the Command Governor scheme, which changes
+  the controller's reference to enforce constraints. When the system is a
+  switched one, the problem of stability arises. Switched systems are a common
+  kind of system used to describe non-linear systems by dividing them into
+  linear sections or different modes of operations of the same system, like the
+  different phases an airplane goes through during take-off or landing. However,
+  arbitrarily switching the modes of a switched system can cause instability,
+  requiring a switching rule design. The most commonly used rule is the
+  dwell-time switch, in which the system waits for a dwell-time to elapse after
+  the references changes to switch modes. Seeing the possibility of speeding up
+  such systems' convergence, we propose a new rule based on the controller's
+  Region of Attraction, which requires the system's state to be inside the
+  mode's controller's Region of Attraction to switch, guaranteeing stability
+  after a mode switch. With this technique, we also propose a hybrid switch
+  technique, which can further speed up convergence and generate lower actuator
+  effort in some cases. We present some simulations to illustrate the proposal's
+  potential and compare it with a scheme exploiting a dwell-time approach. The
+  results suggest that our approach adds new CG and supervisor design
+  possibilities, reducing the transition time between system modes and improving
+  the closed-loop performance indexes.
 \end{abstract}
 
 \textbf{Keywords}: Command Governor, Discrete-time systems, Switching systems,
